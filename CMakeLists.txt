@@ -28,10 +28,11 @@ find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
 list(APPEND SOURCE_FILES
 	main.cpp
 	mainwindow.cpp
-	resources.qrc
+    #resources.qrc
 )
 
 list(APPEND HEADER_FILES
+	pch.h
 	mainwindow.h 
 )
 
@@ -40,7 +41,7 @@ list(APPEND HEADER_FILES
 #-------------------------------------------------------------------------------
 if (MSVC)
 	set(GUI_TYPE WIN32) 
-	set(CMAKE_CXX_FLAGS_DEBUG "/MP /MDd /std:c++latest /GS /analyze /Gd /Od /RTCs /RTCu /RTC1 /W3 ") # /Wall
+        set(CMAKE_CXX_FLAGS_DEBUG "/MP /MDd /std:c++latest /GS /analyze /Gd /Od /RTC1 /RTCs /RTCu /W3 ") # /Wall
 	set(CMAKE_CXX_FLAGS_RELEASE "/MP /MD /std:c++latest /Ox")
 endif(MSVC)
 
@@ -57,7 +58,7 @@ endif(MSVC)
 #	ADDITIONAL LIBRARIES
 #-------------------------------------------------------------------------------
 
-list(APPEND QT5_LIBRARIES Qt5::Widgets Qt5::SerialPort)
+list(APPEND QT5_LIBRARIES Qt5::Widgets Qt5::SerialPort GTest::GTest GTest::Main)
 
 #-------------------------------------------------------------------------------
 #	GENERATE EXECUTABLE
@@ -67,3 +68,13 @@ add_executable(${TARGET_NAME} ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES} ${RESO
 
 # link libraries
 target_link_libraries(${TARGET_NAME} ${QT5_LIBRARIES})
+
+#-------------------------------------------------------------------------------
+#	TEST SECTION
+#-------------------------------------------------------------------------------
+enable_testing()
+list(APPEND TEST_FILES
+	tests/mainwindowtests.cpp
+)
+find_package(GTest MODULE REQUIRED)
+add_test(${TEST_FILES} ${TARGET_NAME}) 
