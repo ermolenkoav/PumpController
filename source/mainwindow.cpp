@@ -1,44 +1,14 @@
-#include "mainwindow.h"
-
+#include <source/mainwindow.h>
 
 MainWindow::~MainWindow() {
-	delete qmCartridge;
-	delete qmCommand;
-	delete qmClapan;
-	delete dataArray;
 	delete controller;
-}
+} 
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
-	// commands and cartridge
-	qmCartridge = new QMap<QString, char>;
-	qmCartridge->insert("Cartridge A", 'A');
-	qmCartridge->insert("Cartridge B", 'B');
-	qmCartridge->insert("Cartridge C", 'C');
-	qmCartridge->insert("Cartridge D", 'D');
-	qmCartridge->insert("Cartridge E", 'E');
-	qmCartridge->insert("Cartridge F", 'F');
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 
-	qmCommand = new QMap<QString, char>;
-	qmCommand->insert("aerate", 'A');
-	qmCommand->insert("stop", 'P');
-	qmCommand->insert("below to down", 'B');
-	qmCommand->insert("step up 100 steps", 'U');
-	qmCommand->insert("open valve", 'K');
-	qmCommand->insert("close valve", 'L');
-	qmCommand->insert("step down 100 steps", 'D');
-
-	qmClapan = new QMap<QString, int>;
-	qmClapan->insert("first", 1);
-	qmClapan->insert("second", 2);
-	qmClapan->insert("third", 3);
-	qmClapan->insert("forth", 4);
-
-    dataArray = new QByteArray();
-	dataArray->insert(0, 'A');
-	dataArray->insert(1, 'P');
-/**********************************************************************************/
+	/*************************************************************************/
 	createMainWindowLayout();
+	controller = new Controller();
 
     // Signals:
 	connect(pcmdSearch, SIGNAL (clicked()), this, SLOT (searchButtonClicked()));
@@ -46,20 +16,36 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
 }
 
 void MainWindow::createMainWindowLayout() {
-	pcmdSearch = new QPushButton("Search", this);
-	pcmdSend = new QPushButton("Send", this);
 	mainLayout = new QVBoxLayout(this);
+	mainLayout->addWidget(createConnectionLayout());
+	mainLayout->addWidget(createSetUpLayout());
+	mainLayout->addWidget(createExecuteLayout());
+	setLayout(mainLayout);
+}
+
+QGroupBox* MainWindow::createConnectionLayout() {
+	auto pgbConnectionLayout = new QGroupBox(tr("Connection"), this);
+	auto ploConnectionLayout = new QGridLayout(this);
+
+	pcmdSearch = new QPushButton("Search", this);
+	ploConnectionLayout->addWidget(pcmdSearch);
+
+	pgbConnectionLayout->setLayout(ploConnectionLayout);
+	return pgbConnectionLayout;
+}
+
+QGroupBox* MainWindow::createSetUpLayout() {
 	auto pgbSetOfAllValves = new QGroupBox(tr("Set up"), this);
 	auto ploSetOfAllValves = new QGridLayout(this);
 
 	QGroupBox *pgbValveSetUp[NumValves];
 	QGridLayout *ploValveLayout[NumValves];
 	QLabel *plblTimes[NumGridRows * NumValves];
-		
+
 	for (auto k = 0; k < NumValves; ++k) {
 		pgbValveSetUp[k] = new QGroupBox(tr("Cartridge %1").arg(k + 1), this);
 		ploValveLayout[k] = new QGridLayout(this);
-	
+
 		for (auto column = 0; column < NumGridColumns; ++column) {
 			for (auto row = 0; row < NumGridRows; ++row) {
 
@@ -70,21 +56,33 @@ void MainWindow::createMainWindowLayout() {
 				}
 
 				if (column == 1) {
-					ptxtConcentration[row + k] = new QLineEdit(this);
-					ploValveLayout[k]->addWidget(ptxtConcentration[row + k], row, column);
+					static auto iter = 0;
+					ptxtConcentration[iter] = new QLineEdit(this);
+					ploValveLayout[k]->addWidget(ptxtConcentration[iter++], row, column);
 				}
 			}
 		}
 
 		pgbValveSetUp[k]->setLayout(ploValveLayout[k]);
 		ploSetOfAllValves->addWidget(pgbValveSetUp[k]);
-	}   
+	}
 
 	pgbSetOfAllValves->setLayout(ploSetOfAllValves);
-	mainLayout->addWidget(pcmdSearch);
-	mainLayout->addWidget(pgbSetOfAllValves);
-	mainLayout->addWidget(pcmdSend);
-	setLayout(mainLayout);
+	return pgbSetOfAllValves;
+}
+
+QGroupBox* MainWindow::createExecuteLayout() {
+	auto pgbExecuteLayout = new QGroupBox(tr("Execute sequence"), this);
+	auto ploExecuteLayout = new QGridLayout(this);
+
+	plneSequence = new QLineEdit(this);
+	ploExecuteLayout->addWidget(plneSequence);
+
+	pcmdSend = new QPushButton("Send", this);
+	ploExecuteLayout->addWidget(pcmdSend);
+
+	pgbExecuteLayout->setLayout(ploExecuteLayout);
+	return pgbExecuteLayout;
 }
 
 void MainWindow::searchButtonClicked() {
@@ -96,7 +94,6 @@ void MainWindow::searchButtonClicked() {
 	pcmbListOfPorts->show();
 	connect(pcmbListOfPorts, QOverload<const QString &>::of(&QComboBox::activated),
 		[=](const QString &text) {
-		controller = new Controller;
 		controller->devisesActivated(text);
 		pcmdSearch->setText("Connected");
 		pcmdSearch->setCheckable(false);
@@ -106,48 +103,19 @@ void MainWindow::searchButtonClicked() {
 	
 }
 
-
-void MainWindow::sendButtonClicked() {
-	for(auto iterator : ptxtConcentration) {
-		
-	}
-
-	/*
-	auto stTimes = ptxtTimes->text();
-	int times = stTimes.split(" ")[0].toInt();
-	if (1 >= times) {
-		times = 2;
-	}
-	int debug = 0;
-	for (int i = 0; i < times; i++) {
-		if (pSerialPort->isOpen()) {
-			auto temp(dataArray);
-			pSerialPort->write(*temp);
-			pSerialPort->waitForBytesWritten(10000);
-
-			debug++;
+void MainWindow::sendButtonClicked() const {
+	for (auto iterate = 0; iterate < NumValves * NumGridRows; ++iterate) {
+		if (0 == (iterate % 2)) {
+			static auto pos = 0;
+			auto stTimes = ptxtConcentration[iterate]->text();
+			controller->setStartValue(stTimes.split(" ")[0].toDouble(), pos++);
 		}
-		else {
-			QMessageBox::warning(this, "error", "no com port", QMessageBox::Ok);
+		if (0 != (iterate % 2)) {
+			static auto pos = 0;
+			auto stTimes = ptxtConcentration[iterate]->text();
+			controller->setTimes(stTimes.split(" ")[0].toInt(), pos++);
 		}
 	}
-	qDebug() << debug;
-	*/
+	controller->calculateData();
+	controller->sendCommand();
 }
-
-
-/*
-void MainWindow::pcmbCartridgeActivated() {
-	auto stValueComboBox = pcmbCartridge->currentText();
-	auto value = qmCartridge->take(stValueComboBox);
-	dataArray->replace(0,1, &value);
-	qDebug() << dataArray[0];
-}
-
-void MainWindow::pcmbCommandActivated() {
-	auto stValueComboBox = pcmbCommand->currentText();
-	auto value = qmCommand->take(stValueComboBox);
-	dataArray->replace(1, 1, &value);
-	qDebug() << dataArray[0];
-}
-*/

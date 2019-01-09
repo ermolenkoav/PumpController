@@ -5,18 +5,23 @@
 class QSerialPort;
 
 class Controller {
-	double _initialValue = 0;
+	// variable:
+	std::list<char> sendCommandData;
+	const std::array<char, 6> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
 
-	QSerialPort *pSerialPort;
-	double _startValue[NumValves] = {};
-	int StartTimes[NumValves] = {};
+	QSerialPort *pSerialPort{};
+
+	double _startValue[NumValves];
+	int _startTimes[NumValves];
 
 public:
 	Controller();
 	~Controller();
 
-	int CalculateValue(double initialValue);
+	int calculateValue(const double, int) const;
 	bool devisesActivated(QString);
-	void setStartValue(double _startValue[]);
-	void setStartTimes(int _startTimes[]);
+	void setStartValue(const double, const int);
+	void setTimes(const int, const int);
+	void calculateData();
+	void sendCommand();
 };

@@ -13,11 +13,6 @@ class QVBoxLayout;
 
 class MainWindow : public QWidget {
     Q_OBJECT    
-	// variable:
-    QByteArray *dataArray;
-	QMap<QString, char> *qmCartridge;
-	QMap<QString, char> *qmCommand;
-	QMap<QString, int> *qmClapan;
 
 	Controller *controller = nullptr;
     // widgets:
@@ -25,9 +20,13 @@ class MainWindow : public QWidget {
 	QVBoxLayout *mainLayout = nullptr;
 	QPushButton *pcmdSearch = nullptr;
 	QPushButton *pcmdSend = nullptr;
+	QLineEdit *plneSequence = nullptr;
 
     // methods:
 	void createMainWindowLayout();
+	QGroupBox* createConnectionLayout();
+	QGroupBox* createSetUpLayout();
+	QGroupBox* createExecuteLayout();
 
 
 public:
@@ -35,6 +34,6 @@ public:
     ~MainWindow();
 	
 private slots:
-   void sendButtonClicked();
-     void searchButtonClicked();
+	void sendButtonClicked() const;
+	void searchButtonClicked();
 };
