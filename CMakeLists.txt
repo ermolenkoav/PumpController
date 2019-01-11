@@ -22,8 +22,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON) 
 
 find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
-find_package(GTest MODULE REQUIRED)
 
+add_subdirectory(tests)
 #-------------------------------------------------------------------------------
 #	SOURCE CODE
 #-------------------------------------------------------------------------------
@@ -40,33 +40,20 @@ list(APPEND HEADER_FILES
 	source/controller.h 
 )
 
-list(APPEND TEST_FILES
-	tests/mainwindowtests.cpp
-)
-
 #-------------------------------------------------------------------------------
 #	COMPILE FLAGS
 #-------------------------------------------------------------------------------
 if (MSVC)
 	set(GUI_TYPE WIN32) 
-        set(CMAKE_CXX_FLAGS_DEBUG "/MP /MDd /std:c++latest /GS /analyze /Gd /Od /RTC1 /RTCs /RTCu /W3 ") # /Wall
+    set(CMAKE_CXX_FLAGS_DEBUG "/MP /MDd /std:c++latest /GS /analyze /Gd /Od /RTC1 /RTCs /RTCu /W3 ") # /Wall
 	set(CMAKE_CXX_FLAGS_RELEASE "/MP /MD /std:c++latest /Ox")
 endif(MSVC)
-
-#-------------------------------------------------------------------------------
-#	SOURCE GROUPS
-#-------------------------------------------------------------------------------
-#source_group(generated REGULAR_EXPRESSION ".*_automoc.cpp")
-#source_group(resources REGULAR_EXPRESSION ".*[.][q]?rc")
-#source_group(source REGULAR_EXPRESSION ".*[.]cpp")
-#source_group(headers REGULAR_EXPRESSION ".*[.]h")
-#source_group(continuous-integration REGULAR_EXPRESSION ".*[.]yml")
 
 #-------------------------------------------------------------------------------
 #	ADDITIONAL LIBRARIES
 #-------------------------------------------------------------------------------
 
-list(APPEND LIBRARIES Qt5::Widgets Qt5::SerialPort GTest::GTest GTest::Main)
+list(APPEND LIBRARIES Qt5::Widgets Qt5::SerialPort)
 
 #-------------------------------------------------------------------------------
 #	GENERATE EXECUTABLE
@@ -76,9 +63,3 @@ add_executable(${TARGET_NAME} ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES} ${RESO
 
 # link libraries
 target_link_libraries(${TARGET_NAME} ${LIBRARIES})
-
-#-------------------------------------------------------------------------------
-#	TEST SECTION
-#-------------------------------------------------------------------------------
-
-#gtest_discover_tests(AllOdoratorTests) 

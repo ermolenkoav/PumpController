@@ -17,10 +17,9 @@ TEST(EvenDivideTest, HandlesPositiveInput) {
 	ASSERT_TRUE(EvenDivide(0));
 	ASSERT_FALSE(EvenDivide(1));
 	ASSERT_TRUE(EvenDivide(2));
-	ASSERT_TRUE(EvenDivide(1));
 }
 
 int main(int argc, char *argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TEST();
+	return RUN_ALL_TESTS();
 }

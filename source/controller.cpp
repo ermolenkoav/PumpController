@@ -1,4 +1,4 @@
-   #include <source/controller.h>
+    #include <source/controller.h>
 
 Controller::~Controller() {
 	pSerialPort->close();
@@ -10,33 +10,38 @@ Controller::Controller(): _startValue{0}, _startTimes{1} {
 }
 
 void Controller::sendCommand() { /////////////////////////
-	for (auto it = 0; it < NumValves; it++) {
+	for (auto it = 0; it < NumValves; ++it) {
+		if (sendCommandData.empty()) {
+			break;
+		}
 		if (pSerialPort->isOpen()) {
 			QByteArray buffer;
 			for (auto jt = 0; jt < 4; ++jt) {
-				if (0 == sendCommandData.size()) {
-					break;
-				}
 				buffer.append(sendCommandData.front());
 				sendCommandData.pop_front();
-				std::this_thread::sleep_for(std::chrono::seconds(2));
 			}
 			pSerialPort->write(buffer);
-			pSerialPort->waitForBytesWritten(1000);
+			buffer.clear();
+			while (!pSerialPort->waitForBytesWritten(500));
 		}
 	}
 }
 
+void Controller::clearBuffer() {
+	   sendCommandData.clear();
+}
+
 void Controller::calculateData() {
 	sendCommandData.clear();
-	for (auto iter = 0; iter < NumValves; iter++) {
-		if (0 == _startValue[iter]) {
+	for (auto it = 0; it < NumValves; it++) {
+		if (0 == _startValue[it]) {
 			continue;
 		}
-		sendCommandData.push_back(cartridgeName[iter]);
+		auto aChar = '0';
+		sendCommandData.push_back(cartridgeName[it+1]);
 		sendCommandData.push_back('6');
 		sendCommandData.push_back('2');
-		sendCommandData.push_back(calculateValue(_startValue[iter], 20));
+		sendCommandData.push_back(aChar + calculateValue(_startValue[it], 20));
 	}
 }
 

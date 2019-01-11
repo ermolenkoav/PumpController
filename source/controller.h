@@ -7,12 +7,12 @@ class QSerialPort;
 class Controller {
 	// variable:
 	std::list<char> sendCommandData;
-	const std::array<char, 6> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
+	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	QSerialPort *pSerialPort{};
 
-	double _startValue[NumValves];
-	int _startTimes[NumValves];
+	double _startValue[NumValves] = {};
+	int _startTimes[NumValves] = {};
 
 public:
 	Controller();
@@ -24,4 +24,5 @@ public:
 	void setTimes(const int, const int);
 	void calculateData();
 	void sendCommand();
+	void clearBuffer();
 };

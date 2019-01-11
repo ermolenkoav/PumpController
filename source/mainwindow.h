@@ -34,6 +34,6 @@ public:
     ~MainWindow();
 	
 private slots:
-	void sendButtonClicked() const;
+	void sendButtonClicked();
 	void searchButtonClicked();
 };

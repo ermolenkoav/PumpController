@@ -5,8 +5,6 @@ MainWindow::~MainWindow() {
 } 
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
-
-	/*************************************************************************/
 	createMainWindowLayout();
 	controller = new Controller();
 
@@ -103,7 +101,8 @@ void MainWindow::searchButtonClicked() {
 	
 }
 
-void MainWindow::sendButtonClicked() const {
+void MainWindow::sendButtonClicked() {
+	controller->clearBuffer();
 	for (auto iterate = 0; iterate < NumValves * NumGridRows; ++iterate) {
 		if (0 == (iterate % 2)) {
 			static auto pos = 0;
