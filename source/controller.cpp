@@ -1,5 +1,5 @@
-    #include <source/controller.h>
-
+#include "controller.h"
+#include <QThread>
 Controller::~Controller() {
 	pSerialPort->close();
 }
@@ -9,20 +9,27 @@ Controller::Controller(): _startValue{0}, _startTimes{1} {
 	pSerialPort = new QSerialPort();
 }
 
-void Controller::sendCommand() { /////////////////////////
+void Controller::sendCommand() { 
 	for (auto it = 0; it < NumValves; ++it) {
 		if (sendCommandData.empty()) {
 			break;
 		}
 		if (pSerialPort->isOpen()) {
-			QByteArray buffer;
+			QByteArray sentData;
+			sentData.reserve(8);
 			for (auto jt = 0; jt < 4; ++jt) {
-				buffer.append(sendCommandData.front());
+				sentData[jt] = sendCommandData.front();
 				sendCommandData.pop_front();
 			}
-			pSerialPort->write(buffer);
-			buffer.clear();
-			while (!pSerialPort->waitForBytesWritten(500));
+			for (auto jt = 4; jt < 8; ++jt) {
+				sentData[jt] = 0;
+			}
+			for (auto jt = 0; jt < 8; ++jt) {
+				qDebug() << sentData[jt];
+			}
+			pSerialPort->write(sentData);
+			pSerialPort->waitForBytesWritten(100);
+			std::this_thread::sleep_for(std::chrono::seconds(3));
 		}
 	}
 }
@@ -37,10 +44,10 @@ void Controller::calculateData() {
 		if (0 == _startValue[it]) {
 			continue;
 		}
-		auto aChar = '0';
-		sendCommandData.push_back(cartridgeName[it+1]);
+		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('6');
 		sendCommandData.push_back('2');
+		auto aChar = '0';
 		sendCommandData.push_back(aChar + calculateValue(_startValue[it], 20));
 	}
 }

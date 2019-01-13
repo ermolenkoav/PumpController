@@ -1,4 +1,4 @@
-#include <source/mainwindow.h>
+#include "mainwindow.h"
 
 MainWindow::~MainWindow() {
 	delete controller;
@@ -105,14 +105,14 @@ void MainWindow::sendButtonClicked() {
 	controller->clearBuffer();
 	for (auto iterate = 0; iterate < NumValves * NumGridRows; ++iterate) {
 		if (0 == (iterate % 2)) {
-			static auto pos = 0;
+			static auto posValue = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
-			controller->setStartValue(stTimes.split(" ")[0].toDouble(), pos++);
+			controller->setStartValue(stTimes.toDouble(), posValue++);
 		}
 		if (0 != (iterate % 2)) {
-			static auto pos = 0;
+			static auto posTimes = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
-			controller->setTimes(stTimes.split(" ")[0].toInt(), pos++);
+			controller->setTimes(stTimes.toInt(), posTimes++);
 		}
 	}
 	controller->calculateData();
