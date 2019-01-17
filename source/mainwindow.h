@@ -1,7 +1,9 @@
 #pragma once
 #include "pch.h"
 #include "common.h"
-#include "controller.h"
+#include "model.h"
+#include "setupcontroller.h"
+#include "startcontroller.h"
 
 class QGroupBox;
 class QGridLayout;
@@ -10,16 +12,20 @@ class QPushButton;
 class QListWidget;
 class QLineEdit;
 class QVBoxLayout;
+class QSerialPort;
 
 class MainWindow : public QWidget {
     Q_OBJECT    
+	QSerialPort *pSerialPort = nullptr;
+	SetUpController *setupcontroller = nullptr;
+	StartController * startcontroller = nullptr;
 
-	Controller *controller = nullptr;
     // widgets:
 	QLineEdit *ptxtConcentration[NumGridRows * NumValves] = {};
 	QVBoxLayout *mainLayout = nullptr;
 	QPushButton *pcmdSearch = nullptr;
 	QPushButton *pcmdSend = nullptr;
+	QPushButton *pcmdStart = nullptr;
 	QLineEdit *plneSequence = nullptr;
 
     // methods:
@@ -36,4 +42,5 @@ public:
 private slots:
 	void sendButtonClicked();
 	void searchButtonClicked();
+	void startButtonClicked();
 };

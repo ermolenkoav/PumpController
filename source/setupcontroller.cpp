@@ -1,15 +1,16 @@
-#include "controller.h"
-#include <QThread>
-Controller::~Controller() {
-	pSerialPort->close();
+#include "setupcontroller.h"
+#include "setupcontroller.h"
+
+SetUpController::~SetUpController() {
+
 }
 
-Controller::Controller(): _startValue{0}, _startTimes{1} {
+SetUpController::SetUpController(QSerialPort *_pSerialPort) : _startValue{0}, _startTimes{1} {
 	// commands and cartridge
-	pSerialPort = new QSerialPort();
+	pSerialPort = _pSerialPort;
 }
 
-void Controller::sendCommand() { 
+void SetUpController::sendCommand() {
 	for (auto it = 0; it < NumValves; ++it) {
 		if (sendCommandData.empty()) {
 			break;
@@ -34,11 +35,11 @@ void Controller::sendCommand() {
 	}
 }
 
-void Controller::clearBuffer() {
+void SetUpController::clearBuffer() {
 	   sendCommandData.clear();
 }
 
-void Controller::calculateData() {
+void SetUpController::calculateData() {
 	sendCommandData.clear();
 	for (auto it = 0; it < NumValves; it++) {
 		if (0 == _startValue[it]) {
@@ -52,11 +53,11 @@ void Controller::calculateData() {
 	}
 }
 
-int Controller::calculateValue(const double _initialValue, int _startVolume = 10) const {
+int SetUpController::calculateValue(const double _initialValue, int _startVolume = 10) const {
 	return static_cast<int>(log(_initialValue / _finalValue) / log(_vesselVolume / _startVolume));
 }
 
-bool Controller::devisesActivated(QString selectedDevice) {
+bool SetUpController::devisesActivated(QString selectedDevice) {
 	
 	if (!pSerialPort->isOpen()) {
 		qDebug() << selectedDevice;
@@ -75,10 +76,10 @@ bool Controller::devisesActivated(QString selectedDevice) {
 	return false;
 }
 
-void Controller::setStartValue(const double _value, const int _iter) {
+void SetUpController::setStartValue(const double _value, const int _iter) {
 	_startValue[_iter] = _value;
 }
 
-void Controller::setTimes(const int _times, const int _iter) {
+void SetUpController::setTimes(const int _times, const int _iter) {
 	_startTimes[_iter] = _times;
 }

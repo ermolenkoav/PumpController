@@ -20,21 +20,25 @@ find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
 list(APPEND SOURCE_FILES
 	main.cpp
 	mainwindow.cpp
-	controller.cpp
-
+	setupcontroller.cpp
+	startcontroller.cpp
+	model.cpp
+	resources/resources.qrc
 )
 
 list(APPEND HEADER_FILES
 	pch.h
 	mainwindow.h
-	controller.h 
+	setupcontroller.h 
+	startcontroller.h
+	model.h
 )
 
 #-------------------------------------------------------------------------------
 #	GENERATE EXECUTABLE
 #-------------------------------------------------------------------------------
 # Generate the executable
-add_executable(${TARGET_NAME} ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES} ${RESOURCES})
+add_executable(${TARGET_NAME} ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES})
 
 # link libraries
 target_link_libraries(${TARGET_NAME} Qt5::Widgets Qt5::SerialPort)

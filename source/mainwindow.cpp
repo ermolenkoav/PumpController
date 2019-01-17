@@ -1,16 +1,22 @@
 #include "mainwindow.h"
 
 MainWindow::~MainWindow() {
-	delete controller;
+	pSerialPort->close();
+	delete setupcontroller;
 } 
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
+	setWindowIcon(QIcon(":logo.ico"));
+	setWindowTitle("Odorizer");
+	resize(300, 120);
 	createMainWindowLayout();
-	controller = new Controller();
-
+	pSerialPort = new QSerialPort(this);
+	setupcontroller = new SetUpController(pSerialPort);
+	
     // Signals:
 	connect(pcmdSearch, SIGNAL (clicked()), this, SLOT (searchButtonClicked()));
     connect(pcmdSend, SIGNAL (clicked()), this, SLOT (sendButtonClicked()));
+	connect(pcmdStart, SIGNAL(clicked()), this, SLOT(startButtonClicked()));
 }
 
 void MainWindow::createMainWindowLayout() {
@@ -65,6 +71,9 @@ QGroupBox* MainWindow::createSetUpLayout() {
 		ploSetOfAllValves->addWidget(pgbValveSetUp[k]);
 	}
 
+	pcmdSend = new QPushButton("Set Up", this);
+	ploSetOfAllValves->addWidget(pcmdSend);
+
 	pgbSetOfAllValves->setLayout(ploSetOfAllValves);
 	return pgbSetOfAllValves;
 }
@@ -76,8 +85,8 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	plneSequence = new QLineEdit(this);
 	ploExecuteLayout->addWidget(plneSequence);
 
-	pcmdSend = new QPushButton("Send", this);
-	ploExecuteLayout->addWidget(pcmdSend);
+	pcmdStart = new QPushButton("Start", this);
+	ploExecuteLayout->addWidget(pcmdStart);
 
 	pgbExecuteLayout->setLayout(ploExecuteLayout);
 	return pgbExecuteLayout;
@@ -92,29 +101,35 @@ void MainWindow::searchButtonClicked() {
 	pcmbListOfPorts->show();
 	connect(pcmbListOfPorts, QOverload<const QString &>::of(&QComboBox::activated),
 		[=](const QString &text) {
-		controller->devisesActivated(text);
+		setupcontroller->devisesActivated(text);
 		pcmdSearch->setText("Connected");
 		pcmdSearch->setCheckable(false);
 		pcmbListOfPorts->hide();
 		pcmbListOfPorts->clear();
 	});
-	
 }
 
 void MainWindow::sendButtonClicked() {
-	controller->clearBuffer();
+	setupcontroller->clearBuffer();
 	for (auto iterate = 0; iterate < NumValves * NumGridRows; ++iterate) {
 		if (0 == (iterate % 2)) {
 			static auto posValue = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
-			controller->setStartValue(stTimes.toDouble(), posValue++);
+			setupcontroller->setStartValue(stTimes.toDouble(), posValue++);
 		}
 		if (0 != (iterate % 2)) {
 			static auto posTimes = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
-			controller->setTimes(stTimes.toInt(), posTimes++);
+			setupcontroller->setTimes(stTimes.toInt(), posTimes++);
 		}
 	}
-	controller->calculateData();
-	controller->sendCommand();
+	setupcontroller->calculateData();
+	setupcontroller->sendCommand();
+}
+
+void MainWindow::startButtonClicked() {
+	StartController startcontroller(pSerialPort);
+
+
+	startcontroller.startOperations();
 }

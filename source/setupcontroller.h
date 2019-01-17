@@ -2,21 +2,18 @@
 #include "pch.h"
 #include "common.h"
 
-class QSerialPort;
-
-class Controller {
+class SetUpController {
 	// variable:
 	std::list<char> sendCommandData;
 	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
-
-	QSerialPort *pSerialPort{};
-
 	double _startValue[NumValves] = {};
 	int _startTimes[NumValves] = {};
 
+	QSerialPort *pSerialPort = nullptr;
+
 public:
-	Controller();
-	~Controller();
+	SetUpController(QSerialPort *_pSerialPort);
+	~SetUpController();
 
 	int calculateValue(const double, int) const;
 	bool devisesActivated(QString);
