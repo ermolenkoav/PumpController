@@ -1,26 +1,23 @@
 #include "setupcontroller.h"
-#include "setupcontroller.h"
 
-SetUpController::~SetUpController() {
+SetUpController::~SetUpController() {}
 
-}
-
-SetUpController::SetUpController(QSerialPort *_pSerialPort) : _startValue{0}, _startTimes{1} {
-	// commands and cartridge
+SetUpController::SetUpController(QSerialPort *_pSerialPort, OdoratorModel *_odoratorModel) {
 	pSerialPort = _pSerialPort;
+	odoratorModel = _odoratorModel;
 }
 
 void SetUpController::sendCommand() {
 	for (auto it = 0; it < NumValves; ++it) {
-		if (sendCommandData.empty()) {
+		if (odoratorModel->sendCommandData.empty()) {
 			break;
 		}
 		if (pSerialPort->isOpen()) {
 			QByteArray sentData;
 			sentData.reserve(8);
 			for (auto jt = 0; jt < 4; ++jt) {
-				sentData[jt] = sendCommandData.front();
-				sendCommandData.pop_front();
+				sentData[jt] = odoratorModel->sendCommandData.front();
+				odoratorModel->sendCommandData.pop_front();
 			}
 			for (auto jt = 4; jt < 8; ++jt) {
 				sentData[jt] = 0;
@@ -36,20 +33,24 @@ void SetUpController::sendCommand() {
 }
 
 void SetUpController::clearBuffer() {
-	   sendCommandData.clear();
+	odoratorModel->sendCommandData.clear();
 }
 
 void SetUpController::calculateData() {
-	sendCommandData.clear();
+	odoratorModel->sendCommandData.clear();
 	for (auto it = 0; it < NumValves; it++) {
 		if (0 == _startValue[it]) {
 			continue;
 		}
-		sendCommandData.push_back(cartridgeName[it]);
-		sendCommandData.push_back('6');
-		sendCommandData.push_back('2');
+		odoratorModel->sendCommandData.push_back(odoratorModel->cartridgeName[it]);
+		odoratorModel->sendCommandData.push_back('6');
+		odoratorModel->sendCommandData.push_back('2');
 		auto aChar = '0';
-		sendCommandData.push_back(aChar + calculateValue(_startValue[it], 20));
+		auto times = calculateValue(_startValue[it], 20);
+		if (9 >= times) {
+			times = 9;
+		}
+		odoratorModel->sendCommandData.push_back(aChar + times);
 	}
 }
 
@@ -58,7 +59,6 @@ int SetUpController::calculateValue(const double _initialValue, int _startVolume
 }
 
 bool SetUpController::devisesActivated(QString selectedDevice) {
-	
 	if (!pSerialPort->isOpen()) {
 		qDebug() << selectedDevice;
 		pSerialPort->setPortName(selectedDevice);

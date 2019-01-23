@@ -2,7 +2,9 @@
 
 MainWindow::~MainWindow() {
 	pSerialPort->close();
+	delete odoratorModel;
 	delete setupcontroller;
+	delete startcontroller;
 } 
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
@@ -10,15 +12,17 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowTitle("Odorizer");
 	resize(300, 120);
 	createMainWindowLayout();
+	odoratorModel = new OdoratorModel;
 	pSerialPort = new QSerialPort(this);
-	setupcontroller = new SetUpController(pSerialPort);
+	setupcontroller = new SetUpController(pSerialPort, odoratorModel);
+	startcontroller = new StartController(pSerialPort, odoratorModel);;
 	
     // Signals:
 	connect(pcmdSearch, SIGNAL (clicked()), this, SLOT (searchButtonClicked()));
     connect(pcmdSend, SIGNAL (clicked()), this, SLOT (sendButtonClicked()));
 	connect(pcmdStart, SIGNAL(clicked()), this, SLOT(startButtonClicked()));
 }
-
+/************************************CREATE VIEW LAYOUT************************************/
 void MainWindow::createMainWindowLayout() {
 	mainLayout = new QVBoxLayout(this);
 	mainLayout->addWidget(createConnectionLayout());
@@ -91,7 +95,7 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	pgbExecuteLayout->setLayout(ploExecuteLayout);
 	return pgbExecuteLayout;
 }
-
+/********************************RESPOND EVENTS AND SIGNALS********************************/
 void MainWindow::searchButtonClicked() {
  	auto pcmbListOfPorts = new QComboBox(pcmdSearch);
 	auto serialPortInfos = QSerialPortInfo::availablePorts();
@@ -128,8 +132,5 @@ void MainWindow::sendButtonClicked() {
 }
 
 void MainWindow::startButtonClicked() {
-	StartController startcontroller(pSerialPort);
 
-
-	startcontroller.startOperations();
 }

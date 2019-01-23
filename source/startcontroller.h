@@ -6,12 +6,11 @@ class StartController {
 	void shuffle(int * arr, size_t n);
 
 	QSerialPort *pSerialPort = nullptr;
+	OdoratorModel *odoratorModel = nullptr;
 
-	std::list<char> sendCommandData;
-	int _startSequence[NumValves] = { 65, 66, 67, 68, 69, 70 };
-	
+	int _startSequence[NumValves] = { 0, 1, 2, 3, 4, 5 };
 public:
-	StartController(QSerialPort *_pSerialPort);
+	StartController(QSerialPort *_pSerialPort, OdoratorModel *_odoratorModel);
 	~StartController();
 
 	void getStartSequence();

@@ -1,9 +1,6 @@
 #pragma once
 #include "pch.h"
 #include "common.h"
-#include "model.h"
-#include "setupcontroller.h"
-#include "startcontroller.h"
 
 class QGroupBox;
 class QGridLayout;
@@ -16,9 +13,10 @@ class QSerialPort;
 
 class MainWindow : public QWidget {
     Q_OBJECT    
+	OdoratorModel *odoratorModel = nullptr;
 	QSerialPort *pSerialPort = nullptr;
 	SetUpController *setupcontroller = nullptr;
-	StartController * startcontroller = nullptr;
+	StartController *startcontroller = nullptr;
 
     // widgets:
 	QLineEdit *ptxtConcentration[NumGridRows * NumValves] = {};

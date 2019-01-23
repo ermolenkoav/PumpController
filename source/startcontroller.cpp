@@ -3,8 +3,9 @@
 StartController::~StartController() {
 }
 
-StartController::StartController(QSerialPort *_pSerialPort) {
+StartController::StartController(QSerialPort *_pSerialPort, OdoratorModel *_odoratorModel) {
 	pSerialPort = _pSerialPort;
+	odoratorModel = _odoratorModel;
 }
 
 void StartController::getStartSequence() {
@@ -24,7 +25,7 @@ void StartController::startOperations() {
 void StartController::shuffle(int *arr, size_t n) {
 	if (n > 1) {
 		size_t i;
-		srand(time(NULL));
+		srand(time(nullptr));
 		for (i = 0; i < n - 1; i++) {
 			size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
 			int t = arr[j];

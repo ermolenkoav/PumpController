@@ -1,19 +1,15 @@
 #pragma once
-#include "pch.h"
 #include "common.h"
 
 class SetUpController {
-	// variable:
-	std::list<char> sendCommandData;
-	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
 	double _startValue[NumValves] = {};
 	int _startTimes[NumValves] = {};
 
 	QSerialPort *pSerialPort = nullptr;
-
+	OdoratorModel *odoratorModel = nullptr;
 public:
-	SetUpController(QSerialPort *_pSerialPort);
 	~SetUpController();
+	SetUpController(QSerialPort *_pSerialPort, OdoratorModel *_odoratorModel);
 
 	int calculateValue(const double, int) const;
 	bool devisesActivated(QString);
