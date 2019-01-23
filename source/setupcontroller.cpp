@@ -7,6 +7,23 @@ SetUpController::SetUpController(QSerialPort *_pSerialPort, OdoratorModel *_odor
 	odoratorModel = _odoratorModel;
 }
 
+bool SetUpController::serialPortInitialization(QString selectedDevice) {
+	if (!pSerialPort->isOpen()) {
+		qDebug() << selectedDevice;
+		pSerialPort->setPortName(selectedDevice);
+		pSerialPort->setBaudRate(QSerialPort::Baud9600);
+		pSerialPort->setDataBits(QSerialPort::Data8);
+		pSerialPort->setParity(QSerialPort::NoParity);
+		pSerialPort->setStopBits(QSerialPort::OneStop);
+		pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
+		pSerialPort->open(QIODevice::ReadWrite);
+		return true;
+	} else {
+		//QMessageBox::warning(this, "warning", "com port is open", QMessageBox::Ok);
+	}
+	return false;
+}
+
 void SetUpController::sendCommand() {
 	for (auto it = 0; it < NumValves; ++it) {
 		if (odoratorModel->sendCommandData.empty()) {
@@ -30,6 +47,26 @@ void SetUpController::sendCommand() {
 			std::this_thread::sleep_for(std::chrono::seconds(3));
 		}
 	}
+}
+
+void SetUpController::sendCommand(char command) {
+	for (auto it = 0; it < NumValves; ++it) {
+		if (pSerialPort->isOpen()) {
+			QByteArray sentData;
+			sentData.reserve(8);
+
+			sentData[0] = odoratorModel->cartridgeName[it];
+			sentData[1] = command;
+
+			pSerialPort->write(sentData);
+			pSerialPort->waitForBytesWritten(100);
+			std::this_thread::sleep_for(std::chrono::seconds(3));
+		}
+	}
+}
+
+void SetUpController::cleaningAirSystem() {
+	sendCommand('A');
 }
 
 void SetUpController::clearBuffer() {
@@ -58,23 +95,7 @@ int SetUpController::calculateValue(const double _initialValue, int _startVolume
 	return static_cast<int>(log(_initialValue / _finalValue) / log(_vesselVolume / _startVolume));
 }
 
-bool SetUpController::devisesActivated(QString selectedDevice) {
-	if (!pSerialPort->isOpen()) {
-		qDebug() << selectedDevice;
-		pSerialPort->setPortName(selectedDevice);
-		pSerialPort->setBaudRate(QSerialPort::Baud9600);
-		pSerialPort->setDataBits(QSerialPort::Data8);
-		pSerialPort->setParity(QSerialPort::NoParity);
-		pSerialPort->setStopBits(QSerialPort::OneStop);
-		pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
-		pSerialPort->open(QIODevice::ReadWrite);
-		return true;
-	}
-	else {
-		//QMessageBox::warning(this, "warning", "com port is open", QMessageBox::Ok);
-	}
-	return false;
-}
+
 
 void SetUpController::setStartValue(const double _value, const int _iter) {
 	_startValue[_iter] = _value;

@@ -105,11 +105,13 @@ void MainWindow::searchButtonClicked() {
 	pcmbListOfPorts->show();
 	connect(pcmbListOfPorts, QOverload<const QString &>::of(&QComboBox::activated),
 		[=](const QString &text) {
-		setupcontroller->devisesActivated(text);
-		pcmdSearch->setText("Connected");
-		pcmdSearch->setCheckable(false);
-		pcmbListOfPorts->hide();
-		pcmbListOfPorts->clear();
+			if (setupcontroller->serialPortInitialization(text)) {
+				pcmdSearch->setText("Connected");
+				pcmdSearch->setCheckable(false);
+				pcmbListOfPorts->hide();
+				pcmbListOfPorts->clear();
+				setupcontroller->cleaningAirSystem();
+			}
 	});
 }
 

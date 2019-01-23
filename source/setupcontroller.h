@@ -11,11 +11,14 @@ public:
 	~SetUpController();
 	SetUpController(QSerialPort *_pSerialPort, OdoratorModel *_odoratorModel);
 
+	void sendCommand();
+	void sendCommand(char command);
 	int calculateValue(const double, int) const;
-	bool devisesActivated(QString);
+	bool serialPortInitialization(QString);
 	void setStartValue(const double, const int);
 	void setTimes(const int, const int);
 	void calculateData();
-	void sendCommand();
+	void commantToAllValves();
+	void cleaningAirSystem();
 	void clearBuffer();
 };
