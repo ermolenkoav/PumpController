@@ -1,25 +1,19 @@
 #include "mainwindow.h"
 
 MainWindow::~MainWindow() {
-	pSerialPort->close();
-	delete odoratorModel;
-	delete setupcontroller;
-	delete startcontroller;
+	delete controller;
 } 
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowIcon(QIcon(":logo.ico"));
 	setWindowTitle("Odorizer");
 	resize(300, 120);
+	controller = new Controller;
 	createMainWindowLayout();
-	odoratorModel = new OdoratorModel;
-	pSerialPort = new QSerialPort(this);
-	setupcontroller = new SetUpController(pSerialPort, odoratorModel);
-	startcontroller = new StartController(pSerialPort, odoratorModel);;
-	
+
     // Signals:
 	connect(pcmdSearch, SIGNAL (clicked()), this, SLOT (searchButtonClicked()));
-    connect(pcmdSend, SIGNAL (clicked()), this, SLOT (sendButtonClicked()));
+    connect(pcmdSend, SIGNAL (clicked()), this, SLOT (prepareTheGasAirMixtureButtonClicked()));
 	connect(pcmdStart, SIGNAL(clicked()), this, SLOT(startButtonClicked()));
 }
 /************************************CREATE VIEW LAYOUT************************************/
@@ -105,34 +99,32 @@ void MainWindow::searchButtonClicked() {
 	pcmbListOfPorts->show();
 	connect(pcmbListOfPorts, QOverload<const QString &>::of(&QComboBox::activated),
 		[=](const QString &text) {
-			if (setupcontroller->serialPortInitialization(text)) {
+			if (controller->serialPortInitialization(text)) {
 				pcmdSearch->setText("Connected");
 				pcmdSearch->setCheckable(false);
 				pcmbListOfPorts->hide();
 				pcmbListOfPorts->clear();
-				setupcontroller->cleaningAirSystem();
+				controller->cleaningAirSystem();
 			}
 	});
 }
 
-void MainWindow::sendButtonClicked() {
-	setupcontroller->clearBuffer();
+void MainWindow::prepareTheGasAirMixtureButtonClicked() {
 	for (auto iterate = 0; iterate < NumValves * NumGridRows; ++iterate) {
 		if (0 == (iterate % 2)) {
 			static auto posValue = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
-			setupcontroller->setStartValue(stTimes.toDouble(), posValue++);
+			controller->setStartValue(stTimes.toDouble(), posValue++);
 		}
 		if (0 != (iterate % 2)) {
 			static auto posTimes = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
-			setupcontroller->setTimes(stTimes.toInt(), posTimes++);
+			controller->setTimes(stTimes.toInt(), posTimes++);
 		}
 	}
-	setupcontroller->calculateData();
-	setupcontroller->sendCommand();
+	controller->prepareTheGasAirMixture();
 }
 
 void MainWindow::startButtonClicked() {
-
+	controller->startUpTheGasAirMixture();
 }

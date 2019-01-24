@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "common.h"
 
 class QGroupBox;
@@ -9,14 +8,10 @@ class QPushButton;
 class QListWidget;
 class QLineEdit;
 class QVBoxLayout;
-class QSerialPort;
 
 class MainWindow : public QWidget {
     Q_OBJECT    
-	OdoratorModel *odoratorModel = nullptr;
-	QSerialPort *pSerialPort = nullptr;
-	SetUpController *setupcontroller = nullptr;
-	StartController *startcontroller = nullptr;
+	Controller *controller = nullptr;
 
     // widgets:
 	QLineEdit *ptxtConcentration[NumGridRows * NumValves] = {};
@@ -32,13 +27,12 @@ class MainWindow : public QWidget {
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
 
-
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 	
 private slots:
-	void sendButtonClicked();
 	void searchButtonClicked();
+	void prepareTheGasAirMixtureButtonClicked();
 	void startButtonClicked();
 };

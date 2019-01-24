@@ -14,4 +14,5 @@ add_executable(${TARGET_NAME} mainwindowtests.cpp)
 
 target_link_libraries(${TARGET_NAME} GTest::GTest GTest::Main Threads::Threads)
 
-add_test(NAME runAllUnitTests COMMAND ${TARGET_NAME})
+add_test(AllTestsInMain ${TARGET_NAME})
+#add_test(NAME runAllUnitTests COMMAND ${TARGET_NAME})

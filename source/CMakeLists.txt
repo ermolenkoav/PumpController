@@ -20,8 +20,7 @@ find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
 list(APPEND SOURCE_FILES
 	main.cpp
 	mainwindow.cpp
-	setupcontroller.cpp
-	startcontroller.cpp
+	controller.cpp
 	model.cpp
 	resources/resources.qrc
 )
@@ -29,8 +28,7 @@ list(APPEND SOURCE_FILES
 list(APPEND HEADER_FILES
 	pch.h
 	mainwindow.h
-	setupcontroller.h 
-	startcontroller.h
+	controller.h 
 	model.h
 )
 
