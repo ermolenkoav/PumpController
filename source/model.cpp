@@ -10,6 +10,7 @@ void OdoratorModel::cleaningAirSystem() {
 
 void OdoratorModel::calculatePrepareTheGasAirMixture() {
 	sendCommandData.clear();
+	// fail
 	for (auto it = 0; it < NumValves; it++) {
 		if (0 == startValue[it]) {
 			continue;
@@ -46,6 +47,10 @@ int OdoratorModel::calculateValue(const double _initialValue, int _startVolume =
 
 void OdoratorModel::setStartValue(const double _value, const int _iter) {
 	startValue[_iter] = _value;
+}
+
+double OdoratorModel::getStartValue(int index) const {
+	return startValue[index];
 }
 
 void OdoratorModel::setTimes(const int _times, const int _iter) {

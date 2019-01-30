@@ -16,6 +16,7 @@ public:
 	void randomGasAirSequence();
 
 	void setStartValue(const double, const int);
+	double getStartValue(int index) const;
 	void setTimes(const int, const int);
 	void cleaningAirSystem();
 };

@@ -2,9 +2,11 @@
 #include "common.h"
 
 class OdoratorModel;
+class Settings;
 class Controller {
 	QSerialPort *pSerialPort = nullptr;
 	OdoratorModel *odoratorModel = nullptr;
+	Settings* settings = nullptr;
 
 	void sendCommand(int);
 public:	
@@ -19,5 +21,8 @@ public:
 
 	void setStartValue(const double, const int);
 	void setTimes(const int, const int);
+
+
+	void feedbackConnection();
 	
 };

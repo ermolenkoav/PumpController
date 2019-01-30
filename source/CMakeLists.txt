@@ -14,6 +14,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON) 
 
 find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
+find_package(cpprestsdk CONFIG REQUIRED)
 #-------------------------------------------------------------------------------
 #	SOURCE CODE
 #-------------------------------------------------------------------------------
@@ -22,6 +23,7 @@ list(APPEND SOURCE_FILES
 	mainwindow.cpp
 	controller.cpp
 	model.cpp
+	settings.cpp
 	resources/resources.qrc
 )
 
@@ -30,8 +32,17 @@ list(APPEND HEADER_FILES
 	mainwindow.h
 	controller.h 
 	model.h
+	settings.h
 )
 
+list(APPEND LIBRARIES
+	Qt5::Widgets 
+	Qt5::SerialPort
+	cpprestsdk::cpprest 
+	cpprestsdk::cpprestsdk_zlib_internal 
+	cpprestsdk::cpprestsdk_boost_internal 
+	cpprestsdk::cpprestsdk_openssl_internal
+)
 #-------------------------------------------------------------------------------
 #	GENERATE EXECUTABLE
 #-------------------------------------------------------------------------------
@@ -39,4 +50,4 @@ list(APPEND HEADER_FILES
 add_executable(${TARGET_NAME} ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES})
 
 # link libraries
-target_link_libraries(${TARGET_NAME} Qt5::Widgets Qt5::SerialPort)
+target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARIES})

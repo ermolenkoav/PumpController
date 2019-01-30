@@ -10,5 +10,6 @@ const double _finalValue = 1e-15;
 
 #include "controller.h"
 #include "model.h"
+#include "settings.h"
 
 

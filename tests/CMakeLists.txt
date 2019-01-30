@@ -4,7 +4,6 @@
 set(TARGET_NAME ${PROJECT_NAME}-tests)
 
 find_package(GTest MODULE REQUIRED)
-find_package(Threads REQUIRED)
 
 #-------------------------------------------------------------------------------
 #	GENERATE EXECUTABLE
@@ -12,7 +11,6 @@ find_package(Threads REQUIRED)
 
 add_executable(${TARGET_NAME} mainwindowtests.cpp)
 
-target_link_libraries(${TARGET_NAME} GTest::GTest GTest::Main Threads::Threads)
+target_link_libraries(${TARGET_NAME} PRIVATE GTest::GTest GTest::Main)
 
-add_test(AllTestsInMain ${TARGET_NAME})
-#add_test(NAME runAllUnitTests COMMAND ${TARGET_NAME})
+add_test(NAME runAllUnitTests COMMAND ${TARGET_NAME})

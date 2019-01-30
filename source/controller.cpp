@@ -7,6 +7,7 @@ Controller::~Controller() {
 
 Controller::Controller() {
 	odoratorModel = new OdoratorModel;
+	settings = new Settings(odoratorModel);
 	pSerialPort = new QSerialPort;
 }
 
@@ -28,18 +29,25 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 }
 
 void Controller::cleaningAirSystem() {
-	odoratorModel->cleaningAirSystem();
-	sendCommand(2);
+	//odoratorModel->cleaningAirSystem();
+	//sendCommand(2);
+	qDebug() << "Aerate is over";
 }
 
 void Controller::prepareTheGasAirMixture() {
 	odoratorModel->calculatePrepareTheGasAirMixture();
+	qDebug() << "calculatePrepareTheGasAirMixture() is over";
 	sendCommand(4);
+	settings->saveWorkspace();
+	qDebug() << "Set Up is over";
 }
 
 void Controller::startUpTheGasAirMixture() {
-	odoratorModel->randomGasAirSequence();
-	sendCommand(2);
+	for (auto i = 0; i < 5; i++) {
+		odoratorModel->randomGasAirSequence();
+		sendCommand(2);
+		std::this_thread::sleep_for(std::chrono::seconds(16));
+	}
 }
 
 void Controller::clearBuffer() {
@@ -52,18 +60,17 @@ void Controller::sendCommand(int length) {
 			break;
 		}
 		if (pSerialPort->isOpen()) {
-			QByteArray sentData;
-			sentData.reserve(8);
+			QByteArray sendBuffer;
+			sendBuffer.reserve(8);
 			for (auto jt = 0; jt < length; ++jt) {
-				sentData[jt] = odoratorModel->sendCommandData.front();
+				sendBuffer[jt] = odoratorModel->sendCommandData.front();
 				odoratorModel->sendCommandData.pop_front();
 			}
-			pSerialPort->write(sentData);
+			pSerialPort->write(sendBuffer);
 			pSerialPort->waitForBytesWritten(100);
 			std::this_thread::sleep_for(std::chrono::seconds(3));
 		}
 	}
-	qDebug() << "Set Up is over";
 }
 
 void Controller::setStartValue(const double _value, const int _iter) {
@@ -72,4 +79,10 @@ void Controller::setStartValue(const double _value, const int _iter) {
 
 void Controller::setTimes(const int _times, const int _iter) {
 	odoratorModel->setTimes(_times, _iter);
+}
+
+void Controller::feedbackConnection() {
+	pSerialPort->waitForReadyRead(50);
+	auto readBuffer = pSerialPort->readAll();
+	qDebug() << readBuffer;
 }
