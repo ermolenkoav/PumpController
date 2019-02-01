@@ -45,12 +45,16 @@ int OdoratorModel::calculateValue(const double _initialValue, int _startVolume =
 	return static_cast<int>(log(_initialValue / _finalValue) / log(_vesselVolume / _startVolume));
 }
 
-void OdoratorModel::setStartValue(const double _value, const int _iter) {
+void OdoratorModel::setValue(const double _value, const int _iter) {
 	startValue[_iter] = _value;
 }
 
-double OdoratorModel::getStartValue(int index) const {
+double OdoratorModel::getValue(int index) const {
 	return startValue[index];
+}
+
+int OdoratorModel::getTimes(int index) const {
+	return startTimes[index];
 }
 
 void OdoratorModel::setTimes(const int _times, const int _iter) {

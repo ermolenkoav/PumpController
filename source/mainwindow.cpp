@@ -10,12 +10,26 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	resize(300, 120);
 	controller = new Controller;
 	createMainWindowLayout();
+	loadValveValues();
 
     // Signals:
-	connect(pcmdSearch, SIGNAL (clicked()), this, SLOT (searchButtonClicked()));
-    connect(pcmdSend, SIGNAL (clicked()), this, SLOT (prepareTheGasAirMixtureButtonClicked()));
-	connect(pcmdStart, SIGNAL(clicked()), this, SLOT(startButtonClicked()));
+	connect(pcmdSearch,	SIGNAL(clicked()), this, SLOT(searchButtonClicked()));
+    connect(pcmdSend,	SIGNAL(clicked()), this, SLOT(prepareTheGasAirMixtureButtonClicked()));
+	connect(pcmdStart,	SIGNAL(clicked()), this, SLOT(startButtonClicked()));
 }
+
+/************************************LOAD LAST SETTINGS************************************/
+void MainWindow::loadValveValues() {
+	for (auto iterate = 0, posValue = 0, posTimes = 0; iterate < NumValves * NumGridRows; ++iterate) {
+		if (0 == (iterate % 2)) {
+			ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(posValue)));
+		}
+		if (0 != (iterate % 2)) {
+			ptxtConcentration[iterate]->setText(QString::number(controller->getStartTimes(posTimes)));
+		}
+	}
+}
+
 /************************************CREATE VIEW LAYOUT************************************/
 void MainWindow::createMainWindowLayout() {
 	mainLayout = new QVBoxLayout(this);

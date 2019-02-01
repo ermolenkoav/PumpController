@@ -23,6 +23,7 @@ class MainWindow : public QWidget {
 
     // methods:
 	void createMainWindowLayout();
+	void loadValveValues();
 	QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
@@ -30,7 +31,7 @@ class MainWindow : public QWidget {
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-	
+
 private slots:
 	void searchButtonClicked();
 	void prepareTheGasAirMixtureButtonClicked();

@@ -1,12 +1,14 @@
 #pragma once
 #include "pch.h"
 
-const int NumValves = 6;
-const int NumGridColumns = 2;
-const int NumGridRows = 2;
+const auto NumValves = 6;
+const auto NumGridColumns = 2;
+const auto NumGridRows = 2;
 
-const double _vesselVolume = 160;
-const double _finalValue = 1e-15;
+const auto _vesselVolume = 160;
+const auto _finalValue = 1e-15;
+
+const auto fileName = L"settings.json";
 
 #include "controller.h"
 #include "model.h"
