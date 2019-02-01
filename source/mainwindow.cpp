@@ -110,14 +110,12 @@ void MainWindow::searchButtonClicked() {
 }
 
 void MainWindow::prepareTheGasAirMixtureButtonClicked() {
-	for (auto iterate = 0; iterate < NumValves * NumGridRows; ++iterate) {
+	for (auto iterate = 0, posValue = 0, posTimes = 0; iterate < NumValves * NumGridRows; ++iterate) {
 		if (0 == (iterate % 2)) {
-			static auto posValue = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
 			controller->setStartValue(stTimes.toDouble(), posValue++);
 		}
 		if (0 != (iterate % 2)) {
-			static auto posTimes = 0;
 			auto stTimes = ptxtConcentration[iterate]->text();
 			controller->setTimes(stTimes.toInt(), posTimes++);
 		}

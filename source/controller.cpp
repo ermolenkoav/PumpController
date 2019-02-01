@@ -31,19 +31,17 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 void Controller::cleaningAirSystem() {
 	//odoratorModel->cleaningAirSystem();
 	//sendCommand(2);
-	qDebug() << "Aerate is over";
 }
 
 void Controller::prepareTheGasAirMixture() {
 	odoratorModel->calculatePrepareTheGasAirMixture();
-	qDebug() << "calculatePrepareTheGasAirMixture() is over";
 	sendCommand(4);
 	settings->saveWorkspace();
-	qDebug() << "Set Up is over";
 }
 
 void Controller::startUpTheGasAirMixture() {
-	for (auto i = 0; i < 5; i++) {
+	// full piece of shit
+	for (auto i = 0; i < NumValves; i++) {
 		odoratorModel->randomGasAirSequence();
 		sendCommand(2);
 		std::this_thread::sleep_for(std::chrono::seconds(16));

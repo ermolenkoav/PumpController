@@ -1,6 +1,6 @@
 #include "settings.h"
 #include "cpprest/json.h"
- 
+// https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON
 Settings::Settings(OdoratorModel* _odoratorModel) {
 	odoratorModel = _odoratorModel;
 }
