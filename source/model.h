@@ -2,8 +2,8 @@
 #include "common.h"
 
 class OdoratorModel {
-	double startValue[NumValves] = {};
-	int startTimes[NumValves] = {1,1,1,1,1,1};
+	double startValue[NumValves];
+	int startTimes[NumValves];
 
 	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
 
@@ -15,7 +15,9 @@ public:
 	// control commands:
 	void calculatePrepareTheGasAirMixture();
 	void randomGasAirSequence();
+	void sequenceGasAirSequence();
 	void cleaningAirSystem();
+	void checkStatus();
 
 	void setValue(const double, const int);
 	double getValue(int index) const;

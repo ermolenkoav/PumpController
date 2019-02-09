@@ -10,7 +10,6 @@ void OdoratorModel::cleaningAirSystem() {
 
 void OdoratorModel::calculatePrepareTheGasAirMixture() {
 	sendCommandData.clear();
-	// fail
 	for (auto it = 0; it < NumValves; it++) {
 		if (0 == startValue[it]) {
 			continue;
@@ -20,10 +19,17 @@ void OdoratorModel::calculatePrepareTheGasAirMixture() {
 		sendCommandData.push_back('2');
 		auto aChar = '0';
 		auto times = calculateValue(startValue[it], 20);
-		if (9 >= times) {
+		if (9 <= times) {
 			times = 9;
 		}
 		sendCommandData.push_back(aChar + times);
+	}
+}
+
+void OdoratorModel::checkStatus() {
+	while (!sendCommandData.empty()) {
+		sendCommandData.push_back(cartridgeName[5]);
+		sendCommandData.push_back('Y');
 	}
 }
 
@@ -37,6 +43,18 @@ void OdoratorModel::randomGasAirSequence() {
 			continue;
 		}
 		sendCommandData.push_back(cartridgeName[sequence[it]]);
+		sendCommandData.push_back('S');
+	}
+}
+
+void OdoratorModel::sequenceGasAirSequence() {
+	sendCommandData.clear();
+
+	for (auto it = 0; it < NumValves; it++) {
+		if (0 == startValue[it]) {
+			continue;
+		}
+		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('S');
 	}
 }

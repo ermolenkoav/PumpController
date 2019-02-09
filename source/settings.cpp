@@ -1,5 +1,4 @@
 #include "settings.h"
-#include "cpprest/json.h" // https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON
 
 using namespace web;
 
@@ -9,24 +8,39 @@ Settings::Settings(OdoratorModel* _odoratorModel) {
 }
 
 void Settings::saveWorkspace() {
-	std::wofstream settingFile(fileName);
-	auto putvalue = json::value::object();
+	std::wofstream settingFile(settingsFile);
+	if (settingFile.is_open()) {
+		auto putValue = json::value::object();
 
-	for (auto it = 0; it < NumValves; it++) {
-		putvalue[L"Valves values"] = json::value(odoratorModel->getValue(it));
-		settingFile << putvalue.serialize().c_str() << std::endl;
+		for (auto it = 0; it < NumValves; it++) {
+			putValue[L"Valves values"] = json::value(odoratorModel->getValue(it));
+			settingFile << putValue.serialize().c_str() << std::endl;
+		}
 	}
 }
 
 void Settings::loadWorkspace() {
-	std::wifstream settingFile(fileName);
-	auto getValue = json::value::object();
+	std::wifstream settingFile(settingsFile);
+	std::wstringstream sstr;
+
+	if (settingFile.is_open()) {
+		sstr << settingFile.rdbuf();
+		
+		//auto getValue = json::value::parse(sstr);
+
+		//settingFile.close();
+		//qDebug << sstr.str();
+	}  
 
 	for (auto it = 0; it < NumValves; it++) {
-
+		odoratorModel->setValue(1e-10, it);
+	}
+	 
+	for (auto it = 0; it < NumValves; it++) {
+		odoratorModel->setTimes(1, it);
 	}
 }
 
 void Settings::saveCurrentData() {
-
+	std::wifstream settingFile(logFile);
 }

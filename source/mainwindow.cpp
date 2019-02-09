@@ -13,9 +13,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	loadValveValues();
 
     // Signals:
-	connect(pcmdSearch,	SIGNAL(clicked()), this, SLOT(searchButtonClicked()));
-    connect(pcmdSend,	SIGNAL(clicked()), this, SLOT(prepareTheGasAirMixtureButtonClicked()));
-	connect(pcmdStart,	SIGNAL(clicked()), this, SLOT(startButtonClicked()));
+	connect(pcmdSearch,			SIGNAL(clicked()), this, SLOT(searchButtonClicked()));
+    connect(pcmdSend,			SIGNAL(clicked()), this, SLOT(prepareTheGasAirMixtureButtonClicked()));
+	connect(pcmdShuffleStart,	SIGNAL(clicked()), this, SLOT(shuffleStartButtonClicked()));
+	connect(pcmdSequenceStart,	SIGNAL(clicked()), this, SLOT(sequenceStartButtonClicked()));
 }
 
 /************************************LOAD LAST SETTINGS************************************/
@@ -97,12 +98,16 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	plneSequence = new QLineEdit(this);
 	ploExecuteLayout->addWidget(plneSequence);
 
-	pcmdStart = new QPushButton("Start", this);
-	ploExecuteLayout->addWidget(pcmdStart);
+	pcmdShuffleStart = new QPushButton("Shuffle Start", this);
+	ploExecuteLayout->addWidget(pcmdShuffleStart);
+
+	pcmdSequenceStart = new QPushButton("Sequence Start", this);
+	ploExecuteLayout->addWidget(pcmdSequenceStart);
 
 	pgbExecuteLayout->setLayout(ploExecuteLayout);
 	return pgbExecuteLayout;
 }
+
 /********************************RESPOND EVENTS AND SIGNALS********************************/
 void MainWindow::searchButtonClicked() {
  	auto pcmbListOfPorts = new QComboBox(pcmdSearch);
@@ -118,6 +123,7 @@ void MainWindow::searchButtonClicked() {
 				pcmdSearch->setCheckable(false);
 				pcmbListOfPorts->hide();
 				pcmbListOfPorts->clear();
+				std::this_thread::sleep_for(std::chrono::seconds(3));
 				controller->cleaningAirSystem();
 			}
 	});
@@ -137,6 +143,10 @@ void MainWindow::prepareTheGasAirMixtureButtonClicked() {
 	controller->prepareTheGasAirMixture();
 }
 
-void MainWindow::startButtonClicked() {
-	controller->startUpTheGasAirMixture();
+void MainWindow::shuffleStartButtonClicked() {
+	controller->startUpShuffleGasAirMixture();
+}
+
+void MainWindow::sequenceStartButtonClicked() {
+	controller->startUpSequenceGasAirMixture();
 }

@@ -18,7 +18,8 @@ class MainWindow : public QWidget {
 	QVBoxLayout *mainLayout = nullptr;
 	QPushButton *pcmdSearch = nullptr;
 	QPushButton *pcmdSend = nullptr;
-	QPushButton *pcmdStart = nullptr;
+	QPushButton *pcmdShuffleStart = nullptr;
+	QPushButton* pcmdSequenceStart = nullptr;
 	QLineEdit *plneSequence = nullptr;
 
     // methods:
@@ -35,5 +36,6 @@ public:
 private slots:
 	void searchButtonClicked();
 	void prepareTheGasAirMixtureButtonClicked();
-	void startButtonClicked();
+	void shuffleStartButtonClicked();
+	void sequenceStartButtonClicked();
 };

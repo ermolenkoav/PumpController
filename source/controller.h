@@ -16,7 +16,8 @@ public:
 
 	bool serialPortInitialization(QString);
 	void prepareTheGasAirMixture();
-	void startUpTheGasAirMixture();
+	void startUpShuffleGasAirMixture();
+	void startUpSequenceGasAirMixture();
 	void cleaningAirSystem();
 	void clearBuffer();
 
@@ -26,6 +27,6 @@ public:
 	double getStartValue(int);
 	int getStartTimes(int);
 
-	void feedbackConnection();
+	bool isReady();
 	
 };

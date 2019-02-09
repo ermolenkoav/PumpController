@@ -3,13 +3,15 @@
 Controller::~Controller() {
 	pSerialPort->close();
 	delete odoratorModel;
+	delete settings;
+	delete pSerialPort;
 }
 
 Controller::Controller() {
 	odoratorModel = new OdoratorModel;
 	settings = new Settings(odoratorModel);
 	pSerialPort = new QSerialPort;
-	loadValveValues();
+	loadValveValues ();
 }
 
 void Controller::loadValveValues() {
@@ -41,8 +43,8 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 }
 
 void Controller::cleaningAirSystem() {
-	//odoratorModel->cleaningAirSystem();
-	//sendCommand(2);
+	odoratorModel->cleaningAirSystem();
+	sendCommand(2);
 }
 
 void Controller::prepareTheGasAirMixture() {
@@ -51,12 +53,29 @@ void Controller::prepareTheGasAirMixture() {
 	settings->saveWorkspace();
 }
 
-void Controller::startUpTheGasAirMixture() {
+void Controller::startUpShuffleGasAirMixture() {
 	// full piece of shit
-	for (auto i = 0; i < NumValves; i++) {
-		odoratorModel->randomGasAirSequence();
-		sendCommand(2);
-		std::this_thread::sleep_for(std::chrono::seconds(16));
+	//if (isReady()) 
+	{
+		for (auto i = 0; i < NumValves; i++) {
+			odoratorModel->randomGasAirSequence();
+			sendCommand(2);
+			std::this_thread::sleep_for(std::chrono::seconds(30));
+		}
+		settings->saveCurrentData();
+	}
+}
+
+void Controller::startUpSequenceGasAirMixture() {
+	// full piece of shit
+	//if (isReady()) 
+	{
+		for (auto i = 0; i < NumValves; i++) {
+			odoratorModel->sequenceGasAirSequence();
+			sendCommand(2);
+			std::this_thread::sleep_for(std::chrono::seconds(30));
+		}
+		settings->saveCurrentData();
 	}
 }
 
@@ -78,7 +97,7 @@ void Controller::sendCommand(int length) {
 			}
 			pSerialPort->write(sendBuffer);
 			pSerialPort->waitForBytesWritten(100);
-			std::this_thread::sleep_for(std::chrono::seconds(3));
+			std::this_thread::sleep_for(std::chrono::seconds(7));
 		}
 	}
 }
@@ -91,8 +110,16 @@ void Controller::setTimes(const int _times, const int _iter) {
 	odoratorModel->setTimes(_times, _iter);
 }
 
-void Controller::feedbackConnection() {
+bool Controller::isReady() {
+	auto isReady = true;
 	pSerialPort->waitForReadyRead(50);
 	auto readBuffer = pSerialPort->readAll();
 	qDebug() << readBuffer;
+
+	if (isReady) {
+		return true;
+	} 
+	else {
+		return false;
+	}
 }
