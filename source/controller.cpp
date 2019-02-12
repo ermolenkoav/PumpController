@@ -43,8 +43,10 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 }
 
 void Controller::cleaningAirSystem() {
+#ifdef NDEBUG
 	odoratorModel->cleaningAirSystem();
 	sendCommand(2);
+#endif//NDEBUG
 }
 
 void Controller::prepareTheGasAirMixture() {

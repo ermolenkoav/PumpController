@@ -1,46 +1,41 @@
 #include "settings.h"
-
 using namespace web;
-
 
 Settings::Settings(OdoratorModel* _odoratorModel) {
 	odoratorModel = _odoratorModel;
 }
 
 void Settings::saveWorkspace() {
-	std::wofstream settingFile(settingsFile);
-	if (settingFile.is_open()) {
-		auto putValue = json::value::object();
-
+	if (std::wofstream settingFile(settingsFileName); settingFile.is_open()) {
+		json::value putValue;
 		for (auto it = 0; it < NumValves; it++) {
-			putValue[L"Valves values"] = json::value(odoratorModel->getValue(it));
-			settingFile << putValue.serialize().c_str() << std::endl;
+			std::wstring valveIndex = std::to_wstring(it);
+			putValue[valveIndex] = json::value(odoratorModel->getValue(it));
 		}
+		settingFile << putValue.serialize().c_str();
 	}
 }
 
 void Settings::loadWorkspace() {
-	std::wifstream settingFile(settingsFile);
-	std::wstringstream sstr;
+	if (std::wifstream settingFile(settingsFileName); settingFile.is_open()) {
 
-	if (settingFile.is_open()) {
+		std::wstringstream sstr;
 		sstr << settingFile.rdbuf();
 		
-		//auto getValue = json::value::parse(sstr);
+		auto json = json::value::parse(sstr);
 
-		//settingFile.close();
-		//qDebug << sstr.str();
+		for (auto iter = json.as_object().cbegin(); iter != json.as_object().cend(); ++iter) {
+			auto k = iter->first;
+			auto v = iter->second;
+			static auto it = 0;
+			odoratorModel->setValue(v.as_double(), it++);
+
+			qDebug() << k << "=" << v.as_double();
+		}
+		settingFile.close();
 	}  
-
-	for (auto it = 0; it < NumValves; it++) {
-		odoratorModel->setValue(1e-10, it);
-	}
-	 
-	for (auto it = 0; it < NumValves; it++) {
-		odoratorModel->setTimes(1, it);
-	}
 }
 
 void Settings::saveCurrentData() {
-	std::wifstream settingFile(logFile);
+	if(std::wifstream settingFile(logFileName); settingFile.is_open()) {}
 }

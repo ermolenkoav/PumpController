@@ -2,8 +2,8 @@
 #include "common.h"
 
 class OdoratorModel {
-	double startValue[NumValves];
-	int startTimes[NumValves];
+	double startValue[NumValves] = { 0 };
+	int startTimes[NumValves] = { 0 };
 
 	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
 

@@ -23,10 +23,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 void MainWindow::loadValveValues() {
 	for (auto iterate = 0, posValue = 0, posTimes = 0; iterate < NumValves * NumGridRows; ++iterate) {
 		if (0 == (iterate % 2)) {
-			ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(posValue)));
+			ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(posValue++)));
 		}
 		if (0 != (iterate % 2)) {
-			ptxtConcentration[iterate]->setText(QString::number(controller->getStartTimes(posTimes)));
+			ptxtConcentration[iterate]->setText(QString::number(controller->getStartTimes(posTimes++)));
 		}
 	}
 }
