@@ -13,8 +13,5 @@ public:
 
 	void saveWorkspace();
 	void loadWorkspace();
-
-	
-	
 	void saveCurrentData();
 };

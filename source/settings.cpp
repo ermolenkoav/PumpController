@@ -5,12 +5,12 @@ Settings::Settings(OdoratorModel* _odoratorModel) {
 	odoratorModel = _odoratorModel;
 }
 
-auto strConcentration = L"Consentration";
-auto strTimes = L"Times";
-auto strExecuteSequence = L"Execute sequence";
-auto strGeometry = L"Geometry";
-auto strComPort = L"Com Port";
-auto strSettings = L"Settings";
+static auto strConcentration = L"Consentration";
+static auto strTimes = L"Times";
+static auto strExecuteSequence = L"Execute sequence";
+static auto strGeometry = L"Geometry";
+static auto strComPort = L"Com Port";
+static auto strSettings = L"Settings";
 
 void Settings::saveWorkspace() {
 	if (std::wofstream settingFile(settingsFileName); settingFile.is_open()) {
@@ -32,13 +32,8 @@ void Settings::loadWorkspace() {
 	if (std::wifstream settingFile(settingsFileName); settingFile.is_open()) {
 		std::wstringstream sstr;
 		sstr << settingFile.rdbuf();
-		auto jSettings = json::value::parse(sstr);
-		
-		qDebug() << endl << DisplayJSONValue(jSettings);
-		qDebug() << loadJSONValue(jSettings) << endl;
-
-		settingFile.close();
-	}  
+		loadJSONValue(json::value::parse(sstr));
+	}
 }
 
 std::wstring Settings::loadJSONValue(web::json::value v) {
@@ -46,13 +41,10 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 	try {
 		if (!v.is_null()) {
 			if (v.is_object()) {
-				// Loop over each element in the object
 				for (auto iter = v.as_object().cbegin(); iter != v.as_object().cend(); ++iter) {
-					// It is necessary to make sure that you get the value as const reference
-					// in order to avoid copying the whole JSON value recursively (too expensive for nested objects)
-					const utility::string_t& str = iter->first;
-					const web::json::value& value = iter->second;
-					static utility::string_t parentName;
+					const auto& str = iter->first;
+					const auto& value = iter->second;
+					static auto parentName = iter->first;
 
 					if (value.is_object() || value.is_array()) {
 						parentName = str;
@@ -69,7 +61,6 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 				}
 			}
 			else if (v.is_array()) {
-				// Loop over each element in the array
 				for (size_t index = 0; index < v.as_array().size(); ++index) {
 					const web::json::value& value = v.as_array().at(index);
 					ss << loadJSONValue(value);
@@ -107,21 +98,21 @@ std::wstring Settings::DisplayJSONValue(web::json::value v) {
 					}
 				}
 			}
-			else if (v.is_array()){
+			else if (v.is_array()) {
 				// Loop over each element in the array
-				for (size_t index = 0; index < v.as_array().size(); ++index){
+				for (size_t index = 0; index < v.as_array().size(); ++index) {
 					const web::json::value& value = v.as_array().at(index);
 
 					ss << "Array: " << index << std::endl;
 					ss << DisplayJSONValue(value);
 				}
 			}
-			else{
+			else {
 				ss << "Value: " << v.serialize() << std::endl;
 			}
 		}
 	}
-	catch (const std::exception & e){
+	catch (const std::exception & e) {
 		qDebug() << endl << e.what() << endl;
 		ss << "Value: " << v.serialize() << std::endl;
 	}

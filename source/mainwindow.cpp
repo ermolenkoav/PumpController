@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowTitle("Odorizer");
 	resize(300, 120);
 	controller = new Controller;
+	
 	createMainWindowLayout();
 	loadValveValues();
 
