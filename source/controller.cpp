@@ -7,9 +7,10 @@ Controller::~Controller() {
 	delete pSerialPort;
 }
 
-Controller::Controller() {
+Controller::Controller(MainWindow* _odoratorView) {
+	odoratorView = _odoratorView;
 	odoratorModel = new OdoratorModel;
-	settings = new Settings(odoratorModel);
+	settings = new Settings(odoratorModel, odoratorView);
 	pSerialPort = new QSerialPort;
 	loadValveValues ();
 }

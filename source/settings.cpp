@@ -1,8 +1,10 @@
 #include "settings.h"
+
 using namespace web;
 
-Settings::Settings(OdoratorModel* _odoratorModel) {
+Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
 	odoratorModel = _odoratorModel;
+	odoratorView = _odoratorView;
 }
 
 static auto strConcentration = L"Consentration";
@@ -15,14 +17,19 @@ static auto strSettings = L"Settings";
 void Settings::saveWorkspace() {
 	if (std::wofstream settingFile(settingsFileName); settingFile.is_open()) {
 		json::value concentration, times, geometry, executeSequence, comPort, settings;
+		// Valves value:
 		for (auto it = 0; it < NumValves; it++) {
-			std::wstring valveIndex = std::to_wstring(it);
-			concentration[strConcentration][valveIndex] = json::value(odoratorModel->getValue(it));
-			times[strTimes][valveIndex] = json::value(odoratorModel->getTimes(it));
+			concentration[strConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
+			times[strTimes][std::to_wstring(it)] = json::value(odoratorModel->getTimes(it));
 		}
-		executeSequence[strExecuteSequence] = json::value(0);
-		geometry[strGeometry] = json::value(0);
+		// Window geometry:
+		auto windowPos = odoratorView->getWindowPos();
+		geometry[strGeometry][L"0"] = json::value(windowPos.first);
+		geometry[strGeometry][L"1"] = json::value(windowPos.second);
+		// Last com port:
 		comPort[strComPort] = json::value::string(L"COM3");
+		executeSequence[strExecuteSequence] = json::value(0);
+		
 		settings[strSettings] = json::value::array({ concentration, times, executeSequence, geometry, comPort });
 		settingFile << settings.serialize().c_str();
 	}
@@ -34,6 +41,7 @@ void Settings::loadWorkspace() {
 		sstr << settingFile.rdbuf();
 		loadJSONValue(json::value::parse(sstr));
 	}
+	odoratorView->setWindowPos(windowPos);
 }
 
 std::wstring Settings::loadJSONValue(web::json::value v) {
@@ -56,6 +64,15 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 						}
 						if (!parentName.compare(strTimes)) {
 							odoratorModel->setTimes(value.as_integer(), std::stoi(str));
+						}
+						if (!parentName.compare(strGeometry)) {
+							windowPos[std::stoi(str)] = value.as_integer();
+						}
+						if (!parentName.compare(strComPort)) {
+							// To Do:
+						}
+						if (!parentName.compare(strExecuteSequence)) {
+							// To Do:
 						}
 					}
 				}

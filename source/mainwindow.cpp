@@ -8,10 +8,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowIcon(QIcon(":logo.ico"));
 	setWindowTitle("Odorizer");
 	resize(300, 120);
-	controller = new Controller;
-	
 	createMainWindowLayout();
-	loadValveValues();
+	controller = new Controller(this);
+	loadSettings();
+
 
     // Signals:
 	connect(pcmdSearch,			SIGNAL(clicked()), this, SLOT(searchButtonClicked()));
@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 }
 
 /************************************LOAD LAST SETTINGS************************************/
-void MainWindow::loadValveValues() {
+void MainWindow::loadSettings() {
 	for (auto iterate = 0, posValue = 0, posTimes = 0; iterate < NumValves * NumGridRows; ++iterate) {
 		if (0 == (iterate % 2)) {
 			ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(posValue++)));
@@ -30,6 +30,16 @@ void MainWindow::loadValveValues() {
 			ptxtConcentration[iterate]->setText(QString::number(controller->getStartTimes(posTimes++)));
 		}
 	}
+}
+
+std::pair<int, int> MainWindow::getWindowPos() {
+	auto windowPosPoint = pos();
+	std::pair<int, int> winPos(windowPosPoint.x(), windowPosPoint.y());
+	return winPos;
+}
+
+void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
+	move(windowPos[0], windowPos[1]);
 }
 
 /************************************CREATE VIEW LAYOUT************************************/

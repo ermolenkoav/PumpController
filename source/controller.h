@@ -3,15 +3,18 @@
 
 class OdoratorModel;
 class Settings;
+class MainWindow;
+
 class Controller {
 	QSerialPort *pSerialPort = nullptr;
 	OdoratorModel *odoratorModel = nullptr;
 	Settings* settings = nullptr;
+	MainWindow* odoratorView = nullptr;
 
 	void sendCommand(int);
 	void loadValveValues();
 public:	
-	Controller();
+	Controller(MainWindow* _odoratorView);
 	~Controller();
 
 	bool serialPortInitialization(QString);

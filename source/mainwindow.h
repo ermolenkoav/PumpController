@@ -8,6 +8,7 @@ class QPushButton;
 class QListWidget;
 class QLineEdit;
 class QVBoxLayout;
+class Controller;
 
 class MainWindow : public QWidget {
     Q_OBJECT    
@@ -24,14 +25,19 @@ class MainWindow : public QWidget {
 
     // methods:
 	void createMainWindowLayout();
-	void loadValveValues();
+	void loadSettings();
 	QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
 
+	
+
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+	std::pair<int, int> getWindowPos();
+	void setWindowPos(std::array<int, 2> windowPos);
 
 private slots:
 	void searchButtonClicked();

@@ -11,6 +11,7 @@ const auto _finalValue		= 1e-15;
 const auto settingsFileName	= L"settings.json";
 const auto logFileName		= L"logs.json";
 
+#include "mainwindow.h"
 #include "controller.h"
 #include "model.h"
 #include "settings.h"
