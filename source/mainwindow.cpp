@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "version.h"
 
 MainWindow::~MainWindow() {
 	delete controller;
@@ -6,8 +7,8 @@ MainWindow::~MainWindow() {
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowIcon(QIcon(":logo.ico"));
-	setWindowTitle("Odorizer");
-	resize(300, 120);
+	setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
+	setWindowTitle(APPLICATION_NAME);
 	createMainWindowLayout();
 	controller = new Controller(this);
 	loadSettings();
@@ -40,6 +41,38 @@ std::pair<int, int> MainWindow::getWindowPos() {
 
 void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
 	move(windowPos[0], windowPos[1]);
+}
+
+std::wstring MainWindow::getComPortName() {
+	return comPortName;
+}
+
+void MainWindow::setComPortName(std::wstring &_comPortName) {
+	comPortName = _comPortName;
+}
+
+void MainWindow::autoConnectToComPort(const QString& text) {
+	if (!comPortName.empty()) {
+		connectEvent(text);
+	}
+}
+
+void MainWindow::connectEvent(const QString& text) {
+	if (controller->serialPortInitialization(text)) {
+		comPortName = text.toStdWString();
+		pcmdSearch->setText("Connected");
+		pcmdSearch->setCheckable(false);
+		std::this_thread::sleep_for(std::chrono::seconds(3));
+		controller->cleaningAirSystem();
+	}
+}
+
+void MainWindow::setExecuteSequence(std::wstring &text) {
+	plneSequence->insert(QString::fromStdWString(text));
+}
+
+std::wstring MainWindow::getExecuteSequence() {
+	return plneSequence->text().toStdWString();
 }
 
 /************************************CREATE VIEW LAYOUT************************************/
@@ -129,14 +162,9 @@ void MainWindow::searchButtonClicked() {
 	pcmbListOfPorts->show();
 	connect(pcmbListOfPorts, QOverload<const QString &>::of(&QComboBox::activated),
 		[=](const QString &text) {
-			if (controller->serialPortInitialization(text)) {
-				pcmdSearch->setText("Connected");
-				pcmdSearch->setCheckable(false);
-				pcmbListOfPorts->hide();
-				pcmbListOfPorts->clear();
-				std::this_thread::sleep_for(std::chrono::seconds(3));
-				controller->cleaningAirSystem();
-			}
+			connectEvent(text);
+			pcmbListOfPorts->hide();
+			pcmbListOfPorts->clear();
 	});
 }
 

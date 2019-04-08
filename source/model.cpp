@@ -19,8 +19,8 @@ void OdoratorModel::calculatePrepareTheGasAirMixture() {
 		sendCommandData.push_back('2');
 		auto aChar = '0';
 		auto times = calculateValue(startValue[it], 20);
-		if (9 <= times) {
-			times = 9;
+		if (9 >= times) {
+			sendCommandData.push_back('0');
 		}
 		sendCommandData.push_back(aChar + times);
 	}
@@ -60,7 +60,7 @@ void OdoratorModel::sequenceGasAirSequence() {
 }
 
 int OdoratorModel::calculateValue(const double _initialValue, int _startVolume = 10) const {
-	return static_cast<int>(log(_initialValue / _finalValue) / log(_vesselVolume / _startVolume));
+	return static_cast<int>(std::round(log(_initialValue / _finalValue) / log(_vesselVolume / _startVolume)));
 }
 
 void OdoratorModel::setValue(const double _value, const int _iter) {

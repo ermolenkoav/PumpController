@@ -1,0 +1,7 @@
+#pragma once
+
+#define APPLICATION_NAME "Odorator"
+#define PACKAGE_VERSION  ""
+#define DEVELOPMENT_ORGANIZATION ""
+#define DEVELOPMENT_ORGANIZATION_DOMAIN ""
+#define DEVELOPER_CONTACT ""

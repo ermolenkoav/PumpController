@@ -26,11 +26,15 @@ class MainWindow : public QWidget {
     // methods:
 	void createMainWindowLayout();
 	void loadSettings();
+	void autoConnectToComPort(const QString& text);
+	void connectEvent(const QString& text);
+
 	QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
 
-	
+	// variables:
+	std::wstring comPortName;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
@@ -38,6 +42,14 @@ public:
 
 	std::pair<int, int> getWindowPos();
 	void setWindowPos(std::array<int, 2> windowPos);
+
+	std::wstring getComPortName();
+	void setComPortName(std::wstring& _comPortName);
+
+	void setExecuteSequence(std::wstring& text);
+	std::wstring getExecuteSequence();
+
+
 
 private slots:
 	void searchButtonClicked();

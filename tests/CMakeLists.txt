@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 #	CMAKE SETTINGS
 #-------------------------------------------------------------------------------
-set(TARGET_NAME ${PROJECT_NAME}-tests)
+set(TEST_TARGET_NAME ${PROJECT_NAME}-tests)
 
 find_package(GTest MODULE REQUIRED)
 
@@ -9,8 +9,8 @@ find_package(GTest MODULE REQUIRED)
 #	GENERATE EXECUTABLE
 #-------------------------------------------------------------------------------
 
-add_executable(${TARGET_NAME} mainwindowtests.cpp)
+add_executable(${TEST_TARGET_NAME} mainwindowtests.cpp)
 
-target_link_libraries(${TARGET_NAME} PRIVATE GTest::GTest GTest::Main)
+target_link_libraries(${TEST_TARGET_NAME} PRIVATE GTest::GTest GTest::Main)
 
-add_test(NAME runAllUnitTests COMMAND ${TARGET_NAME})
+add_test(NAME runAllUnitTests COMMAND ${TEST_TARGET_NAME})

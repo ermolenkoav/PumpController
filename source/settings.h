@@ -9,6 +9,7 @@ class Settings {
 	std::wstring loadJSONValue(web::json::value v);
 
 	std::array<int, 2> windowPos = {1600,170};
+	std::wstring comPortName;
 
 public:
 	Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView);

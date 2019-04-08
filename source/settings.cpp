@@ -27,9 +27,10 @@ void Settings::saveWorkspace() {
 		geometry[strGeometry][L"0"] = json::value(windowPos.first);
 		geometry[strGeometry][L"1"] = json::value(windowPos.second);
 		// Last com port:
-		comPort[strComPort] = json::value::string(L"COM3");
-		executeSequence[strExecuteSequence] = json::value(0);
-		
+		comPort[strComPort] = json::value::string(odoratorView->getComPortName());
+		// Execute sequence:
+		executeSequence[strExecuteSequence] = json::value(odoratorView->getExecuteSequence());
+		// Compile all application settings:
 		settings[strSettings] = json::value::array({ concentration, times, executeSequence, geometry, comPort });
 		settingFile << settings.serialize().c_str();
 	}
@@ -69,10 +70,10 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 							windowPos[std::stoi(str)] = value.as_integer();
 						}
 						if (!parentName.compare(strComPort)) {
-							// To Do:
+							odoratorView->setComPortName(value.to_string());
 						}
 						if (!parentName.compare(strExecuteSequence)) {
-							// To Do:
+							odoratorView->setExecuteSequence(value.to_string());
 						}
 					}
 				}
