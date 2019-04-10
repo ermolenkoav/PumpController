@@ -6,7 +6,7 @@ MainWindow::~MainWindow() {
 } 
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
-	setWindowIcon(QIcon(":logo.ico"));
+	setWindowIcon(QIcon(":APPLICATION_LOGO"));
 	setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	setWindowTitle(APPLICATION_NAME);
 	createMainWindowLayout();
