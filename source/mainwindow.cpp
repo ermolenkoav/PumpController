@@ -3,6 +3,7 @@
 
 MainWindow::~MainWindow() {
 	delete controller;
+	qDebug() << "Delete Main Window.";
 } 
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
