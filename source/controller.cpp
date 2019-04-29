@@ -1,5 +1,9 @@
 #include "controller.h"
 
+#define AIR_GAS_DELAY 13
+#define SIXTH_COMMAND_LENGTH 5
+#define S_COMMAND_LENGTH 2
+
 Controller::~Controller() {
 	pSerialPort->close();
 	delete odoratorModel;
@@ -44,39 +48,44 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 }
 
 void Controller::cleaningAirSystem() {
-#ifdef NDEBUG
+#ifndef _DEBUG
 	odoratorModel->cleaningAirSystem();
 	sendCommand(2);
-#endif//NDEBUG
+#endif//_DEBUG
 }
 
 void Controller::prepareTheGasAirMixture() {
 	odoratorModel->calculatePrepareTheGasAirMixture();
-	sendCommand(4);
+	sendCommand(SIXTH_COMMAND_LENGTH, 6);
 	settings->saveWorkspace();
 }
 
-void Controller::startUpShuffleGasAirMixture() {
+void Controller::startUpShuffleAirMixture() {
 	// full piece of shit
 	//if (isReady()) 
 	{
-		for (auto i = 0; i < NumValves; i++) {
+		while (true)
+		{
 			odoratorModel->randomGasAirSequence();
-			sendCommand(2);
-			std::this_thread::sleep_for(std::chrono::seconds(30));
+			sendCommand(S_COMMAND_LENGTH, 1);
+			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
 		}
 		settings->saveCurrentData();
 	}
 }
 
-void Controller::startUpSequenceGasAirMixture() {
+void Controller::startUpSequenceAirMixture() {
 	// full piece of shit
 	//if (isReady()) 
 	{
-		for (auto i = 0; i < NumValves; i++) {
-			odoratorModel->sequenceGasAirSequence();
-			sendCommand(2);
-			std::this_thread::sleep_for(std::chrono::seconds(30));
+		odoratorModel->sequenceGasAirSequence();
+		while(true)
+		{
+			if (odoratorModel->isBufferClear()) {
+				odoratorModel->sequenceGasAirSequence();
+			}
+			sendCommand(S_COMMAND_LENGTH, 1);
+			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
 		}
 		settings->saveCurrentData();
 	}
@@ -86,21 +95,21 @@ void Controller::clearBuffer() {
 	odoratorModel->sendCommandData.clear();
 }
 
-void Controller::sendCommand(int length) {
-	for (auto it = 0; it < NumValves; ++it) {
+void Controller::sendCommand(int length, int times) {
+	for (auto it = 0; it < times; ++it) {
 		if (odoratorModel->sendCommandData.empty()) {
 			break;
 		}
 		if (pSerialPort->isOpen()) {
 			QByteArray sendBuffer;
-			sendBuffer.reserve(8);
+			sendBuffer.reserve(length);
 			for (auto jt = 0; jt < length; ++jt) {
 				sendBuffer[jt] = odoratorModel->sendCommandData.front();
 				odoratorModel->sendCommandData.pop_front();
 			}
 			pSerialPort->write(sendBuffer);
-			pSerialPort->waitForBytesWritten(100);
-			std::this_thread::sleep_for(std::chrono::seconds(7));
+			pSerialPort->waitForBytesWritten(50);
+			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 	}
 }

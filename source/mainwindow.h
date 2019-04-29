@@ -15,7 +15,7 @@ class MainWindow : public QWidget {
 	Controller *controller = nullptr;
 
     // widgets:
-	QLineEdit *ptxtConcentration[NumGridRows * NumValves] = {};
+	QLineEdit *ptxtConcentration[NumValves] = {};
 	QVBoxLayout *mainLayout = nullptr;
 	QPushButton *pcmdSearch = nullptr;
 	QPushButton *pcmdSend = nullptr;

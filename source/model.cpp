@@ -1,11 +1,15 @@
 #include "model.h"
-
+// 1e-14
 void OdoratorModel::cleaningAirSystem() {
 	sendCommandData.clear();
 	for (auto it = 0; it < NumValves; it++) {
 		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('A');
 	}
+}
+
+bool OdoratorModel::isBufferClear() {
+	return sendCommandData.empty();
 }
 
 void OdoratorModel::calculatePrepareTheGasAirMixture() {
@@ -19,10 +23,10 @@ void OdoratorModel::calculatePrepareTheGasAirMixture() {
 		sendCommandData.push_back('2');
 		auto aChar = '0';
 		auto times = calculateValue(startValue[it], 20);
-		if (9 >= times) {
+		if (times <= 9) {
 			sendCommandData.push_back('0');
 		}
-		sendCommandData.push_back(aChar + times);
+		sendCommandData.push_back((unsigned short)aChar + times);
 	}
 }
 

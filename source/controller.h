@@ -11,7 +11,7 @@ class Controller {
 	Settings* settings = nullptr;
 	MainWindow* odoratorView = nullptr;
 
-	void sendCommand(int);
+	void sendCommand(int, int);
 	void loadValveValues();
 public:	
 	Controller(MainWindow* _odoratorView);
@@ -19,8 +19,8 @@ public:
 
 	bool serialPortInitialization(QString);
 	void prepareTheGasAirMixture();
-	void startUpShuffleGasAirMixture();
-	void startUpSequenceGasAirMixture();
+	void startUpShuffleAirMixture();
+	void startUpSequenceAirMixture();
 	void cleaningAirSystem();
 	void clearBuffer();
 

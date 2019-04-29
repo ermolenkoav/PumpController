@@ -8,7 +8,6 @@ Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
 }
 
 static auto strConcentration = L"Consentration";
-static auto strTimes = L"Times";
 static auto strExecuteSequence = L"Execute sequence";
 static auto strGeometry = L"Geometry";
 static auto strComPort = L"Com Port";
@@ -20,7 +19,6 @@ void Settings::saveWorkspace() {
 		// Valves value:
 		for (auto it = 0; it < NumValves; it++) {
 			concentration[strConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
-			times[strTimes][std::to_wstring(it)] = json::value(odoratorModel->getTimes(it));
 		}
 		// Window geometry:
 		auto windowPos = odoratorView->getWindowPos();
@@ -62,9 +60,6 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 					else {
 						if (!parentName.compare(strConcentration)) {
 							odoratorModel->setValue(value.as_double(), std::stoi(str));
-						}
-						if (!parentName.compare(strTimes)) {
-							odoratorModel->setTimes(value.as_integer(), std::stoi(str));
 						}
 						if (!parentName.compare(strGeometry)) {
 							windowPos[std::stoi(str)] = value.as_integer();

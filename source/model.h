@@ -17,6 +17,7 @@ public:
 	void randomGasAirSequence();
 	void sequenceGasAirSequence();
 	void cleaningAirSystem();
+	bool isBufferClear();
 	void checkStatus();
 
 	void setValue(const double, const int);
