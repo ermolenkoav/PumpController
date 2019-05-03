@@ -23,13 +23,8 @@ public:
 	void startUpSequenceAirMixture();
 	void cleaningAirSystem();
 	void clearBuffer();
-
 	void setStartValue(const double, const int);
-	void setTimes(const int, const int);
-
 	double getStartValue(int);
-	int getStartTimes(int);
-
 	bool isReady();
-	
+
 };

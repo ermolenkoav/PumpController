@@ -1,5 +1,19 @@
 #pragma once
-#include "pch.h"
+
+#if defined __cplusplus
+#include <QApplication>
+#include <QPushButton>
+#include <QLabel>
+#include <QSerialPortInfo>
+#include <QSerialPort>
+#include <QMessageBox>
+#include <QByteArray>
+#include <QtWidgets>
+#include <QDebug>
+#include <QPoint>
+#endif
+
+#include "cpprest/json.h"
 
 const auto NumValves		= 6;
 const auto NumGridColumns	= 2;

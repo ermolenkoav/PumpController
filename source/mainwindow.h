@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include "common.h"
 
 class QGroupBox;
@@ -21,6 +22,8 @@ class MainWindow : public QWidget {
 	QPushButton *pcmdSend = nullptr;
 	QPushButton *pcmdShuffleStart = nullptr;
 	QPushButton* pcmdSequenceStart = nullptr;
+	QPushButton* pcmd—leaningAirSystem = nullptr;
+	QPushButton* pcmdStop = nullptr;
 	QLineEdit *plneSequence = nullptr;
 
     // methods:
@@ -56,4 +59,7 @@ private slots:
 	void prepareTheGasAirMixtureButtonClicked();
 	void shuffleStartButtonClicked();
 	void sequenceStartButtonClicked();
+	void cleaningAirSystemButtonClicked();
+	void stopButtonClicked();
+	void timeOutSlot();
 };

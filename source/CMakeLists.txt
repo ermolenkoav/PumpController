@@ -13,6 +13,23 @@ set(ORGANIZATION_EMAIL "ermolenkoav@yandex.ru")
 set(CPACK_PACKAGE_VERSION "${CPACK_VERSION_MAJOR}.${CPACK_VERSION_MINOR}.${CPACK_VERSION_PATCH}")
 configure_file(version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
 
+macro(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
+  if(MSVC)
+    GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
+    set(PrecompiledBinary "${CMAKE_CURRENT_BINARY_DIR}/${PrecompiledBasename}.pch")
+    set(Sources ${${SourcesVar}})
+
+    SET_SOURCE_FILES_PROPERTIES(${PrecompiledSource}
+                                PROPERTIES COMPILE_FLAGS "/Yc\"${PrecompiledHeader}\" /Fp\"${PrecompiledBinary}\""
+                                           OBJECT_OUTPUTS "${PrecompiledBinary}")
+    SET_SOURCE_FILES_PROPERTIES(${Sources}
+                                PROPERTIES COMPILE_FLAGS "/Yu\"${PrecompiledHeader}\" /FI\"${PrecompiledHeader}\" /Fp\"${PrecompiledBinary}\""
+                                           OBJECT_DEPENDS "${PrecompiledBinary}")  
+    # Add precompiled header to SourcesVar
+    list(APPEND ${SourcesVar} ${PrecompiledSource})
+  endif(MSVC)
+endmacro(ADD_MSVC_PRECOMPILED_HEADER)
+
 #-------------------------------------------------------------------------------
 #	Settings
 #-------------------------------------------------------------------------------
@@ -22,6 +39,9 @@ set(CMAKE_AUTOUIC OFF)
 
 find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
 find_package(cpprestsdk CONFIG REQUIRED)
+
+ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" MySources)
+add_library(PCHLibrary SHARED ${MySources})
 
 #-------------------------------------------------------------------------------
 #	SOURCE CODE
@@ -36,11 +56,11 @@ list(APPEND SOURCE_FILES
 )
 
 list(APPEND HEADER_FILES
-	pch.h
 	mainwindow.h
 	controller.h 
 	model.h
 	settings.h
+	common.h
 )
 
 list(APPEND LIBRARIES

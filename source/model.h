@@ -3,7 +3,6 @@
 
 class OdoratorModel {
 	double startValue[NumValves] = { 0 };
-	int startTimes[NumValves] = { 0 };
 
 	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
 
@@ -18,11 +17,9 @@ public:
 	void sequenceGasAirSequence();
 	void cleaningAirSystem();
 	bool isBufferClear();
+	void gasSupplyTime(char seconds);
 	void checkStatus();
 
 	void setValue(const double, const int);
 	double getValue(int index) const;
-
-	void setTimes(const int, const int);
-	int getTimes(int) const;
 };

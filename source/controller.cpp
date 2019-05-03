@@ -10,27 +10,19 @@ Controller::~Controller() {
 	delete settings;
 	delete pSerialPort;
 }
-
 Controller::Controller(MainWindow* _odoratorView) {
 	odoratorView = _odoratorView;
 	odoratorModel = new OdoratorModel;
 	settings = new Settings(odoratorModel, odoratorView);
 	pSerialPort = new QSerialPort;
-	loadValveValues ();
+	loadValveValues();
 }
-
 void Controller::loadValveValues() {
 	settings->loadWorkspace();
 }
-
 double Controller::getStartValue(int index) {
 	return odoratorModel->getValue(index);
 }
-
-int Controller::getStartTimes(int index) {
-	return odoratorModel->getTimes(index);
-}
-
 bool Controller::serialPortInitialization(QString selectedDevice) {
 	if (!pSerialPort->isOpen()) {
 		pSerialPort->setPortName(selectedDevice);
@@ -46,11 +38,10 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 	}
 	return false;
 }
-
 void Controller::cleaningAirSystem() {
 #ifndef _DEBUG
 	odoratorModel->cleaningAirSystem();
-	sendCommand(2);
+	sendCommand(2, 6);
 #endif//_DEBUG
 }
 
@@ -77,6 +68,8 @@ void Controller::startUpShuffleAirMixture() {
 void Controller::startUpSequenceAirMixture() {
 	// full piece of shit
 	//if (isReady()) 
+	odoratorModel->gasSupplyTime('9');
+	sendCommand(3, 6);
 	{
 		odoratorModel->sequenceGasAirSequence();
 		while(true)
@@ -109,7 +102,7 @@ void Controller::sendCommand(int length, int times) {
 			}
 			pSerialPort->write(sendBuffer);
 			pSerialPort->waitForBytesWritten(50);
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			std::this_thread::sleep_for(std::chrono::seconds(2));
 		}
 	}
 }
@@ -117,11 +110,6 @@ void Controller::sendCommand(int length, int times) {
 void Controller::setStartValue(const double _value, const int _iter) {
 	odoratorModel->setValue(_value, _iter);
 }
-
-void Controller::setTimes(const int _times, const int _iter) {
-	odoratorModel->setTimes(_times, _iter);
-}
-
 bool Controller::isReady() {
 	auto isReady = true;
 	pSerialPort->waitForReadyRead(50);
