@@ -22,4 +22,5 @@ public:
 
 	void setValue(const double, const int);
 	double getValue(int index) const;
+	void clearBuffer();
 };

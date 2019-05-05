@@ -45,49 +45,6 @@ void Controller::cleaningAirSystem() {
 #endif//_DEBUG
 }
 
-void Controller::prepareTheGasAirMixture() {
-	odoratorModel->calculatePrepareTheGasAirMixture();
-	sendCommand(SIXTH_COMMAND_LENGTH, 6);
-	settings->saveWorkspace();
-}
-
-void Controller::startUpShuffleAirMixture() {
-	// full piece of shit
-	//if (isReady()) 
-	{
-		while (true)
-		{
-			odoratorModel->randomGasAirSequence();
-			sendCommand(S_COMMAND_LENGTH, 1);
-			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
-		}
-		settings->saveCurrentData();
-	}
-}
-
-void Controller::startUpSequenceAirMixture() {
-	// full piece of shit
-	//if (isReady()) 
-	odoratorModel->gasSupplyTime('9');
-	sendCommand(3, 6);
-	{
-		odoratorModel->sequenceGasAirSequence();
-		while(true)
-		{
-			if (odoratorModel->isBufferClear()) {
-				odoratorModel->sequenceGasAirSequence();
-			}
-			sendCommand(S_COMMAND_LENGTH, 1);
-			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
-		}
-		settings->saveCurrentData();
-	}
-}
-
-void Controller::clearBuffer() {
-	odoratorModel->sendCommandData.clear();
-}
-
 void Controller::sendCommand(int length, int times) {
 	for (auto it = 0; it < times; ++it) {
 		if (odoratorModel->sendCommandData.empty()) {
@@ -105,6 +62,49 @@ void Controller::sendCommand(int length, int times) {
 			std::this_thread::sleep_for(std::chrono::seconds(2));
 		}
 	}
+}
+void Controller::prepareTheGasAirMixture() {
+	odoratorModel->calculatePrepareTheGasAirMixture();
+	sendCommand(SIXTH_COMMAND_LENGTH, 6);
+	settings->saveWorkspace();
+}
+void Controller::changeGasSupplyTime(char time) {
+	odoratorModel->gasSupplyTime(time);
+	sendCommand(3, 6);
+}
+void Controller::startUpShuffleAirMixture() {
+	// full piece of shit
+	//if (isReady()) 
+	{
+		while (true)
+		{
+			odoratorModel->randomGasAirSequence();
+			sendCommand(S_COMMAND_LENGTH, 1);
+			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
+		}
+		settings->saveCurrentData();
+	}
+}
+
+void Controller::startUpSequenceAirMixture() {
+	// full piece of shit
+	//if (isReady()) 
+	{
+		odoratorModel->sequenceGasAirSequence();
+		while(true)
+		{
+			if (odoratorModel->isBufferClear()) {
+				odoratorModel->sequenceGasAirSequence();
+			}
+			sendCommand(S_COMMAND_LENGTH, 1);
+			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
+		}
+		settings->saveCurrentData();
+	}
+}
+
+void Controller::clearBuffer() {
+	odoratorModel->sendCommandData.clear();
 }
 
 void Controller::setStartValue(const double _value, const int _iter) {

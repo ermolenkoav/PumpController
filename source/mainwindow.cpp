@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pcmdStop,				SIGNAL(clicked()), this, SLOT(stopButtonClicked()));
 	connect(pcmd—leaningAirSystem,	SIGNAL(clicked()), this, SLOT(cleaningAirSystemButtonClicked()));
 	connect(timer,					SIGNAL(timeout()), this, SLOT(timeOutSlot()));
+	connect(ptbwSequence, QOverload<int>::of(&QSpinBox::valueChanged), [=](int time) {
+		controller->changeGasSupplyTime(time); });
 }
 /************************************LOAD LAST SETTINGS************************************/
 void MainWindow::loadSettings() {
@@ -124,8 +126,18 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	pcmd—leaningAirSystem = new QPushButton("Cleaning Air System", this);
 	ploExecuteLayout->addWidget(pcmd—leaningAirSystem, 1, 1);
 
+	auto plblSupplyTime = new QLabel("Supply Time", this);
+	ploExecuteLayout->addWidget(plblSupplyTime, 2, 0);
+	ptbwSequence = new QSpinBox(this);
+	ptbwSequence->setMinimum(1);
+	ptbwSequence->setMaximum(9);
+	ptbwSequence->setValue(3);
+	ploExecuteLayout->addWidget(ptbwSequence, 2, 1);
+
+	auto plblSequence = new QLabel("Sequence", this);
+	ploExecuteLayout->addWidget(plblSequence, 3, 0);
 	plneSequence = new QLineEdit(this);
-	ploExecuteLayout->addWidget(plneSequence, 2, 0, 2, 2);
+	ploExecuteLayout->addWidget(plneSequence, 3, 1);
 
 	pgbExecuteLayout->setLayout(ploExecuteLayout);
 	return pgbExecuteLayout;
@@ -166,3 +178,5 @@ void MainWindow::stopButtonClicked() {
 
 }
 void MainWindow::timeOutSlot() {}
+
+void MainWindow::sequenceValueChanged() {}

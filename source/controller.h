@@ -19,6 +19,7 @@ public:
 
 	bool serialPortInitialization(QString);
 	void prepareTheGasAirMixture();
+	void changeGasSupplyTime(char time);
 	void startUpShuffleAirMixture();
 	void startUpSequenceAirMixture();
 	void cleaningAirSystem();

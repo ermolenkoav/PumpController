@@ -10,21 +10,23 @@ class QListWidget;
 class QLineEdit;
 class QVBoxLayout;
 class Controller;
+class QSpinBox;
 
 class MainWindow : public QWidget {
     Q_OBJECT    
 	Controller *controller = nullptr;
 
     // widgets:
-	QLineEdit *ptxtConcentration[NumValves] = {};
-	QVBoxLayout *mainLayout = nullptr;
-	QPushButton *pcmdSearch = nullptr;
-	QPushButton *pcmdSend = nullptr;
-	QPushButton *pcmdShuffleStart = nullptr;
+	QLineEdit* ptxtConcentration[NumValves] = {};
+	QVBoxLayout* mainLayout = nullptr;
+	QPushButton* pcmdSearch = nullptr;
+	QPushButton* pcmdSend = nullptr;
+	QPushButton* pcmdShuffleStart = nullptr;
 	QPushButton* pcmdSequenceStart = nullptr;
 	QPushButton* pcmd—leaningAirSystem = nullptr;
 	QPushButton* pcmdStop = nullptr;
-	QLineEdit *plneSequence = nullptr;
+	QLineEdit* plneSequence = nullptr;
+	QSpinBox* ptbwSequence = nullptr;
 
     // methods:
 	void createMainWindowLayout();
@@ -52,8 +54,6 @@ public:
 	void setExecuteSequence(std::wstring& text);
 	std::wstring getExecuteSequence();
 
-
-
 private slots:
 	void searchButtonClicked();
 	void prepareTheGasAirMixtureButtonClicked();
@@ -62,4 +62,5 @@ private slots:
 	void cleaningAirSystemButtonClicked();
 	void stopButtonClicked();
 	void timeOutSlot();
+	void sequenceValueChanged();
 };

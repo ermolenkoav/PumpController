@@ -1,19 +1,26 @@
 #pragma once
 
 #if defined __cplusplus
-#include <QApplication>
-#include <QPushButton>
-#include <QLabel>
+#include <QListWidgetItem>
 #include <QSerialPortInfo>
+#include <QApplication>
 #include <QSerialPort>
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QPushButton>
 #include <QMessageBox>
+#include <QTabWidget>
 #include <QByteArray>
+#include <QComboBox>
+#include <QLineEdit>
 #include <QtWidgets>
-#include <QDebug>
+#include <QSpinBox>
+#include <QLabel>
 #include <QPoint>
-#endif
+#include <QDebug>
 
 #include "cpprest/json.h"
+#endif
 
 const auto NumValves		= 6;
 const auto NumGridColumns	= 2;
