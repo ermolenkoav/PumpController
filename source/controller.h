@@ -11,6 +11,8 @@ class Controller {
 	Settings* settings = nullptr;
 	MainWindow* odoratorView = nullptr;
 
+	bool readyToGo = false;
+
 	void sendCommand(int, int);
 	void loadValveValues();
 public:	
@@ -27,5 +29,6 @@ public:
 	void setStartValue(const double, const int);
 	double getStartValue(int);
 	bool isReady();
+	void setReadyToGo(bool);
 
 };

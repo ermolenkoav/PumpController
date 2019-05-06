@@ -25,8 +25,9 @@ class MainWindow : public QWidget {
 	QPushButton* pcmdSequenceStart = nullptr;
 	QPushButton* pcmd—leaningAirSystem = nullptr;
 	QPushButton* pcmdStop = nullptr;
-	QLineEdit* plneSequence = nullptr;
-	QSpinBox* ptbwSequence = nullptr;
+	QSpinBox* pspbDelayTime = nullptr;
+	QSpinBox* pspbSupplyTime = nullptr;
+	QTimer* timer = nullptr;
 
     // methods:
 	void createMainWindowLayout();
@@ -40,6 +41,7 @@ class MainWindow : public QWidget {
 
 	// variables:
 	std::wstring comPortName;
+	int time = 15000;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
@@ -53,6 +55,8 @@ public:
 
 	void setExecuteSequence(std::wstring& text);
 	std::wstring getExecuteSequence();
+
+	void setTime(int _time);
 
 private slots:
 	void searchButtonClicked();

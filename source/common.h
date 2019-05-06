@@ -1,19 +1,21 @@
 #pragma once
 
 #if defined __cplusplus
+#include <Qt>
+#include <QApplication>
+#include <QMessageBox>
+#include <QtWidgets>
+#include <QTimer>
 #include <QListWidgetItem>
 #include <QSerialPortInfo>
-#include <QApplication>
 #include <QSerialPort>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
-#include <QMessageBox>
 #include <QTabWidget>
 #include <QByteArray>
 #include <QComboBox>
 #include <QLineEdit>
-#include <QtWidgets>
 #include <QSpinBox>
 #include <QLabel>
 #include <QPoint>

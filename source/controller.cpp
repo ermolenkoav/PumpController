@@ -73,32 +73,23 @@ void Controller::changeGasSupplyTime(char time) {
 	sendCommand(3, 6);
 }
 void Controller::startUpShuffleAirMixture() {
-	// full piece of shit
-	//if (isReady()) 
-	{
-		while (true)
-		{
-			odoratorModel->randomGasAirSequence();
-			sendCommand(S_COMMAND_LENGTH, 1);
-			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
+	if (isReady()) {
+		odoratorModel->randomGasAirSequence();
+		if (odoratorModel->isBufferClear()) {
+			odoratorModel->sequenceGasAirSequence();
 		}
+		sendCommand(S_COMMAND_LENGTH, 1);
 		settings->saveCurrentData();
 	}
 }
 
 void Controller::startUpSequenceAirMixture() {
-	// full piece of shit
-	//if (isReady()) 
-	{
+	if (isReady()) {
 		odoratorModel->sequenceGasAirSequence();
-		while(true)
-		{
-			if (odoratorModel->isBufferClear()) {
-				odoratorModel->sequenceGasAirSequence();
-			}
-			sendCommand(S_COMMAND_LENGTH, 1);
-			std::this_thread::sleep_for(std::chrono::seconds(AIR_GAS_DELAY));
+		if (odoratorModel->isBufferClear()) {
+			odoratorModel->sequenceGasAirSequence();
 		}
+		sendCommand(S_COMMAND_LENGTH, 1);
 		settings->saveCurrentData();
 	}
 }
@@ -111,15 +102,8 @@ void Controller::setStartValue(const double _value, const int _iter) {
 	odoratorModel->setValue(_value, _iter);
 }
 bool Controller::isReady() {
-	auto isReady = true;
-	pSerialPort->waitForReadyRead(50);
-	auto readBuffer = pSerialPort->readAll();
-	qDebug() << readBuffer;
-
-	if (isReady) {
-		return true;
-	} 
-	else {
-		return false;
-	}
+	return readyToGo;
+}
+void Controller::setReadyToGo(bool _readyToGo) {
+	readyToGo = _readyToGo;
 }
