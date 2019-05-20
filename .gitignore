@@ -1,0 +1,147 @@
+# Cache of other programs
+#.gitignore
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Visual Studoio files
+Debug
+Release
+*.suo
+*.csproj.user
+*.vbproj.user
+ipch
+*.sdf
+*.VC.db
+*.VC.opendb
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.log
+
+# Visual Studio Code files
+.vs/*
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Cmake folder
+/build
+
+# CMake files
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+CMakeSettings.json
+
+# Qt-es
+object_script.*.Release
+object_script.*.Debug
+*_plugin_import.cpp
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+Makefile*
+*build-*
+
+# Qt unit tests
+target_wrapper.*
+
+# QtCreator
+*.autosave
+
+# QtCreator Qml
+*.qmlproject.user
+*.qmlproject.user.*
+
+# QtCreator CMake
+CMakeLists.txt.user*
+
+# Compiled binaries
+*.bin
+*.elf
+*.hex
+*.map
+*.d51
+*.r51
+*.pbi
+*.pbi.cout
+*.pbd
+*.pbd.browse
+*.dep
+*.dbgdt
+*.dni
+*.wsdt
+*.tmp
+
+# Trash
+*.bak
+
+# IAR project "Debug" directory
+Debug/
+
+# IAR project "Release" directory
+Release/
+
+# IAR project settings directory
+settings/
+
+# IAR other directory
+Exe/*
+List/*
+Obj/*
+
+# IAR backup files
+Backup*
+
+# IAR .dep files
+*.dep
+

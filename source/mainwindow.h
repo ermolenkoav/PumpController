@@ -23,8 +23,10 @@ class MainWindow : public QWidget {
 	QPushButton* pcmdSend = nullptr;
 	QPushButton* pcmdShuffleStart = nullptr;
 	QPushButton* pcmdSequenceStart = nullptr;
-	QPushButton* pcmd—leaningAirSystem = nullptr;
+	QPushButton* pcmdCleaningAirSystem = nullptr;
 	QPushButton* pcmdStop = nullptr;
+	QPushButton* pcmdSendSP = nullptr;
+	QLineEdit* ptxtSerialPort = nullptr;
 	QSpinBox* pspbDelayTime = nullptr;
 	QSpinBox* pspbSupplyTime = nullptr;
 	QTimer* timer = nullptr;
@@ -38,10 +40,12 @@ class MainWindow : public QWidget {
 	QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
+	QGroupBox* createManualSettingLayout();
 
 	// variables:
 	std::wstring comPortName;
-	int time = 15000;
+	int supplyTime;
+	int delayTime;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
@@ -56,7 +60,8 @@ public:
 	void setExecuteSequence(std::wstring& text);
 	std::wstring getExecuteSequence();
 
-	void setTime(int _time);
+	void setSypplyTime(int _time);
+	void setDalayTime();
 
 private slots:
 	void searchButtonClicked();
@@ -67,4 +72,5 @@ private slots:
 	void stopButtonClicked();
 	void timeOutSlot();
 	void sequenceValueChanged();
+	void manualSettingClicked();
 };

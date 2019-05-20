@@ -21,9 +21,10 @@ public:
 
 	bool serialPortInitialization(QString);
 	void prepareTheGasAirMixture();
-	void changeGasSupplyTime(char time);
+	void changeGasSupplyTime(int time);
 	void startUpShuffleAirMixture();
 	void startUpSequenceAirMixture();
+	void manualSetting(std::string command);
 	void cleaningAirSystem();
 	void clearBuffer();
 	void setStartValue(const double, const int);

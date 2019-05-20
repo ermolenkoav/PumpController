@@ -1,13 +1,19 @@
 #include "model.h"
 
+void OdoratorModel::addCustomCommand(std::string command) {
+	for (auto it = 0; it < command.length(); it++) {
+		sendCommandData.push_back(command[it]);
+	}
+}
 void OdoratorModel::cleaningAirSystem() {
 	for (auto it = 0; it < NumValves; it++) {
 		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('A');
 	}
 }
-void OdoratorModel::gasSupplyTime(char seconds) {
-	if ((seconds >= '0') && (seconds <= '9')) {
+void OdoratorModel::gasSupplyTime(int seconds) {
+	if ((seconds >= 0) || (seconds <= 9)) {
+		auto timeChar = '0' + seconds;
 		sendCommandData.clear();
 		for (auto it = 0; it < NumValves; it++) {
 			if (0 == startValue[it]) {
@@ -17,6 +23,7 @@ void OdoratorModel::gasSupplyTime(char seconds) {
 			sendCommandData.push_back('T');
 			sendCommandData.push_back(seconds);
 		}
+
 	}
 }
 void OdoratorModel::calculatePrepareTheGasAirMixture() {
@@ -27,12 +34,11 @@ void OdoratorModel::calculatePrepareTheGasAirMixture() {
 		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('6');
 		sendCommandData.push_back('2');
-		auto aChar = '0';
 		auto times = calculateValue(startValue[it], 20);
 		if (times <= 9) {
 			sendCommandData.push_back('0');
 		}
-		sendCommandData.push_back((unsigned short)aChar + times);
+		sendCommandData.push_back(times + '0');
 	}
 }
 void OdoratorModel::checkStatus() {

@@ -68,7 +68,7 @@ void Controller::prepareTheGasAirMixture() {
 	sendCommand(SIXTH_COMMAND_LENGTH, 6);
 	settings->saveWorkspace();
 }
-void Controller::changeGasSupplyTime(char time) {
+void Controller::changeGasSupplyTime(int time) {
 	odoratorModel->gasSupplyTime(time);
 	sendCommand(3, 6);
 }
@@ -93,7 +93,10 @@ void Controller::startUpSequenceAirMixture() {
 		settings->saveCurrentData();
 	}
 }
-
+void Controller::manualSetting(std::string command) {
+	odoratorModel->addCustomCommand(command);
+	sendCommand(command.length(), 1);
+}
 void Controller::clearBuffer() {
 	odoratorModel->sendCommandData.clear();
 }

@@ -15,9 +15,11 @@ public:
 	void calculatePrepareTheGasAirMixture();
 	void randomGasAirSequence();
 	void sequenceGasAirSequence();
+	void addCustomCommand(std::string command);
 	void cleaningAirSystem();
 	bool isBufferClear();
-	void gasSupplyTime(char seconds);
+	void gasSupplyTime(int seconds);
+	void gasDalayTime(int seconds);
 	void checkStatus();
 
 	void setValue(const double, const int);
