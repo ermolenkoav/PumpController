@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	supplyTime = 3;
 	delayTime = 15000;
 	timer->setInterval(delayTime);
-    // Signals:
+    // Signals: 
 	connect(pcmdSearch,				&QPushButton::clicked, this, &MainWindow::searchButtonClicked);
 	connect(pcmdSend,				&QPushButton::clicked, this, &MainWindow::prepareTheGasAirMixtureButtonClicked);
 	connect(pcmdShuffleStart,		&QPushButton::clicked, this, &MainWindow::shuffleStartButtonClicked);
@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pspbSupplyTime, QOverload<int>::of(&QSpinBox::valueChanged), [=]() {
 		setSypplyTime(pspbSupplyTime->value()); controller->changeGasSupplyTime(MainWindow::supplyTime); });
 	connect(pspbDelayTime, QOverload<int>::of(&QSpinBox::valueChanged), [=]() { setDalayTime(); });
+	connect(pcmdChangeView, &QPushButton::clicked, this, &MainWindow::changeViewClicked);
 }
 /************************************LOAD LAST SETTINGS************************************/
 void MainWindow::loadSettings() {
@@ -70,12 +71,11 @@ void MainWindow::setExecuteSequence(std::wstring &text) {
 std::wstring MainWindow::getExecuteSequence() {
 	return pspbDelayTime->text().toStdWString();
 }
-void MainWindow::setSypplyTime(int _time) {
-	supplyTime = _time;
+void MainWindow::setSypplyTime(int time) {
+	supplyTime = time;
 }
 void MainWindow::setDalayTime() {
-	auto time = pspbDelayTime->value();
-	time *= 1000;
+	auto time = pspbDelayTime->value() * 1000;
 	timer->setInterval(time);
 }
 /************************************CREATE VIEW LAYOUT************************************/
@@ -109,7 +109,7 @@ QGroupBox* MainWindow::createSetUpLayout() {
 		pgbValveSetUp[iter] = new QGroupBox(tr("Cartridge %1").arg(iter + 1), this);
 		ploValveLayout[iter] = new QHBoxLayout(this);
 
-		plblTimes[iter] = new QLabel("Concentrations", this);
+		plblTimes[iter] = new QLabel("Concentrations, g/cm^3", this);
 		ploValveLayout[iter]->addWidget(plblTimes[iter]);
 
 		ptxtConcentration[iter] = new QLineEdit(this);
@@ -139,7 +139,7 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	pcmdCleaningAirSystem = new QPushButton("Cleaning Air System", this);
 	ploExecuteLayout->addWidget(pcmdCleaningAirSystem, 1, 0);
 
-	auto plblSupplyTime = new QLabel("Supply Time", this);
+	auto plblSupplyTime = new QLabel("Supply Time, s", this);
 	ploExecuteLayout->addWidget(plblSupplyTime, 2, 0, Qt::AlignCenter);
 	pspbSupplyTime = new QSpinBox(this);
 	pspbSupplyTime->setMinimum(1);
@@ -147,7 +147,7 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	pspbSupplyTime->setValue(3);
 	ploExecuteLayout->addWidget(pspbSupplyTime, 2, 1);
 
-	auto plblDelayTime = new QLabel("Delay Time", this);
+	auto plblDelayTime = new QLabel("Delay Time, s", this);
 	ploExecuteLayout->addWidget(plblDelayTime, 3, 0, Qt::AlignCenter);
 	pspbDelayTime = new QSpinBox(this);
 	pspbDelayTime->setMinimum(1);
@@ -160,13 +160,16 @@ QGroupBox* MainWindow::createExecuteLayout() {
 }
 QGroupBox* MainWindow::createManualSettingLayout() {
 	auto pgbManualSettingLayout = new QGroupBox(tr("Manual setting"), this);
-	auto ploManualSettingLayout = new QHBoxLayout(this);
+	auto ploManualSettingLayout = new QGridLayout(this);
 
 	ptxtSerialPort = new QLineEdit(this);
-	ploManualSettingLayout->addWidget(ptxtSerialPort);
+	ploManualSettingLayout->addWidget(ptxtSerialPort, 0, 0);
 
 	pcmdSendSP = new QPushButton("Send", this);
-	ploManualSettingLayout->addWidget(pcmdSendSP);
+	ploManualSettingLayout->addWidget(pcmdSendSP, 0, 1);
+
+	pcmdChangeView = new QPushButton("Change View", this);
+	ploManualSettingLayout->addWidget(pcmdChangeView, 1, 0);
 
 	pgbManualSettingLayout->setLayout(ploManualSettingLayout);
 	return pgbManualSettingLayout;
@@ -195,8 +198,8 @@ void MainWindow::prepareTheGasAirMixtureButtonClicked() {
 	controller->prepareTheGasAirMixture();
 }
 void MainWindow::shuffleStartButtonClicked() {
-	controller->startUpShuffleAirMixture();
 	controller->setReadyToGo(true);
+	controller->startUpShuffleAirMixture();
 	timer->start(supplyTime);
 }
 void MainWindow::sequenceStartButtonClicked() {
@@ -212,12 +215,14 @@ void MainWindow::stopButtonClicked() {
 	timer->stop();
 }
 void MainWindow::timeOutSlot() {
-	controller->startUpSequenceAirMixture();
-}
-void MainWindow::sequenceValueChanged() {
-
+	if (true) { controller->startUpSequenceAirMixture(); }
+	else { controller->startUpShuffleAirMixture(); }
+	
 }
 void MainWindow::manualSettingClicked() {
 	auto command = ptxtSerialPort->text();
 	controller->manualSetting(command.toStdString());
+}
+void MainWindow::changeViewClicked() {
+
 }

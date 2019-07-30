@@ -26,6 +26,7 @@ class MainWindow : public QWidget {
 	QPushButton* pcmdCleaningAirSystem = nullptr;
 	QPushButton* pcmdStop = nullptr;
 	QPushButton* pcmdSendSP = nullptr;
+	QPushButton* pcmdChangeView = nullptr;
 	QLineEdit* ptxtSerialPort = nullptr;
 	QSpinBox* pspbDelayTime = nullptr;
 	QSpinBox* pspbSupplyTime = nullptr;
@@ -52,15 +53,12 @@ public:
     ~MainWindow();
 
 	std::pair<int, int> getWindowPos();
-	void setWindowPos(std::array<int, 2> windowPos);
-
+	void setWindowPos(std::array<int, 2>);
 	std::wstring getComPortName();
-	void setComPortName(std::wstring& _comPortName);
-
-	void setExecuteSequence(std::wstring& text);
+	void setComPortName(std::wstring&);
+	void setExecuteSequence(std::wstring&);
 	std::wstring getExecuteSequence();
-
-	void setSypplyTime(int _time);
+	void setSypplyTime(int);
 	void setDalayTime();
 
 private slots:
@@ -71,6 +69,6 @@ private slots:
 	void cleaningAirSystemButtonClicked();
 	void stopButtonClicked();
 	void timeOutSlot();
-	void sequenceValueChanged();
 	void manualSettingClicked();
+	void changeViewClicked();
 };
