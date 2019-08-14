@@ -40,9 +40,10 @@ set(CMAKE_AUTOUIC OFF)
 find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
 find_package(cpprestsdk CONFIG REQUIRED)
 
-ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" MySources)
-add_library(PCHLibrary SHARED ${MySources})
-
+if(MSVC)
+	ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" MySources)
+	add_library(PCHLibrary SHARED ${MySources})
+endif(MSVC)
 #-------------------------------------------------------------------------------
 #	SOURCE CODE
 #-------------------------------------------------------------------------------
@@ -71,6 +72,8 @@ list(APPEND LIBRARIES
 	cpprestsdk::cpprestsdk_boost_internal 
 	cpprestsdk::cpprestsdk_openssl_internal
 )
+
+
 #-------------------------------------------------------------------------------
 #	GENERATE EXECUTABLE
 #-------------------------------------------------------------------------------

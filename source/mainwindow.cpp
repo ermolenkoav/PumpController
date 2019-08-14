@@ -26,10 +26,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pcmdCleaningAirSystem,	&QPushButton::clicked, this, &MainWindow::cleaningAirSystemButtonClicked);
 	connect(pcmdSendSP,				&QPushButton::clicked, this, &MainWindow::manualSettingClicked);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
-	connect(pspbSupplyTime, QOverload<int>::of(&QSpinBox::valueChanged), [=]() {
-		setSypplyTime(pspbSupplyTime->value()); controller->changeGasSupplyTime(MainWindow::supplyTime); });
-	connect(pspbDelayTime, QOverload<int>::of(&QSpinBox::valueChanged), [=]() { setDalayTime(); });
-	connect(pcmdChangeView, &QPushButton::clicked, this, &MainWindow::changeViewClicked);
+	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), [=]() {
+				setSypplyTime(pspbSupplyTime->value()); controller->changeGasSupplyTime(MainWindow::supplyTime); });
+	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), [=]() { setDalayTime(); });
+	connect(pchbGCm3,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
+	connect(pchbTimes,				&QPushButton::toggled, this, &MainWindow::changeViewClicked);
 }
 /************************************LOAD LAST SETTINGS************************************/
 void MainWindow::loadSettings() {
@@ -98,28 +99,36 @@ QGroupBox* MainWindow::createConnectionLayout() {
 	return pgbConnectionLayout;
 }
 QGroupBox* MainWindow::createSetUpLayout() {
-	auto pgbSetOfAllValves = new QGroupBox(tr("Set up"), this);
-	auto ploSetOfAllValves = new QGridLayout(this);
+	pgbSetOfAllValves = new QGroupBox(tr("Set up"), this);
+	ploSetOfAllValves = new QGridLayout(pgbSetOfAllValves);
+
+	auto ploViewSetUp = new QHBoxLayout(this);;
+	pchbGCm3 = new QRadioButton("g/cm^3", this);
+	pchbGCm3->setChecked(true);
+	pchbTimes = new QRadioButton("Times to mix", this);
+	ploViewSetUp->addWidget(pchbGCm3);
+	ploViewSetUp->addWidget(pchbTimes);
+	ploSetOfAllValves->addLayout(ploViewSetUp, 0, 0);
+	
 
 	QGroupBox* pgbValveSetUp[NumValves];
 	QHBoxLayout* ploValveLayout[NumValves];
-	QLabel* plblTimes[NumValves];
-
+	
 	for (auto iter = 0; iter < NumValves; ++iter) {
-		pgbValveSetUp[iter] = new QGroupBox(tr("Cartridge %1").arg(iter + 1), this);
-		ploValveLayout[iter] = new QHBoxLayout(this);
+		pgbValveSetUp[iter] = new QGroupBox(tr("Cartridge %1").arg(iter + 1), pgbSetOfAllValves);
+		ploValveLayout[iter] = new QHBoxLayout(pgbSetOfAllValves);
 
-		plblTimes[iter] = new QLabel("Concentrations, g/cm^3", this);
+		plblTimes[iter] = new QLabel("Concentrations, g/cm^3", pgbSetOfAllValves);
 		ploValveLayout[iter]->addWidget(plblTimes[iter]);
 
-		ptxtConcentration[iter] = new QLineEdit(this);
+		ptxtConcentration[iter] = new QLineEdit(pgbSetOfAllValves);
 		ploValveLayout[iter]->addWidget(ptxtConcentration[iter]);
 
 		pgbValveSetUp[iter]->setLayout(ploValveLayout[iter]);
 		ploSetOfAllValves->addWidget(pgbValveSetUp[iter]);
 	}
 
-	pcmdSend = new QPushButton("Set Up", this);
+	pcmdSend = new QPushButton("Set Up", pgbSetOfAllValves);
 	ploSetOfAllValves->addWidget(pcmdSend);
 
 	pgbSetOfAllValves->setLayout(ploSetOfAllValves);
@@ -174,7 +183,6 @@ QGroupBox* MainWindow::createManualSettingLayout() {
 	pgbManualSettingLayout->setLayout(ploManualSettingLayout);
 	return pgbManualSettingLayout;
 }
-
 /********************************RESPOND EVENTS AND SIGNALS********************************/
 void MainWindow::searchButtonClicked() {
  	auto pcmbListOfPorts = new QComboBox(pcmdSearch);
@@ -224,5 +232,16 @@ void MainWindow::manualSettingClicked() {
 	controller->manualSetting(command.toStdString());
 }
 void MainWindow::changeViewClicked() {
-
+	if (pchbTimes->isChecked()) {
+		for (auto i : plblTimes) {
+			i->setText("Times to mix");
+		}
+		
+	}
+	else if (pchbGCm3->isChecked()) {
+		for (auto i : plblTimes) {
+			i->setText("Concentrations, g/cm^3");
+		}
+		
+	}
 }

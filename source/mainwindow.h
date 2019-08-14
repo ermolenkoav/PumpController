@@ -19,6 +19,8 @@ class MainWindow : public QWidget {
     // widgets:
 	QLineEdit* ptxtConcentration[NumValves] = {};
 	QVBoxLayout* mainLayout = nullptr;
+	QGroupBox* pgbSetOfAllValves = nullptr;
+	QGridLayout* ploSetOfAllValves = nullptr;
 	QPushButton* pcmdSearch = nullptr;
 	QPushButton* pcmdSend = nullptr;
 	QPushButton* pcmdShuffleStart = nullptr;
@@ -27,9 +29,12 @@ class MainWindow : public QWidget {
 	QPushButton* pcmdStop = nullptr;
 	QPushButton* pcmdSendSP = nullptr;
 	QPushButton* pcmdChangeView = nullptr;
+	QRadioButton* pchbGCm3 = nullptr;
+	QRadioButton* pchbTimes = nullptr;
 	QLineEdit* ptxtSerialPort = nullptr;
 	QSpinBox* pspbDelayTime = nullptr;
 	QSpinBox* pspbSupplyTime = nullptr;
+	QLabel* plblTimes[NumValves];
 	QTimer* timer = nullptr;
 
     // methods:

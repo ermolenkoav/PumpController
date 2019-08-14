@@ -11,7 +11,10 @@
 #include <QSerialPort>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QRadioButton>
 #include <QPushButton>
+#include <QToolButton>
+#include <QCheckBox>
 #include <QTabWidget>
 #include <QByteArray>
 #include <QComboBox>
