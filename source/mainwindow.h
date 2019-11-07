@@ -22,12 +22,14 @@ class MainWindow : public QWidget {
 	QGridLayout* ploSetOfAllValves = nullptr;
 	QPushButton* pcmdSearch = nullptr;
 	QPushButton* pcmdSend = nullptr;
-	QPushButton* pcmdShuffleStart = nullptr;
-	QPushButton* pcmdSequenceStart = nullptr;
+	QPushButton* pcmdStart = nullptr;
+	QPushButton* pcmdPause = nullptr;
 	QPushButton* pcmdCleaningAirSystem = nullptr;
 	QPushButton* pcmdStop = nullptr;
 	QPushButton* pcmdSendSP = nullptr;
 	QPushButton* pcmdChangeView = nullptr;
+	QRadioButton* prbtShuffleStart = nullptr;
+	QRadioButton* prbtSequenceStart = nullptr;
 	QRadioButton* pchbGCm3 = nullptr;
 	QRadioButton* pchbTimes = nullptr;
 	QLineEdit* ptxtSerialPort = nullptr;
@@ -68,11 +70,11 @@ public:
 private slots:
 	void searchButtonClicked();
 	void prepareTheGasAirMixtureButtonClicked();
-	void shuffleStartButtonClicked();
-	void sequenceStartButtonClicked();
 	void cleaningAirSystemButtonClicked();
 	void stopButtonClicked();
 	void timeOutSlot();
 	void manualSettingClicked();
 	void changeViewClicked();
+	void startButtonClicked();
+	void pauseButtonClicked();
 };
