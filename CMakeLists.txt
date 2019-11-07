@@ -8,14 +8,12 @@ project(Odorator LANGUAGES CXX)
 #	COMPILE FLAGS
 #-------------------------------------------------------------------------------
 if (MSVC)
-	set(GUI_TYPE WIN32) 
-    set(CMAKE_CXX_FLAGS_DEBUG "/MP /MDd /std:c++17 /GS /analyze /Gd /Od /RTC1 /RTCs /RTCu /W3 ") # /Wall
-	set(CMAKE_CXX_FLAGS_RELEASE "/MP /MD /std:c++latest /Ox")
-elseif(CMAKE_COMPILER_IS_GNUCXX)
-	add_compile_options(
-    "$<$<CONFIG:RELEASE>:/MP /MD /std:c++latest /Ox>"
-    "$<$<CONFIG:DEBUG>:/MP /MDd /std:c++latest /GS /analyze /Gd /Od /RTC1 /RTCs /RTCu /W3>"
-	)
+set(GUI_TYPE WIN32)
+set(CMAKE_CXX_FLAGS_DEBUG "/MP /MDd /std:c++17 /GS /analyze /Gd /Od /RTC1 /RTCs /RTCu /W3 ") # /Wall
+set(CMAKE_CXX_FLAGS_RELEASE "/MP /MD /std:c++latest /Ox")
+elseif(GNU)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -gnu:c++17 -fPIC -w -Wextra -Wall -g -ggdb ")
+set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -gnu:c++17 -fPIC")
 endif(MSVC)
 
 #-------------------------------------------------------------------------------

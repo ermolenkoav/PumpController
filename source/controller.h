@@ -28,6 +28,7 @@ public:
 	void cleaningAirSystem();
 	void clearBuffer();
 	void setStartValue(const double, const int);
+	void setStartValue(const int, const int);
 	double getStartValue(int);
 	bool isReady();
 	void setReadyToGo(bool);

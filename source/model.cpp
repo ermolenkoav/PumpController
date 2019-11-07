@@ -16,7 +16,7 @@ void OdoratorModel::gasSupplyTime(int seconds) {
 		auto timeChar = '0' + seconds;
 		sendCommandData.clear();
 		for (auto it = 0; it < NumValves; it++) {
-			if (0 == startValue[it]) {
+			if (0 == startValueDouble[it]) {
 				continue;
 			}
 			sendCommandData.push_back(cartridgeName[it]);
@@ -28,13 +28,13 @@ void OdoratorModel::gasSupplyTime(int seconds) {
 }
 void OdoratorModel::calculatePrepareTheGasAirMixture() {
 	for (auto it = 0; it < NumValves; it++) {
-		if (0 == startValue[it]) {
+		if (0 == startValueDouble[it]) {
 			continue;
 		}
 		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('6');
 		sendCommandData.push_back('2');
-		auto times = calculateValue(startValue[it], 20);
+		auto times = calculateValue(startValueDouble[it], 20);
 		if (times <= 9) {
 			sendCommandData.push_back('0');
 		}
@@ -52,7 +52,7 @@ void OdoratorModel::randomGasAirSequence() {
 	shuffleValves(sequence, NumValves);
 
 	for (auto it = 0; it < NumValves; it++) {
-		if (0 == startValue[it]) {
+		if (0 == startValueDouble[it]) {
 			continue;
 		}
 		sendCommandData.push_back(cartridgeName[sequence[it]]);
@@ -61,7 +61,7 @@ void OdoratorModel::randomGasAirSequence() {
 }
 void OdoratorModel::sequenceGasAirSequence() {
 	for (auto it = 0; it < NumValves; it++) {
-		if (0 == startValue[it]) {
+		if (0 == startValueDouble[it]) {
 			continue;
 		}
 		sendCommandData.push_back(cartridgeName[it]);
@@ -85,10 +85,13 @@ void OdoratorModel::shuffleValves(int *arr, size_t n) {
 	}
 }
 void OdoratorModel::setValue(const double _value, const int _iter) {
-	startValue[_iter] = _value;
+	startValueDouble[_iter] = _value;
+}
+void OdoratorModel::setValue(const int _value, const int _iter) {
+	startValueInt[_iter] = _value;
 }
 double OdoratorModel::getValue(int index) const {
-	return startValue[index];
+	return startValueDouble[index];
 }
 void OdoratorModel::clearBuffer() {
 	sendCommandData.clear();

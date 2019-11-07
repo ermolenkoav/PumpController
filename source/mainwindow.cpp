@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	loadSettings();
 
 	timer = new QTimer(this);
-	supplyTime = 3;
-	delayTime = 15000;
+	supplyTime = 20000;
+	delayTime = 25000;
 	timer->setInterval(delayTime);
     // Signals: 
 	connect(pcmdSearch,				&QPushButton::clicked, this, &MainWindow::searchButtonClicked);
@@ -26,11 +26,17 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pcmdCleaningAirSystem,	&QPushButton::clicked, this, &MainWindow::cleaningAirSystemButtonClicked);
 	connect(pcmdSendSP,				&QPushButton::clicked, this, &MainWindow::manualSettingClicked);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
-	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), [=]() {
-				setSypplyTime(pspbSupplyTime->value()); controller->changeGasSupplyTime(MainWindow::supplyTime); });
-	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), [=]() { setDalayTime(); });
+	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
+		[=]() {
+		setSypplyTime(pspbSupplyTime->value()); 
+		controller->changeGasSupplyTime(MainWindow::supplyTime); 
+		});
+	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
+		[=]() { 
+		setDalayTime(); 
+		});
 	connect(pchbGCm3,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
-	connect(pchbTimes,				&QPushButton::toggled, this, &MainWindow::changeViewClicked);
+	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 }
 /************************************LOAD LAST SETTINGS************************************/
 void MainWindow::loadSettings() {
@@ -128,7 +134,7 @@ QGroupBox* MainWindow::createSetUpLayout() {
 		ploSetOfAllValves->addWidget(pgbValveSetUp[iter]);
 	}
 
-	pcmdSend = new QPushButton("Set Up", pgbSetOfAllValves);
+	pcmdSend = new QPushButton("Prepare a gas air mixture", pgbSetOfAllValves);
 	ploSetOfAllValves->addWidget(pcmdSend);
 
 	pgbSetOfAllValves->setLayout(ploSetOfAllValves);
@@ -199,11 +205,20 @@ void MainWindow::searchButtonClicked() {
 	});
 }
 void MainWindow::prepareTheGasAirMixtureButtonClicked() {
-	for (auto iterate = 0; iterate < NumValves; ++iterate) {
-		auto stTimes = ptxtConcentration[iterate]->text();
-		controller->setStartValue(stTimes.toDouble(), iterate);
+	if (pchbGCm3->isChecked()) {
+		for (auto iterate = 0; iterate < NumValves; ++iterate) {
+			auto stTimes = ptxtConcentration[iterate]->text();
+			controller->setStartValue(stTimes.toDouble(), iterate);
+		}
+		controller->prepareTheGasAirMixture();
 	}
-	controller->prepareTheGasAirMixture();
+	if (pchbTimes->isChecked()) {
+		for (auto iterate = 0; iterate < NumValves; ++iterate) {
+			auto stTimes = ptxtConcentration[iterate]->text();
+			controller->setStartValue(stTimes.toInt(), iterate);
+		}
+		controller->prepareTheGasAirMixture();
+	}
 }
 void MainWindow::shuffleStartButtonClicked() {
 	controller->setReadyToGo(true);
@@ -238,7 +253,7 @@ void MainWindow::changeViewClicked() {
 		}
 		
 	}
-	else if (pchbGCm3->isChecked()) {
+	if (pchbGCm3->isChecked()) {
 		for (auto i : plblTimes) {
 			i->setText("Concentrations, g/cm^3");
 		}

@@ -39,10 +39,8 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 	return false;
 }
 void Controller::cleaningAirSystem() {
-#ifndef _DEBUG
 	odoratorModel->cleaningAirSystem();
 	sendCommand(2, 6);
-#endif//_DEBUG
 }
 
 void Controller::sendCommand(int length, int times) {
@@ -58,8 +56,8 @@ void Controller::sendCommand(int length, int times) {
 				odoratorModel->sendCommandData.pop_front();
 			}
 			pSerialPort->write(sendBuffer);
-			pSerialPort->waitForBytesWritten(50);
-			std::this_thread::sleep_for(std::chrono::seconds(2));
+			pSerialPort->waitForBytesWritten(100);
+			std::this_thread::sleep_for(std::chrono::seconds(3));
 		}
 	}
 }
@@ -102,7 +100,14 @@ void Controller::clearBuffer() {
 }
 
 void Controller::setStartValue(const double _value, const int _iter) {
-	odoratorModel->setValue(_value, _iter);
+	if (_value <= _finalValue) {
+		odoratorModel->setValue(_value, _iter);
+	}
+}
+void Controller::setStartValue(const int _value, const int _iter) {
+	if ((_value >= 0) && (_value <= 10)) {
+		odoratorModel->setValue(_value, _iter);
+	}
 }
 bool Controller::isReady() {
 	return readyToGo;
