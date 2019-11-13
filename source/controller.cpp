@@ -15,9 +15,9 @@ Controller::Controller(MainWindow* _odoratorView) {
 	odoratorModel = new OdoratorModel;
 	settings = new Settings(odoratorModel, odoratorView);
 	pSerialPort = new QSerialPort;
-	loadValveValues();
+	loadWorkspace();
 }
-void Controller::loadValveValues() {
+void Controller::loadWorkspace() {
 	settings->loadWorkspace();
 }
 double Controller::getStartValue(int index) {
@@ -26,7 +26,7 @@ double Controller::getStartValue(int index) {
 bool Controller::serialPortInitialization(QString selectedDevice) {
 	if (!pSerialPort->isOpen()) {
 		pSerialPort->setPortName(selectedDevice);
-		pSerialPort->setBaudRate(QSerialPort::Baud9600);
+		pSerialPort->setBaudRate(QSerialPort::Baud115200);
 		pSerialPort->setDataBits(QSerialPort::Data8);
 		pSerialPort->setParity(QSerialPort::NoParity);
 		pSerialPort->setStopBits(QSerialPort::OneStop);
@@ -114,4 +114,16 @@ bool Controller::isReady() {
 }
 void Controller::setReadyToGo(bool _readyToGo) {
 	readyToGo = _readyToGo;
+}
+int Controller::getSupplyTime() {
+	return odoratorModel->getSupplyTime();
+}
+bool Controller::setSupplyTime(int temp) {
+	return odoratorModel->setSupplyTime(temp);
+}
+int Controller::getDelayTime() {
+	return odoratorModel->getDelayTime();
+}
+bool Controller::setDelayTime(int temp) {
+	return odoratorModel->setDelayTime(temp);
 }

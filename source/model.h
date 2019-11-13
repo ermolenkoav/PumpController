@@ -10,6 +10,9 @@ class OdoratorModel {
 	void shuffleValves(int *arr, size_t n);
 	int calculateValue(const double, int) const;
 
+	int supplyTime = { 3 };
+	int delayTime = { 25 };
+
 public:
 	std::list<char> sendCommandData;
 	// control commands:
@@ -20,11 +23,16 @@ public:
 	void cleaningAirSystem();
 	bool isBufferClear();
 	void gasSupplyTime(int seconds);
-	void gasDalayTime(int seconds);
+	//void gasDalayTime(int seconds);
 	void checkStatus();
 
 	void setValue(const double, const int);
 	double getValue(int index) const;
 	void setValue(const int, const int);
 	void clearBuffer();
+
+	int getSupplyTime();
+	bool setSupplyTime(int);
+	int getDelayTime();
+	bool setDelayTime(int);
 };

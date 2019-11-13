@@ -23,7 +23,6 @@ void OdoratorModel::gasSupplyTime(int seconds) {
 			sendCommandData.push_back('T');
 			sendCommandData.push_back(seconds);
 		}
-
 	}
 }
 void OdoratorModel::calculatePrepareTheGasAirMixture() {
@@ -98,4 +97,31 @@ void OdoratorModel::clearBuffer() {
 }
 bool OdoratorModel::isBufferClear() {
 	return sendCommandData.empty();
+}
+
+int OdoratorModel::getSupplyTime() {
+	return supplyTime;
+}
+bool OdoratorModel::setSupplyTime(int temp) {
+	if ((SupplyTimeMin >= temp) && ((SupplyTimeMax <= temp))) {
+		supplyTime = temp;
+	}
+	else {
+		supplyTime = 3;
+		return false;
+	}
+	return true;
+}
+int OdoratorModel::getDelayTime() {
+	return delayTime;
+}
+bool OdoratorModel::setDelayTime(int temp) {
+	if ((DelayTimeMin >= temp) && ((DelayTimeMax <= temp))) {
+		delayTime = temp;
+	}
+	else {
+		delayTime = 25;
+		return false;
+	}
+	return true;
 }

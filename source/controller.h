@@ -14,7 +14,7 @@ class Controller {
 	bool readyToGo = false;
 
 	void sendCommand(int, int);
-	void loadValveValues();
+	void loadWorkspace();
 public:	
 	Controller(MainWindow* _odoratorView);
 	~Controller();
@@ -32,5 +32,8 @@ public:
 	double getStartValue(int);
 	bool isReady();
 	void setReadyToGo(bool);
-
+	int getSupplyTime();
+	bool setSupplyTime(int);
+	int getDelayTime();
+	bool setDelayTime(int);
 };

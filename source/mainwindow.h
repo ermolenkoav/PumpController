@@ -43,6 +43,7 @@ class MainWindow : public QWidget {
 	void loadSettings();
 	void autoConnectToComPort(const QString& text);
 	void connectEvent(const QString& text);
+	void errorMessage(const QString&);
 
 	QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
@@ -51,8 +52,6 @@ class MainWindow : public QWidget {
 
 	// variables:
 	std::wstring comPortName;
-	int supplyTime;
-	int delayTime;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
@@ -62,10 +61,10 @@ public:
 	void setWindowPos(std::array<int, 2>);
 	std::wstring getComPortName();
 	void setComPortName(std::wstring&);
-	void setExecuteSequence(std::wstring&);
-	std::wstring getExecuteSequence();
+	void loadDelayTime(int);
+	std::wstring saveDelayTime();
 	void setSypplyTime(int);
-	void setDalayTime();
+	void setDalayTime(int);
 
 private slots:
 	void searchButtonClicked();

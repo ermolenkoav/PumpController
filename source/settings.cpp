@@ -7,29 +7,31 @@ Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
 	odoratorView = _odoratorView;
 }
 
-static auto strConcentration = L"Consentration";
-static auto strExecuteSequence = L"Execute sequence";
-static auto strGeometry = L"Geometry";
-static auto strComPort = L"Com Port";
-static auto strSettings = L"Settings";
+static auto cstrConcentration = L"Consentration";
+static auto cstrGeometry = L"Geometry";
+static auto cstrComPort = L"Com Port";
+static auto cstrSettings = L"Settings";
+static auto cstrSupplyTimes = L"Supply Times";
+static auto cstrDelayTimes = L"Delay Times";
 
 void Settings::saveWorkspace() {
 	if (std::wofstream settingFile(settingsFileName); settingFile.is_open()) {
-		json::value concentration, times, geometry, executeSequence, comPort, settings;
+		json::value concentration, delayTimes, supplyTimes, geometry, comPort, settings;
 		// Valves value:
 		for (auto it = 0; it < NumValves; it++) {
-			concentration[strConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
+			concentration[cstrConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
 		}
 		// Window geometry:
 		auto windowPos = odoratorView->getWindowPos();
-		geometry[strGeometry][L"0"] = json::value(windowPos.first);
-		geometry[strGeometry][L"1"] = json::value(windowPos.second);
+		geometry[cstrGeometry][L"0"] = json::value(windowPos.first);
+		geometry[cstrGeometry][L"1"] = json::value(windowPos.second);
 		// Last com port:
-		comPort[strComPort] = json::value::string(odoratorView->getComPortName());
+		comPort[cstrComPort] = json::value::string(odoratorView->getComPortName());
 		// Execute sequence:
-		executeSequence[strExecuteSequence] = json::value(odoratorView->getExecuteSequence());
+		delayTimes[cstrDelayTimes] = json::value(odoratorModel->getDelayTime());
+		supplyTimes[cstrSupplyTimes] = json::value(odoratorModel->getSupplyTime());
 		// Compile all application settings:
-		settings[strSettings] = json::value::array({ concentration, times, executeSequence, geometry, comPort });
+		settings[cstrSettings] = json::value::array({ concentration, delayTimes, supplyTimes, geometry, comPort });
 		settingFile << settings.serialize().c_str();
 	}
 }
@@ -58,17 +60,20 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 						ss << loadJSONValue(value);
 					}
 					else {
-						if (!parentName.compare(strConcentration)) {
+						if (!parentName.compare(cstrConcentration)) {
 							odoratorModel->setValue(value.as_double(), std::stoi(str));
 						}
-						if (!parentName.compare(strGeometry)) {
+						if (!parentName.compare(cstrGeometry)) {
 							windowPos[std::stoi(str)] = value.as_integer();
 						}
-						if (!parentName.compare(strComPort)) {
+						if (!parentName.compare(cstrComPort)) {
 							odoratorView->setComPortName(value.to_string());
 						}
-						if (!parentName.compare(strExecuteSequence)) {
-							odoratorView->setExecuteSequence(value.to_string());
+						if (!parentName.compare(cstrSupplyTimes)) {
+							odoratorModel->setSupplyTime(value.as_integer());
+						}
+						if (!parentName.compare(cstrDelayTimes)) {
+							odoratorModel->setDelayTime(value.as_integer());
 						}
 					}
 				}
@@ -87,8 +92,6 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 
 	return ss.str();
 }
-
-
 std::wstring Settings::DisplayJSONValue(web::json::value v) {
 	std::wstringstream ss;
 	try {
@@ -132,7 +135,6 @@ std::wstring Settings::DisplayJSONValue(web::json::value v) {
 
 	return ss.str();
 }
-
 void Settings::saveCurrentData() {
 	if(std::wifstream settingFile(logFileName); settingFile.is_open()) {}
 }

@@ -9,40 +9,40 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowIcon(QIcon(":APPLICATION_LOGO"));
 	setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	setWindowTitle(APPLICATION_NAME);
-	createMainWindowLayout();
 	controller = new Controller(this);
-	loadSettings();
 
 	timer = new QTimer(this);
-	supplyTime = 20000;
-	delayTime = 25000;
-	timer->setInterval(delayTime);
-    // Signals: 
-	connect(pcmdSearch,				&QPushButton::clicked, this, &MainWindow::searchButtonClicked);
+	timer->setInterval(controller->getDelayTime() * 1000);
+
+	createMainWindowLayout();
+	loadSettings();
+
+    // Signals:
 	connect(pcmdSend,				&QPushButton::clicked, this, &MainWindow::prepareTheGasAirMixtureButtonClicked);
-	connect(pcmdStart,				&QPushButton::clicked, this, &MainWindow::startButtonClicked);
-	connect(pcmdStop,				&QPushButton::clicked, this, &MainWindow::stopButtonClicked);
-	connect(pcmdPause,				&QPushButton::clicked, this, &MainWindow::pauseButtonClicked);
 	connect(pcmdCleaningAirSystem,	&QPushButton::clicked, this, &MainWindow::cleaningAirSystemButtonClicked);
 	connect(pcmdSendSP,				&QPushButton::clicked, this, &MainWindow::manualSettingClicked);
+	connect(pcmdSearch,				&QPushButton::clicked, this, &MainWindow::searchButtonClicked);
+	connect(pcmdStart,				&QPushButton::clicked, this, &MainWindow::startButtonClicked);
+	connect(pcmdPause,				&QPushButton::clicked, this, &MainWindow::pauseButtonClicked);
+	connect(pcmdStop,				&QPushButton::clicked, this, &MainWindow::stopButtonClicked);
+	connect(pchbGCm3,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
+	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
 		[=]() {
 		setSypplyTime(pspbSupplyTime->value()); 
-		controller->changeGasSupplyTime(MainWindow::supplyTime); 
 		});
 	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
 		[=]() { 
-		setDalayTime(); 
+		setDalayTime(pspbDelayTime->value());
 		});
-	connect(pchbGCm3,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
-	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 }
 /************************************LOAD LAST SETTINGS************************************/
 void MainWindow::loadSettings() {
-	for (auto iterate = 0; iterate < NumValves; ++iterate) {
+	for (auto iterate = 0; iterate < NumValves; ++iterate) {  // All previous concentrations
 		ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(iterate)));
 	}
+	pspbDelayTime->setValue(controller->getDelayTime());
 }
 std::pair<int, int> MainWindow::getWindowPos() {
 	auto windowPosPoint = pos();
@@ -72,18 +72,22 @@ void MainWindow::connectEvent(const QString& text) {
 		controller->cleaningAirSystem();
 	}
 }
-void MainWindow::setExecuteSequence(std::wstring &text) {
-	pspbDelayTime->setValue(QString::fromStdWString(text).toInt());
-}
-std::wstring MainWindow::getExecuteSequence() {
+std::wstring MainWindow::saveDelayTime() {
 	return pspbDelayTime->text().toStdWString();
 }
 void MainWindow::setSypplyTime(int time) {
-	supplyTime = time;
+	if (!controller->setSupplyTime(time)) {
+		errorMessage("An error has occured !");
+	}
+	controller->changeGasSupplyTime(controller->getSupplyTime());
 }
-void MainWindow::setDalayTime() {
-	auto time = pspbDelayTime->value() * 1000;
-	timer->setInterval(time);
+void MainWindow::setDalayTime(int time) {
+	if (!controller->setDelayTime(time)) {
+		errorMessage("An error has occured !");
+	}
+
+	timer->setInterval(time * 1000);
+	// To Do : Commant tp change time
 }
 /************************************CREATE VIEW LAYOUT************************************/
 void MainWindow::createMainWindowLayout() {
@@ -147,17 +151,17 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	auto plblSupplyTime = new QLabel("Supply Time, s", this);
 	ploExecuteLayout->addWidget(plblSupplyTime, 0, 0, Qt::AlignCenter);
 	pspbSupplyTime = new QSpinBox(this);
-	pspbSupplyTime->setMinimum(1);
-	pspbSupplyTime->setMaximum(9);
-	pspbSupplyTime->setValue(3);
+	pspbSupplyTime->setMinimum(SupplyTimeMin);
+	pspbSupplyTime->setMaximum(SupplyTimeMax);
+	pspbSupplyTime->setValue(controller->getSupplyTime());
 	ploExecuteLayout->addWidget(pspbSupplyTime, 0, 1);
 
 	auto plblDelayTime = new QLabel("Delay Time, s", this);
 	ploExecuteLayout->addWidget(plblDelayTime, 1, 0, Qt::AlignCenter);
 	pspbDelayTime = new QSpinBox(this);
-	pspbDelayTime->setMinimum(1);
-	pspbDelayTime->setMaximum(60);
-	pspbDelayTime->setValue(delayTime / 1000);
+	pspbDelayTime->setMinimum(DelayTimeMin);
+	pspbDelayTime->setMaximum(DelayTimeMax);
+	pspbDelayTime->setValue(controller->getDelayTime());
 	ploExecuteLayout->addWidget(pspbDelayTime, 1, 1);
 
 	prbtSequenceStart = new QRadioButton("Sequence Start", this);
@@ -236,7 +240,7 @@ void MainWindow::startButtonClicked() {
 	if (prbtShuffleStart->isChecked()) {
 		controller->startUpShuffleAirMixture();
 	}
-	timer->start(supplyTime);
+	timer->start(controller->getSupplyTime());
 }
 void MainWindow::cleaningAirSystemButtonClicked() {
 	controller->cleaningAirSystem();
@@ -272,4 +276,9 @@ void MainWindow::changeViewClicked() {
 		}
 		
 	}
+}
+void MainWindow::errorMessage(const QString& errorMsg) {
+	QMessageBox messageBox;
+	messageBox.critical(0, "Error", errorMsg);
+	messageBox.setFixedSize(500, 200);
 }
