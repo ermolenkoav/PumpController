@@ -127,3 +127,6 @@ int Controller::getDelayTime() {
 bool Controller::setDelayTime(int temp) {
 	return odoratorModel->setDelayTime(temp);
 }
+void Controller::saveCurrentWorkSpace() {
+	settings->saveWorkspace();
+}

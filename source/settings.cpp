@@ -3,6 +3,7 @@
 using namespace web;
 
 Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
+	//TO DO: pointer to class is mast be const
 	odoratorModel = _odoratorModel;
 	odoratorView = _odoratorView;
 }

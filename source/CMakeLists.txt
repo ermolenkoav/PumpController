@@ -66,11 +66,15 @@ target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARIES})
 #-------------------------------------------------------------------------------
 #	GENERATE INSTALLER
 #-------------------------------------------------------------------------------
-if (CMAKE_BUILD_TYPE MATCHES Release AND MSVC)
+if (MSVC)
 	message("Enable CPack.")
 
-	install(TARGETS ${TARGET_NAME} DESTINATION /)
-	file(GLOB DYNAMIC_LINK_LIB ${CMAKE_BINARY_DIR}/source/*.dll ${CMAKE_BINARY_DIR}/source/qt.conf)
+	#install(TARGETS ${TARGET_NAME} DESTINATION /)
+	file(GLOB DYNAMIC_LINK_LIB 
+				${CMAKE_BINARY_DIR}/source/*.dll 
+				${CMAKE_BINARY_DIR}/source/qt.conf
+				${CMAKE_BINARY_DIR}/source/*.exe
+				)
 	install(FILES ${DYNAMIC_LINK_LIB} DESTINATION /)
 	install(DIRECTORY ${CMAKE_BINARY_DIR}/source/plugins/ DESTINATION plugins/)
 

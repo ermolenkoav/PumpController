@@ -13,6 +13,7 @@
 #include <QRadioButton>
 #include <QPushButton>
 #include <QToolButton>
+#include <QCloseEvent>
 #include <QCheckBox>
 #include <QTabWidget>
 #include <QByteArray>

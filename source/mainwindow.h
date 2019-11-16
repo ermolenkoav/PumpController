@@ -61,8 +61,7 @@ public:
 	void setWindowPos(std::array<int, 2>);
 	std::wstring getComPortName();
 	void setComPortName(std::wstring&);
-	void loadDelayTime(int);
-	std::wstring saveDelayTime();
+	void saveDelayTime();
 	void setSypplyTime(int);
 	void setDalayTime(int);
 
@@ -72,6 +71,7 @@ private slots:
 	void cleaningAirSystemButtonClicked();
 	void stopButtonClicked();
 	void timeOutSlot();
+	void closeEvent();
 	void manualSettingClicked();
 	void changeViewClicked();
 	void startButtonClicked();

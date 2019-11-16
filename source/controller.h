@@ -36,4 +36,5 @@ public:
 	bool setSupplyTime(int);
 	int getDelayTime();
 	bool setDelayTime(int);
+	void saveCurrentWorkSpace();
 };

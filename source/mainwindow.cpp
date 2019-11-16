@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pcmdStop,				&QPushButton::clicked, this, &MainWindow::stopButtonClicked);
 	connect(pchbGCm3,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
+	connect(qApp,					SIGNAL(aboutToQuit()), this, SLOT(closeEvent()));
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
 		[=]() {
@@ -72,8 +73,8 @@ void MainWindow::connectEvent(const QString& text) {
 		controller->cleaningAirSystem();
 	}
 }
-std::wstring MainWindow::saveDelayTime() {
-	return pspbDelayTime->text().toStdWString();
+void MainWindow::saveDelayTime() {
+	controller->setDelayTime(pspbDelayTime->text().toInt());
 }
 void MainWindow::setSypplyTime(int time) {
 	if (!controller->setSupplyTime(time)) {
@@ -88,6 +89,15 @@ void MainWindow::setDalayTime(int time) {
 
 	timer->setInterval(time * 1000);
 	// To Do : Commant tp change time
+}
+void MainWindow::closeEvent() {
+	QMessageBox::StandardButton resBtn = QMessageBox::question(this, APPLICATION_NAME,
+		tr("Save privious session?\n"), QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+		QMessageBox::Yes);
+	if (resBtn == QMessageBox::Yes) {
+		controller->saveCurrentWorkSpace();
+	}
+
 }
 /************************************CREATE VIEW LAYOUT************************************/
 void MainWindow::createMainWindowLayout() {
