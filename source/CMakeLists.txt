@@ -13,7 +13,6 @@ set(ORGANIZATION_EMAIL "ermolenkoav@yandex.ru")
 set(CPACK_PACKAGE_VERSION "${CPACK_VERSION_MAJOR}.${CPACK_VERSION_MINOR}.${CPACK_VERSION_PATCH}")
 configure_file(version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
 
-
 #-------------------------------------------------------------------------------
 #	Settings
 #-------------------------------------------------------------------------------
@@ -67,7 +66,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARIES})
 #	GENERATE INSTALLER
 #-------------------------------------------------------------------------------
 if (MSVC)
-	message("Enable CPack.")
+	message("-- Enable CPack. cpack -C Release")
 
 	#install(TARGETS ${TARGET_NAME} DESTINATION /)
 	file(GLOB DYNAMIC_LINK_LIB 

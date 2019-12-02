@@ -41,17 +41,14 @@ class MainWindow : public QWidget {
     // methods:
 	void createMainWindowLayout();
 	void loadSettings();
-	void autoConnectToComPort(const QString& text);
+	void autoConnectToComPort();
 	void connectEvent(const QString& text);
-	void errorMessage(const QString&);
+	const QString& toQString(const std::wstring& str);
 
 	QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
 	QGroupBox* createManualSettingLayout();
-
-	// variables:
-	std::wstring comPortName;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
@@ -60,10 +57,11 @@ public:
 	std::pair<int, int> getWindowPos();
 	void setWindowPos(std::array<int, 2>);
 	std::wstring getComPortName();
-	void setComPortName(std::wstring&);
+	void setComPortName(const std::wstring&);
 	void saveDelayTime();
 	void setSypplyTime(int);
 	void setDalayTime(int);
+	void errorMessage(const std::wstring&);
 
 private slots:
 	void searchButtonClicked();

@@ -15,6 +15,7 @@ class Controller {
 
 	void sendCommand(int, int);
 	void loadWorkspace();
+
 public:	
 	Controller(MainWindow* _odoratorView);
 	~Controller();
@@ -22,8 +23,8 @@ public:
 	bool serialPortInitialization(QString);
 	void prepareTheGasAirMixture();
 	void changeGasSupplyTime(int time);
-	void startUpShuffleAirMixture();
-	void startUpSequenceAirMixture();
+	void startUpShuffleAirDelivery();
+	void startUpSequenceAirDelivery();
 	void manualSetting(std::string command);
 	void cleaningAirSystem();
 	void clearBuffer();
@@ -37,4 +38,6 @@ public:
 	int getDelayTime();
 	bool setDelayTime(int);
 	void saveCurrentWorkSpace();
+	void setComPortName(const std::wstring&);
+	const std::wstring& getComPortName();
 };

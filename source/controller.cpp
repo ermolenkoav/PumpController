@@ -1,6 +1,5 @@
 #include "controller.h"
 
-#define AIR_GAS_DELAY 13
 #define SIXTH_COMMAND_LENGTH 5
 #define S_COMMAND_LENGTH 2
 
@@ -34,7 +33,7 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 		pSerialPort->open(QIODevice::ReadWrite);
 		return true;
 	} else {
-		//QMessageBox::warning(this, "warning", "com port is open", QMessageBox::Ok);
+		//odoratorView->errorMessage("Com port is open");
 	}
 	return false;
 }
@@ -57,7 +56,7 @@ void Controller::sendCommand(int length, int times) {
 			}
 			pSerialPort->write(sendBuffer);
 			pSerialPort->waitForBytesWritten(100);
-			std::this_thread::sleep_for(std::chrono::seconds(3));
+			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 	}
 }
@@ -65,30 +64,24 @@ void Controller::prepareTheGasAirMixture() {
 	odoratorModel->calculatePrepareTheGasAirMixture();
 	sendCommand(SIXTH_COMMAND_LENGTH, 6);
 	settings->saveWorkspace();
+	odoratorModel->clearBuffer();
 }
 void Controller::changeGasSupplyTime(int time) {
 	odoratorModel->gasSupplyTime(time);
 	sendCommand(3, 6);
 }
-void Controller::startUpShuffleAirMixture() {
+void Controller::startUpShuffleAirDelivery() {
 	if (isReady()) {
-		odoratorModel->randomGasAirSequence();
-		if (odoratorModel->isBufferClear()) {
-			odoratorModel->sequenceGasAirSequence();
-		}
+		//odoratorModel->randomGasAirSequence();
 		sendCommand(S_COMMAND_LENGTH, 1);
-		settings->saveCurrentData();
 	}
 }
-
-void Controller::startUpSequenceAirMixture() {
+void Controller::startUpSequenceAirDelivery() {
 	if (isReady()) {
-		odoratorModel->sequenceGasAirSequence();
 		if (odoratorModel->isBufferClear()) {
-			odoratorModel->sequenceGasAirSequence();
+			odoratorModel->sequenceGasAirDelivery();
 		}
 		sendCommand(S_COMMAND_LENGTH, 1);
-		settings->saveCurrentData();
 	}
 }
 void Controller::manualSetting(std::string command) {
@@ -98,7 +91,6 @@ void Controller::manualSetting(std::string command) {
 void Controller::clearBuffer() {
 	odoratorModel->sendCommandData.clear();
 }
-
 void Controller::setStartValue(const double _value, const int _iter) {
 	if (_value <= _finalValue) {
 		odoratorModel->setValue(_value, _iter);
@@ -122,11 +114,17 @@ bool Controller::setSupplyTime(int temp) {
 	return odoratorModel->setSupplyTime(temp);
 }
 int Controller::getDelayTime() {
-	return odoratorModel->getDelayTime();
+	return odoratorModel->getDelayTime() * 1000;
 }
 bool Controller::setDelayTime(int temp) {
 	return odoratorModel->setDelayTime(temp);
 }
 void Controller::saveCurrentWorkSpace() {
 	settings->saveWorkspace();
+}
+void Controller::setComPortName(const std::wstring& name) {
+	odoratorModel->setComPortName(name);
+}
+const std::wstring& Controller::getComPortName() {
+	return odoratorModel->getComPortName();
 }

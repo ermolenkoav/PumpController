@@ -10,15 +10,17 @@ class OdoratorModel {
 	void shuffleValves(int *arr, size_t n);
 	int calculateValue(const double, int) const;
 
-	int supplyTime = { 3 };
-	int delayTime = { 25 };
+	// variables:
+	int supplyTime = {};
+	int delayTime = {};
+	std::wstring comPortName;
 
 public:
 	std::list<char> sendCommandData;
 	// control commands:
 	void calculatePrepareTheGasAirMixture();
-	void randomGasAirSequence();
-	void sequenceGasAirSequence();
+	void randomGasAirDelivery();
+	void sequenceGasAirDelivery();
 	void addCustomCommand(std::string command);
 	void cleaningAirSystem();
 	bool isBufferClear();
@@ -35,4 +37,6 @@ public:
 	bool setSupplyTime(int);
 	int getDelayTime();
 	bool setDelayTime(int);
+	void setComPortName(const std::wstring);
+	std::wstring getComPortName();
 };

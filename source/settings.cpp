@@ -27,7 +27,7 @@ void Settings::saveWorkspace() {
 		geometry[cstrGeometry][L"0"] = json::value(windowPos.first);
 		geometry[cstrGeometry][L"1"] = json::value(windowPos.second);
 		// Last com port:
-		comPort[cstrComPort] = json::value::string(odoratorView->getComPortName());
+		comPort[cstrComPort] = json::value::string(odoratorModel->getComPortName());
 		// Execute sequence:
 		delayTimes[cstrDelayTimes] = json::value(odoratorModel->getDelayTime());
 		supplyTimes[cstrSupplyTimes] = json::value(odoratorModel->getSupplyTime());
@@ -68,7 +68,7 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 							windowPos[std::stoi(str)] = value.as_integer();
 						}
 						if (!parentName.compare(cstrComPort)) {
-							odoratorView->setComPortName(value.to_string());
+							odoratorModel->setComPortName(value.to_string());
 						}
 						if (!parentName.compare(cstrSupplyTimes)) {
 							odoratorModel->setSupplyTime(value.as_integer());

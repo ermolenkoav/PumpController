@@ -12,10 +12,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	controller = new Controller(this);
 
 	timer = new QTimer(this);
-	timer->setInterval(controller->getDelayTime() * 1000);
+	timer->setInterval(controller->getDelayTime());
 
 	createMainWindowLayout();
 	loadSettings();
+	//autoConnectToComPort();
 
     // Signals:
 	connect(pcmdSend,				&QPushButton::clicked, this, &MainWindow::prepareTheGasAirMixtureButtonClicked);
@@ -53,42 +54,32 @@ std::pair<int, int> MainWindow::getWindowPos() {
 void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
 	move(windowPos[0], windowPos[1]);
 }
-std::wstring MainWindow::getComPortName() {
-	return comPortName;
-}
-void MainWindow::setComPortName(std::wstring &_comPortName) {
-	comPortName = _comPortName;
-}
-void MainWindow::autoConnectToComPort(const QString& text) {
-	if (!comPortName.empty()) {
-		connectEvent(text);
+void MainWindow::autoConnectToComPort() {
+	if (!controller->getComPortName().empty()) 
+	{
+		connectEvent(toQString(controller->getComPortName()));
 	}
 }
 void MainWindow::connectEvent(const QString& text) {
 	if (controller->serialPortInitialization(text)) {
-		comPortName = text.toStdWString();
+		controller->setComPortName(text.toStdWString());
 		pcmdSearch->setText("Connected");
 		pcmdSearch->setCheckable(false);
 		std::this_thread::sleep_for(std::chrono::seconds(3));
 		controller->cleaningAirSystem();
 	}
 }
-void MainWindow::saveDelayTime() {
-	controller->setDelayTime(pspbDelayTime->text().toInt());
-}
 void MainWindow::setSypplyTime(int time) {
 	if (!controller->setSupplyTime(time)) {
-		errorMessage("An error has occured !");
+		errorMessage(L"An error has occured!");
 	}
-	controller->changeGasSupplyTime(controller->getSupplyTime());
+	controller->changeGasSupplyTime(time);
 }
 void MainWindow::setDalayTime(int time) {
 	if (!controller->setDelayTime(time)) {
-		errorMessage("An error has occured !");
+		errorMessage(L"An error has occured!");
 	}
-
-	timer->setInterval(time * 1000);
-	// To Do : Commant tp change time
+	timer->setInterval(controller->getDelayTime());
 }
 void MainWindow::closeEvent() {
 	QMessageBox::StandardButton resBtn = QMessageBox::question(this, APPLICATION_NAME,
@@ -97,7 +88,6 @@ void MainWindow::closeEvent() {
 	if (resBtn == QMessageBox::Yes) {
 		controller->saveCurrentWorkSpace();
 	}
-
 }
 /************************************CREATE VIEW LAYOUT************************************/
 void MainWindow::createMainWindowLayout() {
@@ -205,13 +195,13 @@ QGroupBox* MainWindow::createManualSettingLayout() {
 	pcmdSendSP = new QPushButton("Send", this);
 	ploManualSettingLayout->addWidget(pcmdSendSP, 0, 1);
 
-	//pcmdChangeView = new QPushButton("Change View", this);
-	//ploManualSettingLayout->addWidget(pcmdChangeView, 1, 0);
-
 	pgbManualSettingLayout->setLayout(ploManualSettingLayout);
 	return pgbManualSettingLayout;
 }
 /********************************RESPOND EVENTS AND SIGNALS********************************/
+void MainWindow::cleaningAirSystemButtonClicked() {
+	controller->cleaningAirSystem();
+}
 void MainWindow::searchButtonClicked() {
  	auto pcmbListOfPorts = new QComboBox(pcmdSearch);
 	auto serialPortInfos = QSerialPortInfo::availablePorts();
@@ -241,19 +231,19 @@ void MainWindow::prepareTheGasAirMixtureButtonClicked() {
 		}
 		controller->prepareTheGasAirMixture();
 	}
+	controller->setReadyToGo(true);
 }
 void MainWindow::startButtonClicked() {
-	controller->setReadyToGo(true);
+	timeOutSlot();
+	timer->start(controller->getDelayTime());
+}
+void MainWindow::timeOutSlot() {
 	if (prbtSequenceStart->isChecked()) {
-		controller->startUpSequenceAirMixture();
+		controller->startUpSequenceAirDelivery();
 	}
 	if (prbtShuffleStart->isChecked()) {
-		controller->startUpShuffleAirMixture();
+		controller->startUpShuffleAirDelivery();
 	}
-	timer->start(controller->getSupplyTime());
-}
-void MainWindow::cleaningAirSystemButtonClicked() {
-	controller->cleaningAirSystem();
 }
 void MainWindow::stopButtonClicked() {
 	controller->setReadyToGo(false);
@@ -261,13 +251,7 @@ void MainWindow::stopButtonClicked() {
 	controller->clearBuffer();
 }
 void MainWindow::pauseButtonClicked() {
-	controller->setReadyToGo(false);
 	timer->stop();
-}
-void MainWindow::timeOutSlot() {
-	if (true) { controller->startUpSequenceAirMixture(); }
-	else { controller->startUpShuffleAirMixture(); }
-	
 }
 void MainWindow::manualSettingClicked() {
 	auto command = ptxtSerialPort->text();
@@ -278,17 +262,20 @@ void MainWindow::changeViewClicked() {
 		for (auto i : plblTimes) {
 			i->setText("Times to mix");
 		}
-		
 	}
 	if (pchbGCm3->isChecked()) {
 		for (auto i : plblTimes) {
 			i->setText("Concentrations, g/cm^3");
 		}
-		
 	}
 }
-void MainWindow::errorMessage(const QString& errorMsg) {
+void MainWindow::errorMessage(const std::wstring& errorMsg) {
 	QMessageBox messageBox;
-	messageBox.critical(0, "Error", errorMsg);
+	//QString qErrorMsg = QString::fromStdString(errorMsg);
+	messageBox.critical(0, "Error", toQString(errorMsg));
 	messageBox.setFixedSize(500, 200);
+}
+const QString& MainWindow::toQString(const std::wstring& str) {
+	QString qstr = QString::fromStdWString(str);
+	return qstr;
 }
