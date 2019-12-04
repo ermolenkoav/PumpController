@@ -13,6 +13,7 @@ class OdoratorModel {
 	// variables:
 	int supplyTime = {};
 	int delayTime = {};
+	char workingVolume = '2';
 	std::wstring comPortName;
 
 public:
@@ -25,18 +26,18 @@ public:
 	void cleaningAirSystem();
 	bool isBufferClear();
 	void gasSupplyTime(int seconds);
-	//void gasDalayTime(int seconds);
-	void checkStatus();
 
 	void setValue(const double, const int);
 	double getValue(int index) const;
 	void setValue(const int, const int);
 	void clearBuffer();
 
-	int getSupplyTime();
+	int getSupplyTime() const;
 	bool setSupplyTime(int);
-	int getDelayTime();
+	int getDelayTime() const;
 	bool setDelayTime(int);
 	void setComPortName(const std::wstring);
-	std::wstring getComPortName();
+	std::wstring getComPortName() const;
+	void setWorkingVolume(char);
+	char getWorkingVolume() const;
 };

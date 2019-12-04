@@ -12,16 +12,12 @@ static auto cstrConcentration = L"Consentration";
 static auto cstrGeometry = L"Geometry";
 static auto cstrComPort = L"Com Port";
 static auto cstrSettings = L"Settings";
-static auto cstrSupplyTimes = L"Supply Times";
-static auto cstrDelayTimes = L"Delay Times";
+static std::wstring cstrSupplyTimes = L"Supply Times";
+static std::wstring cstrDelayTimes = L"Delay Times";
 
 void Settings::saveWorkspace() {
 	if (std::wofstream settingFile(settingsFileName); settingFile.is_open()) {
 		json::value concentration, delayTimes, supplyTimes, geometry, comPort, settings;
-		// Valves value:
-		for (auto it = 0; it < NumValves; it++) {
-			concentration[cstrConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
-		}
 		// Window geometry:
 		auto windowPos = odoratorView->getWindowPos();
 		geometry[cstrGeometry][L"0"] = json::value(windowPos.first);
@@ -31,6 +27,10 @@ void Settings::saveWorkspace() {
 		// Execute sequence:
 		delayTimes[cstrDelayTimes] = json::value(odoratorModel->getDelayTime());
 		supplyTimes[cstrSupplyTimes] = json::value(odoratorModel->getSupplyTime());
+		// Valves value:
+		for (auto it = 0; it < NumValves; it++) {
+			concentration[cstrConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
+		}
 		// Compile all application settings:
 		settings[cstrSettings] = json::value::array({ concentration, delayTimes, supplyTimes, geometry, comPort });
 		settingFile << settings.serialize().c_str();
@@ -56,6 +56,19 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 					const auto& value = iter->second;
 					static auto parentName = iter->first;
 
+					if (!str.compare(cstrSupplyTimes)) {
+						odoratorModel->setSupplyTime(value.as_integer());
+						continue;
+					}
+					if (!str.compare(cstrDelayTimes)) {
+						odoratorModel->setDelayTime(value.as_integer());
+						continue;
+					}
+					if (!str.compare(cstrComPort)) {
+						odoratorModel->setComPortName(value.as_string());
+						continue;
+					}
+
 					if (value.is_object() || value.is_array()) {
 						parentName = str;
 						ss << loadJSONValue(value);
@@ -66,15 +79,6 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 						}
 						if (!parentName.compare(cstrGeometry)) {
 							windowPos[std::stoi(str)] = value.as_integer();
-						}
-						if (!parentName.compare(cstrComPort)) {
-							odoratorModel->setComPortName(value.to_string());
-						}
-						if (!parentName.compare(cstrSupplyTimes)) {
-							odoratorModel->setSupplyTime(value.as_integer());
-						}
-						if (!parentName.compare(cstrDelayTimes)) {
-							odoratorModel->setDelayTime(value.as_integer());
 						}
 					}
 				}

@@ -28,7 +28,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pcmdStop,				&QPushButton::clicked, this, &MainWindow::stopButtonClicked);
 	connect(pchbGCm3,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
-	connect(qApp,					SIGNAL(aboutToQuit()), this, SLOT(closeEvent()));
+	//connect(qApp,					SIGNAL(aboutToQuit()), this, SLOT(closeEvent()));
+	//connect(exitAction,			&QAction::triggered,   this, &QApplication::quit);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
 		[=]() {
@@ -44,7 +45,8 @@ void MainWindow::loadSettings() {
 	for (auto iterate = 0; iterate < NumValves; ++iterate) {  // All previous concentrations
 		ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(iterate)));
 	}
-	pspbDelayTime->setValue(controller->getDelayTime());
+	pspbDelayTime->setValue(controller->getDelayTime() / 1000);
+	pspbSupplyTime->setValue(controller->getSupplyTime());
 }
 std::pair<int, int> MainWindow::getWindowPos() {
 	auto windowPosPoint = pos();
@@ -65,8 +67,8 @@ void MainWindow::connectEvent(const QString& text) {
 		controller->setComPortName(text.toStdWString());
 		pcmdSearch->setText("Connected");
 		pcmdSearch->setCheckable(false);
-		std::this_thread::sleep_for(std::chrono::seconds(3));
-		controller->cleaningAirSystem();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		//controller->cleaningAirSystem();
 	}
 }
 void MainWindow::setSypplyTime(int time) {
@@ -81,13 +83,17 @@ void MainWindow::setDalayTime(int time) {
 	}
 	timer->setInterval(controller->getDelayTime());
 }
-void MainWindow::closeEvent() {
+void MainWindow::closeEvent(QCloseEvent *event) {
 	QMessageBox::StandardButton resBtn = QMessageBox::question(this, APPLICATION_NAME,
 		tr("Save privious session?\n"), QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
-		QMessageBox::Yes);
+			QMessageBox::Yes);
+	if (resBtn == QMessageBox::Cancel) {
+		event->ignore();
+	}
 	if (resBtn == QMessageBox::Yes) {
 		controller->saveCurrentWorkSpace();
 	}
+	event->accept();
 }
 /************************************CREATE VIEW LAYOUT************************************/
 void MainWindow::createMainWindowLayout() {
@@ -153,7 +159,6 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	pspbSupplyTime = new QSpinBox(this);
 	pspbSupplyTime->setMinimum(SupplyTimeMin);
 	pspbSupplyTime->setMaximum(SupplyTimeMax);
-	pspbSupplyTime->setValue(controller->getSupplyTime());
 	ploExecuteLayout->addWidget(pspbSupplyTime, 0, 1);
 
 	auto plblDelayTime = new QLabel("Delay Time, s", this);
@@ -161,7 +166,6 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	pspbDelayTime = new QSpinBox(this);
 	pspbDelayTime->setMinimum(DelayTimeMin);
 	pspbDelayTime->setMaximum(DelayTimeMax);
-	pspbDelayTime->setValue(controller->getDelayTime());
 	ploExecuteLayout->addWidget(pspbDelayTime, 1, 1);
 
 	prbtSequenceStart = new QRadioButton("Sequence Start", this);
@@ -271,11 +275,10 @@ void MainWindow::changeViewClicked() {
 }
 void MainWindow::errorMessage(const std::wstring& errorMsg) {
 	QMessageBox messageBox;
-	//QString qErrorMsg = QString::fromStdString(errorMsg);
 	messageBox.critical(0, "Error", toQString(errorMsg));
 	messageBox.setFixedSize(500, 200);
 }
-const QString& MainWindow::toQString(const std::wstring& str) {
+QString& MainWindow::toQString(const std::wstring& str) {
 	QString qstr = QString::fromStdWString(str);
 	return qstr;
 }

@@ -20,7 +20,7 @@ void OdoratorModel::gasSupplyTime(int seconds) {
 			}
 			sendCommandData.push_back(cartridgeName[it]);
 			sendCommandData.push_back('T');
-			sendCommandData.push_back(seconds);
+			sendCommandData.push_back('0' + seconds);
 		}
 	}
 }
@@ -31,14 +31,41 @@ void OdoratorModel::calculatePrepareTheGasAirMixture() {
 		}
 		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('6');
-		sendCommandData.push_back('2');
-		auto times = calculateValue(startValueDouble[it], 20);
-		if (times <= 9) {
+		sendCommandData.push_back(workingVolume);
+		int iworkingVolume = (int)(workingVolume - '0') * 10;
+		auto times = calculateValue(startValueDouble[it], iworkingVolume);
+		if ( (0 <= times) && (9 >= times) ) {
 			sendCommandData.push_back('0');
+			sendCommandData.push_back((char)('0' + times));
 		}
-		sendCommandData.push_back(times + '0');
+		else if ( (10 <= times) && (20 >= times) ) {
+			sendCommandData.push_back('1');
+			times -= 10;
+			sendCommandData.push_back('0' + times);
+		}
 	}
-}/*
+}
+bool OdoratorModel::setSupplyTime(int temp) {
+	if ((SupplyTimeMin <= temp) && (SupplyTimeMax >= temp)) {
+		supplyTime = temp;
+	}
+	else {
+		supplyTime = 3;
+		return false;
+	}
+	return true;
+}
+bool OdoratorModel::setDelayTime(int temp) {
+	if ((DelayTimeMin <= temp) && (DelayTimeMax >= temp)) {
+		delayTime = temp;
+	}
+	else {
+		delayTime = 25;
+		return false;
+	}
+	return true;
+}
+/*
 void OdoratorModel::checkStatus() {
 	while (!sendCommandData.empty()) {
 		sendCommandData.push_back(cartridgeName[5]);
@@ -96,35 +123,23 @@ void OdoratorModel::clearBuffer() {
 bool OdoratorModel::isBufferClear() {
 	return sendCommandData.empty();
 }
-int OdoratorModel::getSupplyTime() {
+int OdoratorModel::getSupplyTime() const {
 	return supplyTime;
 }
-bool OdoratorModel::setSupplyTime(int temp) {
-	if ((SupplyTimeMin <= temp) && ((SupplyTimeMax >= temp))) {
-		supplyTime = temp;
-	}
-	else {
-		supplyTime = 3;
-		return false;
-	}
-	return true;
-}
-int OdoratorModel::getDelayTime() {
+int OdoratorModel::getDelayTime() const {
 	return delayTime;
-}
-bool OdoratorModel::setDelayTime(int temp) {
-	if ( (DelayTimeMin <= temp) && (DelayTimeMax >= temp) ) {
-		delayTime = temp;
-	}
-	else {
-		delayTime = 25;
-		return false;
-	}
-	return true;
 }
 void OdoratorModel::setComPortName(const std::wstring name) {
 	comPortName = name;
 }
-std::wstring OdoratorModel::getComPortName() {
+std::wstring OdoratorModel::getComPortName() const {
 	return comPortName;
+}
+void OdoratorModel::setWorkingVolume(char vol) {
+	if ((0 < vol) && (10 > vol)) {
+		workingVolume = vol;
+	}
+}
+char OdoratorModel::getWorkingVolume() const {
+	return workingVolume;
 }

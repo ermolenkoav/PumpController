@@ -7,16 +7,17 @@ project(Odorator LANGUAGES CXX)
 #-------------------------------------------------------------------------------
 #	COMPILE FLAGS
 #-------------------------------------------------------------------------------
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 if (MSVC)
 set(GUI_TYPE WIN32)
-set(CMAKE_CXX_FLAGS_DEBUG "/MP /MDd /std:c++17 /GS /analyze /Gd /Od /RTC1 /RTCs /RTCu ") # /Wall /W3 
-set(CMAKE_CXX_FLAGS_RELEASE "/MP /MD /std:c++latest /Ox")
+#set(CMAKE_CXX_FLAGS_RELEASE "/MP /MD /std:c++latest /Ox")
 elseif(GNU)
 set (CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/)
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -gnu:c++17 -fPIC -w -Wextra -Wall -g -ggdb ")
-set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -gnu:c++17 -fPIC")
+#set(CMAKE_CXX_FLAGS_DEBUG "-O0 -gnu:c++17 -fPIC -w -Wextra -Wall -g -ggdb ")
+#set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -gnu:c++17 -fPIC")
 endif(MSVC)
-
 #-------------------------------------------------------------------------------
 #	PROJECT STRUCTURE
 #-------------------------------------------------------------------------------

@@ -23,6 +23,7 @@ double Controller::getStartValue(int index) {
 	return odoratorModel->getValue(index);
 }
 bool Controller::serialPortInitialization(QString selectedDevice) {
+	bool state;
 	if (!pSerialPort->isOpen()) {
 		pSerialPort->setPortName(selectedDevice);
 		pSerialPort->setBaudRate(QSerialPort::Baud115200);
@@ -31,17 +32,18 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 		pSerialPort->setStopBits(QSerialPort::OneStop);
 		pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 		pSerialPort->open(QIODevice::ReadWrite);
-		return true;
+		state = true;
 	} else {
-		//odoratorView->errorMessage("Com port is open");
+		state = false;
+		odoratorView->errorMessage(L"Com port is open");
 	}
-	return false;
+	return state;
 }
 void Controller::cleaningAirSystem() {
+	odoratorModel->clearBuffer();
 	odoratorModel->cleaningAirSystem();
 	sendCommand(2, 6);
 }
-
 void Controller::sendCommand(int length, int times) {
 	for (auto it = 0; it < times; ++it) {
 		if (odoratorModel->sendCommandData.empty()) {
@@ -55,8 +57,8 @@ void Controller::sendCommand(int length, int times) {
 				odoratorModel->sendCommandData.pop_front();
 			}
 			pSerialPort->write(sendBuffer);
-			pSerialPort->waitForBytesWritten(100);
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			pSerialPort->waitForBytesWritten(150);
+			std::this_thread::sleep_for(std::chrono::milliseconds(700));
 		}
 	}
 }
@@ -72,7 +74,9 @@ void Controller::changeGasSupplyTime(int time) {
 }
 void Controller::startUpShuffleAirDelivery() {
 	if (isReady()) {
-		//odoratorModel->randomGasAirSequence();
+		if (odoratorModel->isBufferClear()) {
+			odoratorModel->randomGasAirDelivery();
+		}
 		sendCommand(S_COMMAND_LENGTH, 1);
 	}
 }
@@ -92,7 +96,7 @@ void Controller::clearBuffer() {
 	odoratorModel->sendCommandData.clear();
 }
 void Controller::setStartValue(const double _value, const int _iter) {
-	if (_value <= _finalValue) {
+	if (_finalValue <= _value) {
 		odoratorModel->setValue(_value, _iter);
 	}
 }
@@ -125,6 +129,6 @@ void Controller::saveCurrentWorkSpace() {
 void Controller::setComPortName(const std::wstring& name) {
 	odoratorModel->setComPortName(name);
 }
-const std::wstring& Controller::getComPortName() {
+std::wstring& Controller::getComPortName() const {
 	return odoratorModel->getComPortName();
 }

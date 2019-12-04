@@ -39,5 +39,5 @@ public:
 	bool setDelayTime(int);
 	void saveCurrentWorkSpace();
 	void setComPortName(const std::wstring&);
-	const std::wstring& getComPortName();
+	std::wstring& getComPortName() const;
 };

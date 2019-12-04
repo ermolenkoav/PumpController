@@ -43,7 +43,8 @@ class MainWindow : public QWidget {
 	void loadSettings();
 	void autoConnectToComPort();
 	void connectEvent(const QString& text);
-	const QString& toQString(const std::wstring& str);
+	QString& toQString(const std::wstring& str);
+	void closeEvent(QCloseEvent* bar);
 
 	QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
@@ -56,9 +57,6 @@ public:
 
 	std::pair<int, int> getWindowPos();
 	void setWindowPos(std::array<int, 2>);
-	std::wstring getComPortName();
-	void setComPortName(const std::wstring&);
-	void saveDelayTime();
 	void setSypplyTime(int);
 	void setDalayTime(int);
 	void errorMessage(const std::wstring&);
@@ -69,7 +67,6 @@ private slots:
 	void cleaningAirSystemButtonClicked();
 	void stopButtonClicked();
 	void timeOutSlot();
-	void closeEvent();
 	void manualSettingClicked();
 	void changeViewClicked();
 	void startButtonClicked();
