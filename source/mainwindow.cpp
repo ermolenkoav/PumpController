@@ -31,6 +31,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	//connect(qApp,					SIGNAL(aboutToQuit()), this, SLOT(closeEvent()));
 	//connect(exitAction,			&QAction::triggered,   this, &QApplication::quit);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
+	connect(pspbWorkingVolume,			QOverload<int>::of(&QSpinBox::valueChanged),
+		[=]() {
+		controller->setWorkingVolume(pspbWorkingVolume->value());
+		});
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
 		[=]() {
 		setSypplyTime(pspbSupplyTime->value()); 
@@ -154,37 +158,46 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	auto pgbExecuteLayout = new QGroupBox(tr("Execute sequence"), this);
 	auto ploExecuteLayout = new QGridLayout(this);
 
-	auto plblSupplyTime = new QLabel("Supply Time, s", this);
-	ploExecuteLayout->addWidget(plblSupplyTime, 0, 0, Qt::AlignCenter);
+	auto row = 0;
+
+	auto plblWorkingVolume = new QLabel("Working Volume, %", this);
+	ploExecuteLayout->addWidget(plblWorkingVolume, row, 0, Qt::AlignCenter);
+	pspbWorkingVolume = new QSpinBox(this);
+	pspbWorkingVolume->setMinimum(WorkingVolumeMin);
+	pspbWorkingVolume->setMaximum(WorkingVolumeMax);
+	ploExecuteLayout->addWidget(pspbWorkingVolume, row++, 1);
+
+	auto plblSupplyTime = new QLabel("Supply Time, max 9s", this);
+	ploExecuteLayout->addWidget(plblSupplyTime, row, 0, Qt::AlignCenter);
 	pspbSupplyTime = new QSpinBox(this);
 	pspbSupplyTime->setMinimum(SupplyTimeMin);
 	pspbSupplyTime->setMaximum(SupplyTimeMax);
-	ploExecuteLayout->addWidget(pspbSupplyTime, 0, 1);
+	ploExecuteLayout->addWidget(pspbSupplyTime, row++, 1);
 
-	auto plblDelayTime = new QLabel("Delay Time, s", this);
-	ploExecuteLayout->addWidget(plblDelayTime, 1, 0, Qt::AlignCenter);
+	auto plblDelayTime = new QLabel("Delay Time, max 100s", this);
+	ploExecuteLayout->addWidget(plblDelayTime, row, 0, Qt::AlignCenter);
 	pspbDelayTime = new QSpinBox(this);
 	pspbDelayTime->setMinimum(DelayTimeMin);
 	pspbDelayTime->setMaximum(DelayTimeMax);
-	ploExecuteLayout->addWidget(pspbDelayTime, 1, 1);
+	ploExecuteLayout->addWidget(pspbDelayTime, row++, 1);
 
 	prbtSequenceStart = new QRadioButton("Sequence Start", this);
-	ploExecuteLayout->addWidget(prbtSequenceStart, 2, 0);
+	ploExecuteLayout->addWidget(prbtSequenceStart, row, 0);
 	prbtSequenceStart->setChecked(true);
 	prbtShuffleStart = new QRadioButton("Shuffle Start", this);
-	ploExecuteLayout->addWidget(prbtShuffleStart, 2, 1);
+	ploExecuteLayout->addWidget(prbtShuffleStart, row, 1);
 
 	pcmdStart = new QPushButton("Start", this);
-	ploExecuteLayout->addWidget(pcmdStart, 3, 0);
+	ploExecuteLayout->addWidget(pcmdStart, row, 0);
 
 	pcmdStop = new QPushButton("Stop", this);
-	ploExecuteLayout->addWidget(pcmdStop, 3, 1);
+	ploExecuteLayout->addWidget(pcmdStop, row++, 1);
 
 	pcmdPause = new QPushButton("Pause", this);
-	ploExecuteLayout->addWidget(pcmdPause, 4, 0);
+	ploExecuteLayout->addWidget(pcmdPause, row, 0);
 
 	pcmdCleaningAirSystem = new QPushButton("Cleaning Air System", this);
-	ploExecuteLayout->addWidget(pcmdCleaningAirSystem, 4, 1);
+	ploExecuteLayout->addWidget(pcmdCleaningAirSystem, row++, 1);
 
 	pgbExecuteLayout->setLayout(ploExecuteLayout);
 	return pgbExecuteLayout;
@@ -221,6 +234,7 @@ void MainWindow::searchButtonClicked() {
 	});
 }
 void MainWindow::prepareTheGasAirMixtureButtonClicked() {
+	controller->clearBuffer();
 	if (pchbGCm3->isChecked()) {
 		for (auto iterate = 0; iterate < NumValves; ++iterate) {
 			auto stTimes = ptxtConcentration[iterate]->text();

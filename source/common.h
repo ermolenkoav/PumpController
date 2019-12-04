@@ -51,9 +51,11 @@ const auto settingsFileName	= L"settings.json";
 const auto logFileName		= L"logs.json";
 
 const auto DelayTimeMin = 1;
-const auto DelayTimeMax = 60;
+const auto DelayTimeMax = 100;
 const auto SupplyTimeMin = 1;
 const auto SupplyTimeMax = 9;
+const auto WorkingVolumeMin = 1;
+const auto WorkingVolumeMax = 9;
 
 #include "mainwindow.h"
 #include "controller.h"

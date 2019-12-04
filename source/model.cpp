@@ -34,7 +34,7 @@ void OdoratorModel::calculatePrepareTheGasAirMixture() {
 		sendCommandData.push_back(workingVolume);
 		int iworkingVolume = (int)(workingVolume - '0') * 10;
 		auto times = calculateValue(startValueDouble[it], iworkingVolume);
-		if ( (0 <= times) && (9 >= times) ) {
+		if ( (0 <= times) && (20 >= times) ) {
 			sendCommandData.push_back('0');
 			sendCommandData.push_back((char)('0' + times));
 		}
@@ -109,10 +109,15 @@ void OdoratorModel::shuffleValves(int *arr, size_t n) {
 	}
 }
 void OdoratorModel::setValue(const double _value, const int _iter) {
-	startValueDouble[_iter] = _value;
+	//if ((_finalValue <= _value) || (0 > _value)) 
+	{
+		startValueDouble[_iter] = _value;
+	}
 }
 void OdoratorModel::setValue(const int _value, const int _iter) {
-	startValueInt[_iter] = _value;
+	if ((_value >= 0) && (_value <= 10)) {
+		startValueInt[_iter] = _value;
+	}
 }
 double OdoratorModel::getValue(int index) const {
 	return startValueDouble[index];
@@ -127,7 +132,7 @@ int OdoratorModel::getSupplyTime() const {
 	return supplyTime;
 }
 int OdoratorModel::getDelayTime() const {
-	return delayTime;
+	return delayTime * 1000;
 }
 void OdoratorModel::setComPortName(const std::wstring name) {
 	comPortName = name;
@@ -135,11 +140,9 @@ void OdoratorModel::setComPortName(const std::wstring name) {
 std::wstring OdoratorModel::getComPortName() const {
 	return comPortName;
 }
-void OdoratorModel::setWorkingVolume(char vol) {
-	if ((0 < vol) && (10 > vol)) {
-		workingVolume = vol;
-	}
+int OdoratorModel::getWorkingVolume() const {
+	return workingVolume - '0';
 }
-char OdoratorModel::getWorkingVolume() const {
-	return workingVolume;
+void OdoratorModel::setWorkingVolume(int vol) {
+	workingVolume = vol + '0';
 }

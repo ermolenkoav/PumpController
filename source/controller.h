@@ -31,13 +31,15 @@ public:
 	void setStartValue(const double, const int);
 	void setStartValue(const int, const int);
 	double getStartValue(int);
-	bool isReady();
+	bool isReady() const;
 	void setReadyToGo(bool);
-	int getSupplyTime();
+	int getSupplyTime() const;
 	bool setSupplyTime(int);
-	int getDelayTime();
+	int getDelayTime() const;
 	bool setDelayTime(int);
 	void saveCurrentWorkSpace();
 	void setComPortName(const std::wstring&);
 	std::wstring& getComPortName() const;
+	void setWorkingVolume(int);
+	int getWorkingVolume() const;
 };

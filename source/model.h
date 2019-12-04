@@ -38,6 +38,6 @@ public:
 	bool setDelayTime(int);
 	void setComPortName(const std::wstring);
 	std::wstring getComPortName() const;
-	void setWorkingVolume(char);
-	char getWorkingVolume() const;
+	void setWorkingVolume(int);
+	int getWorkingVolume() const;
 };
