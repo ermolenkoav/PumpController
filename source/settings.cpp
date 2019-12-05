@@ -14,14 +14,17 @@ static auto cstrComPort = L"Com Port";
 static auto cstrSettings = L"Settings";
 static std::wstring cstrSupplyTimes = L"Supply Times";
 static std::wstring cstrDelayTimes = L"Delay Times";
+static std::wstring cstrWorkingVolume = L"Working Volume";
 
 void Settings::saveWorkspace() {
 	if (std::wofstream settingFile(settingsFileName); settingFile.is_open()) {
-		json::value concentration, delayTimes, supplyTimes, geometry, comPort, settings;
+		json::value concentration, delayTimes, supplyTimes, geometry, comPort, settings, workingVolume;
 		// Window geometry:
 		auto windowPos = odoratorView->getWindowPos();
 		geometry[cstrGeometry][L"0"] = json::value(windowPos.first);
 		geometry[cstrGeometry][L"1"] = json::value(windowPos.second);
+		// Working Volume
+		workingVolume[cstrWorkingVolume] = json::value(odoratorModel->getWorkingVolume());
 		// Last com port:
 		comPort[cstrComPort] = json::value::string(odoratorModel->getComPortName());
 		// Execute sequence:
@@ -66,6 +69,10 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 					}
 					if (!str.compare(cstrComPort)) {
 						odoratorModel->setComPortName(value.as_string());
+						continue;
+					}
+					if (!str.compare(cstrWorkingVolume)) {
+						odoratorModel->setWorkingVolume(value.as_integer());
 						continue;
 					}
 

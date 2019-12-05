@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "version.h"
+#include "csvLog.h"
+
 
 MainWindow::~MainWindow() {
 	delete controller;
@@ -37,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 		});
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
 		[=]() {
-		setSypplyTime(pspbSupplyTime->value()); 
+		setSypplyTime(pspbSupplyTime->value());
 		});
 	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
 		[=]() { 
@@ -50,7 +52,8 @@ void MainWindow::loadSettings() {
 		ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(iterate)));
 	}
 	pspbDelayTime->setValue(controller->getDelayTime() / 1000);
-	pspbSupplyTime->setValue(controller->getSupplyTime());
+	pspbSupplyTime->setValue(DefaultSupplyTime);
+	pspbWorkingVolume->setValue(controller->getWorkingVolume());
 }
 std::pair<int, int> MainWindow::getWindowPos() {
 	auto windowPosPoint = pos();
@@ -122,13 +125,22 @@ QGroupBox* MainWindow::createSetUpLayout() {
 	pgbSetOfAllValves = new QGroupBox(tr("Set up"), this);
 	ploSetOfAllValves = new QGridLayout(pgbSetOfAllValves);
 
-	auto ploViewSetUp = new QHBoxLayout(this);;
+	auto ploConsentration = new QHBoxLayout(this);
+	auto plblWorkingVolume = new QLabel("Working Volume, %", this);
+	ploConsentration->addWidget(plblWorkingVolume);
+	pspbWorkingVolume = new QSpinBox(this);
+	pspbWorkingVolume->setMinimum(WorkingVolumeMin);
+	pspbWorkingVolume->setMaximum(WorkingVolumeMax);
+	ploConsentration->addWidget(pspbWorkingVolume);
+	ploSetOfAllValves->addLayout(ploConsentration, 0, 0);
+
+	auto ploViewSetUp = new QHBoxLayout(this);
 	pchbGCm3 = new QRadioButton("g/cm^3", this);
 	pchbGCm3->setChecked(true);
 	pchbTimes = new QRadioButton("Times to mix", this);
 	ploViewSetUp->addWidget(pchbGCm3);
 	ploViewSetUp->addWidget(pchbTimes);
-	ploSetOfAllValves->addLayout(ploViewSetUp, 0, 0);
+	ploSetOfAllValves->addLayout(ploViewSetUp, 1, 0);
 	
 
 	QGroupBox* pgbValveSetUp[NumValves];
@@ -157,15 +169,14 @@ QGroupBox* MainWindow::createSetUpLayout() {
 QGroupBox* MainWindow::createExecuteLayout() {
 	auto pgbExecuteLayout = new QGroupBox(tr("Execute sequence"), this);
 	auto ploExecuteLayout = new QGridLayout(this);
-
 	auto row = 0;
 
-	auto plblWorkingVolume = new QLabel("Working Volume, %", this);
-	ploExecuteLayout->addWidget(plblWorkingVolume, row, 0, Qt::AlignCenter);
-	pspbWorkingVolume = new QSpinBox(this);
-	pspbWorkingVolume->setMinimum(WorkingVolumeMin);
-	pspbWorkingVolume->setMaximum(WorkingVolumeMax);
-	ploExecuteLayout->addWidget(pspbWorkingVolume, row++, 1);
+	auto plblTimesofInnings = new QLabel("number of innings, pcs", this);
+	ploExecuteLayout->addWidget(plblTimesofInnings, row, 0, Qt::AlignCenter);
+	pspbTimesofInnings = new QSpinBox(this);
+	pspbTimesofInnings->setMinimum(TimesofInningsMin);
+	pspbTimesofInnings->setMaximum(TimesofInningsMax);
+	ploExecuteLayout->addWidget(pspbTimesofInnings, row++, 1);
 
 	auto plblSupplyTime = new QLabel("Supply Time, max 9s", this);
 	ploExecuteLayout->addWidget(plblSupplyTime, row, 0, Qt::AlignCenter);
@@ -234,7 +245,7 @@ void MainWindow::searchButtonClicked() {
 	});
 }
 void MainWindow::prepareTheGasAirMixtureButtonClicked() {
-	controller->clearBuffer();
+//controller->clearBuffer();
 	if (pchbGCm3->isChecked()) {
 		for (auto iterate = 0; iterate < NumValves; ++iterate) {
 			auto stTimes = ptxtConcentration[iterate]->text();
@@ -256,11 +267,18 @@ void MainWindow::startButtonClicked() {
 	timer->start(controller->getDelayTime());
 }
 void MainWindow::timeOutSlot() {
-	if (prbtSequenceStart->isChecked()) {
-		controller->startUpSequenceAirDelivery();
-	}
-	if (prbtShuffleStart->isChecked()) {
-		controller->startUpShuffleAirDelivery();
+	auto count = pspbTimesofInnings->value();
+	if (0 < count) {
+		pspbTimesofInnings->setValue(count - 1);
+		if (prbtSequenceStart->isChecked()) {
+			controller->startUpSequenceAirDelivery();
+		}
+		if (prbtShuffleStart->isChecked()) {
+			controller->startUpShuffleAirDelivery();
+		}
+		if (0 == count) {
+			timer->stop();
+		}
 	}
 }
 void MainWindow::stopButtonClicked() {

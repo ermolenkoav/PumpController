@@ -63,11 +63,9 @@ void Controller::sendCommand(int length, int times) {
 	}
 }
 void Controller::prepareTheGasAirMixture() {
-	odoratorModel->clearBuffer();
 	odoratorModel->calculatePrepareTheGasAirMixture();
 	sendCommand(SIXTH_COMMAND_LENGTH, 6);
 	settings->saveWorkspace();
-	odoratorModel->clearBuffer();
 }
 void Controller::changeGasSupplyTime(int time) {
 	odoratorModel->gasSupplyTime(time);
@@ -131,4 +129,7 @@ std::wstring& Controller::getComPortName() const {
 }
 void Controller::setWorkingVolume(int vol) {
 	odoratorModel->setWorkingVolume(vol);
+}
+int Controller::getWorkingVolume() const {
+	return odoratorModel->getWorkingVolume();
 }

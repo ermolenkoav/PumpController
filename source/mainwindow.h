@@ -35,7 +35,8 @@ class MainWindow : public QWidget {
 	QLineEdit* ptxtSerialPort = nullptr;
 	QSpinBox* pspbDelayTime = nullptr;
 	QSpinBox* pspbSupplyTime = nullptr;
-	QSpinBox* pspbWorkingVolume = nullptr;
+	QSpinBox* pspbWorkingVolume = nullptr; 
+	QSpinBox* pspbTimesofInnings = nullptr;
 	QLabel* plblTimes[NumValves];
 	QTimer* timer = nullptr;
 
