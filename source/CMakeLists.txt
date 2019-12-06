@@ -32,6 +32,7 @@ list(APPEND SOURCE_FILES
 	controller.cpp
 	model.cpp
 	settings.cpp
+	csvLog.cpp
 	resources/resources.rc
 ) 
 
@@ -41,6 +42,7 @@ list(APPEND HEADER_FILES
 	model.h
 	settings.h
 	common.h
+	csvLog.h
 )
 
 list(APPEND LIBRARIES

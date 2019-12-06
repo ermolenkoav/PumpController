@@ -1,11 +1,14 @@
 #pragma once
 #include "common.h"
-
 #include <chrono>
 #include <ctime>    
 
 class csvLog {
+	wchar_t* getCurrentTime();
+	std::wofstream logFile;
 
 public:
-	void logEvent(std::wstring);
+	csvLog();
+	~csvLog();
+	void logEvent(char);
 };

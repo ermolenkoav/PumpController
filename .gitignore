@@ -1,5 +1,8 @@
 # Cache of other programs
-#.gitignore
+.gitignore
+
+# JetBrains
+.idea
 
 # Prerequisites
 *.d

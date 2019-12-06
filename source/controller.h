@@ -1,9 +1,11 @@
 #pragma once
 #include "common.h"
+#include "csvLog.h"
 
 class OdoratorModel;
 class Settings;
 class MainWindow;
+class csvLog;
 
 class Controller {
 	QSerialPort *pSerialPort = nullptr;

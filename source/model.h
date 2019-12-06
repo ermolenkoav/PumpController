@@ -36,7 +36,7 @@ public:
 	bool setSupplyTime(int);
 	int getDelayTime() const;
 	bool setDelayTime(int);
-	void setComPortName(const std::wstring);
+	void setComPortName(const std::wstring&);
 	std::wstring getComPortName() const;
 	void setWorkingVolume(int);
 	int getWorkingVolume() const;

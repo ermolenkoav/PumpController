@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "version.h"
-#include "csvLog.h"
-
 
 MainWindow::~MainWindow() {
 	delete controller;
@@ -310,7 +308,7 @@ void MainWindow::errorMessage(const std::wstring& errorMsg) {
 	messageBox.critical(0, "Error", toQString(errorMsg));
 	messageBox.setFixedSize(500, 200);
 }
-QString& MainWindow::toQString(const std::wstring& str) {
-	QString qstr = QString::fromStdWString(str);
+QString MainWindow::toQString(const std::wstring& str) {
+	auto qstr = QString::fromStdWString(str);
 	return qstr;
 }

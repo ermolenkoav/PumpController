@@ -45,7 +45,7 @@ class MainWindow : public QWidget {
 	void loadSettings();
 	void autoConnectToComPort();
 	void connectEvent(const QString& text);
-	QString& toQString(const std::wstring& str);
+	QString toQString(const std::wstring& str);
 	void closeEvent(QCloseEvent* bar);
 
 	QGroupBox* createConnectionLayout();

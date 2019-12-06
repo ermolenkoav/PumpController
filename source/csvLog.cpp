@@ -1,17 +1,23 @@
 #include "csvLog.h"
 
-csvLog::csvLog() {}
-csvLog::csvLog() {}
-
-void logEvent(std::wstring str) {
-    auto time = std::chrono::system_clock::now();
-    std::time_t timeAndData = std::chrono::system_clock::to_time_t(time);
-    std::cout << std::ctime(&timeAndData);
-
-    io::CSVReader<3> in("ram.csv");
-    in.read_header(io::ignore_extra_column, "vendor", "size", "speed");
-    std::string vendor; int size; double speed;
-    while (in.read_row(vendor, size, speed)) {
-        // do stuff with the data
+csvLog::~csvLog() {
+    logFile.close();
+}
+csvLog::csvLog() {
+    std::wstring name = L"logs";
+    std::wstring time = getCurrentTime();
+    std::wstring format = L".json";
+    std::wstring fileName(name + time + format);
+    std::wofstream logFile(fileName);
+}
+wchar_t* csvLog::getCurrentTime() {
+    std::time_t result = std::time(nullptr);
+    return _wctime(&result);
+}
+void csvLog::logEvent(char str) {
+    wchar_t wstr;
+    mbtowc(&wstr, &str, 1);
+    if (logFile.is_open()) {
+        logFile << "Catridg " << wstr << ', ' << getCurrentTime() << std::endl;
     }
 }

@@ -58,6 +58,10 @@ void Controller::sendCommand(int length, int times) {
 			}
 			pSerialPort->write(sendBuffer);
 			pSerialPort->waitForBytesWritten(150);
+			if (sendBuffer[1] = 'S') {
+				static csvLog log;
+				log.logEvent(sendBuffer[0]);
+			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(700));
 		}
 	}
