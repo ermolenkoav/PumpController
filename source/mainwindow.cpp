@@ -28,8 +28,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pcmdStop,				&QPushButton::clicked, this, &MainWindow::stopButtonClicked);
 	connect(pchbGCm3,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
-	//connect(qApp,					SIGNAL(aboutToQuit()), this, SLOT(closeEvent()));
-	//connect(exitAction,			&QAction::triggered,   this, &QApplication::quit);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
 	connect(pspbWorkingVolume,			QOverload<int>::of(&QSpinBox::valueChanged),
 		[=]() {
@@ -94,6 +92,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 			QMessageBox::Yes);
 	if (resBtn == QMessageBox::Cancel) {
 		event->ignore();
+		return;
 	}
 	if (resBtn == QMessageBox::Yes) {
 		controller->saveCurrentWorkSpace();
