@@ -56,12 +56,12 @@ void Controller::sendCommand(int length, int times) {
 				sendBuffer[jt] = odoratorModel->sendCommandData.front();
 				odoratorModel->sendCommandData.pop_front();
 			}
-			pSerialPort->write(sendBuffer);
-			pSerialPort->waitForBytesWritten(150);
-			if (sendBuffer[1] = 'S') {
-				static csvLog log;
+			static csvLog log;
+			if ('S' == sendBuffer[1]) {
 				log.logEvent(sendBuffer[0]);
 			}
+			pSerialPort->write(sendBuffer);
+			pSerialPort->waitForBytesWritten(150);
 			std::this_thread::sleep_for(std::chrono::milliseconds(700));
 		}
 	}

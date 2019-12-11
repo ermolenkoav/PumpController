@@ -35,7 +35,7 @@ void Settings::saveWorkspace() {
 			concentration[cstrConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
 		}
 		// Compile all application settings:
-		settings[cstrSettings] = json::value::array({ concentration, delayTimes, supplyTimes, geometry, comPort });
+		settings[cstrSettings] = json::value::array({ concentration, delayTimes, supplyTimes, geometry, comPort, workingVolume });
 		settingFile << settings.serialize().c_str();
 	}
 }

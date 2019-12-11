@@ -5,9 +5,9 @@ csvLog::~csvLog() {
 }
 csvLog::csvLog() {
     std::wstring name = L"logs";
-    std::wstring time = getCurrentTime();
-    std::wstring format = L".json";
-    std::wstring fileName(name + time + format);
+    //std::wstring time = getCurrentTime();
+    std::wstring format = L".csv";
+    std::wstring fileName(name /*+ time*/ + format);
     std::wofstream logFile(fileName);
 }
 wchar_t* csvLog::getCurrentTime() {
@@ -17,7 +17,8 @@ wchar_t* csvLog::getCurrentTime() {
 void csvLog::logEvent(char str) {
     wchar_t wstr;
     mbtowc(&wstr, &str, 1);
-    if (logFile.is_open()) {
-        logFile << "Catridg " << wstr << ', ' << getCurrentTime() << std::endl;
+    //if (logFile.is_open()) 
+    {
+        logFile << "Cartridge " << wstr << ', ' << getCurrentTime() << std::endl;
     }
 }
