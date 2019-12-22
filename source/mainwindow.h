@@ -62,6 +62,7 @@ public:
 	void setSypplyTime(int);
 	void setDalayTime(int);
 	void errorMessage(const std::wstring&);
+	void changeCartridgeView(int, bool);
 
 private slots:
 	void searchButtonClicked();

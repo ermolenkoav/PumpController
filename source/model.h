@@ -1,6 +1,7 @@
 #pragma once
 #include "common.h"
 
+
 class OdoratorModel {
 	double startValueDouble[NumValves] = { 0 };
 	int startValueInt[NumValves] = { 0 };

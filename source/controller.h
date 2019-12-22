@@ -12,6 +12,7 @@ class Controller {
 	OdoratorModel *odoratorModel = nullptr;
 	Settings* settings = nullptr;
 	MainWindow* odoratorView = nullptr;
+	csvLog* log = nullptr;
 
 	bool readyToGo = false;
 

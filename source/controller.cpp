@@ -8,12 +8,14 @@ Controller::~Controller() {
 	delete odoratorModel;
 	delete settings;
 	delete pSerialPort;
+	delete log;
 }
 Controller::Controller(MainWindow* _odoratorView) {
 	odoratorView = _odoratorView;
 	odoratorModel = new OdoratorModel;
 	settings = new Settings(odoratorModel, odoratorView);
 	pSerialPort = new QSerialPort;
+	log = new csvLog;
 	loadWorkspace();
 }
 void Controller::loadWorkspace() {
@@ -56,13 +58,16 @@ void Controller::sendCommand(int length, int times) {
 				sendBuffer[jt] = odoratorModel->sendCommandData.front();
 				odoratorModel->sendCommandData.pop_front();
 			}
-			static csvLog log;
 			if ('S' == sendBuffer[1]) {
-				log.logEvent(sendBuffer[0]);
+				log->logEvent(sendBuffer[0]);
+			}
+			if ('6' == sendBuffer[1]) {
+				odoratorView->changeCartridgeView(sendBuffer[0] - 'A', true);
 			}
 			pSerialPort->write(sendBuffer);
 			pSerialPort->waitForBytesWritten(150);
 			std::this_thread::sleep_for(std::chrono::milliseconds(700));
+			odoratorView->changeCartridgeView(sendBuffer[0] - 'A', false);
 		}
 	}
 }

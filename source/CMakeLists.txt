@@ -2,16 +2,11 @@
 #	CONFIGURATION
 #-------------------------------------------------------------------------------
 set(TARGET_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_VERSION_MAJOR 0)
-set(CPACK_VERSION_MINOR 9)
-set(CPACK_VERSION_PATCH 0)
 set(ORGANIZATION_NAME "SFEDU")
 set(ORGANIZATION_URL "https://sfedu.ru/www/stat_pages22.show?p=ELs/sotr/D&x=ELS/10484")
 set(ORGANIZATION_LOGO "logoSFEDU.ico")
 set(ORGANIZATION_EMAIL "ermolenkoav@yandex.ru")
-set(CPACK_PACKAGE_VERSION "${CPACK_VERSION_MAJOR}.${CPACK_VERSION_MINOR}.${CPACK_VERSION_PATCH}")
-configure_file(version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h)
+configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
 #-------------------------------------------------------------------------------
 #	Settings
@@ -20,7 +15,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC OFF)
 
-find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets SerialPort REQUIRED)
 find_package(cpprestsdk CONFIG REQUIRED)
 
 #-------------------------------------------------------------------------------
@@ -34,9 +29,6 @@ list(APPEND SOURCE_FILES
 	settings.cpp
 	csvLog.cpp
 	resources/resources.rc
-) 
-
-list(APPEND HEADER_FILES 
 	mainwindow.h
 	controller.h 
 	model.h
@@ -46,39 +38,41 @@ list(APPEND HEADER_FILES
 )
 
 list(APPEND LIBRARIES
+	Qt5::Core
 	Qt5::Widgets 
 	Qt5::SerialPort
 	cpprestsdk::cpprest 
-	cpprestsdk::cpprestsdk_zlib_internal 
-	cpprestsdk::cpprestsdk_boost_internal 
-	cpprestsdk::cpprestsdk_openssl_internal
 )
-
 
 #-------------------------------------------------------------------------------
 #	GENERATE EXECUTABLE
 #-------------------------------------------------------------------------------
 # Generate the executable
-add_executable(${TARGET_NAME} ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(${TARGET_NAME} ${GUI_TYPE} ${SOURCE_FILES})
 
 # Link libraries
-target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARIES})
+target_link_libraries(${TARGET_NAME} PUBLIC ${LIBRARIES})
 
 #-------------------------------------------------------------------------------
-#	GENERATE INSTALLER
+#	GENERATE CPACK INSTALLER
 #-------------------------------------------------------------------------------
 if (MSVC)
 	message("-- Enable CPack. cpack -C Release")
 
-	#install(TARGETS ${TARGET_NAME} DESTINATION /)
-	file(GLOB DYNAMIC_LINK_LIB 
-				${CMAKE_BINARY_DIR}/source/*.dll 
-				${CMAKE_BINARY_DIR}/source/qt.conf
-				${CMAKE_BINARY_DIR}/source/*.exe
-				)
-	install(FILES ${DYNAMIC_LINK_LIB} DESTINATION /)
-	install(DIRECTORY ${CMAKE_BINARY_DIR}/source/plugins/ DESTINATION plugins/)
+	install(TARGETS ${TARGET_NAME} DESTINATION /)
+	#file(GLOB DYNAMIC_LINK_LIB 
+	#			${CMAKE_BINARY_DIR}/source/*.dll 
+	#			${CMAKE_BINARY_DIR}/source/qt.conf
+	#			${CMAKE_BINARY_DIR}/source/*.exe
+	#			)
+	#install(FILES ${DYNAMIC_LINK_LIB} DESTINATION /)
+	#install(DIRECTORY ${CMAKE_BINARY_DIR}/source/plugins/ DESTINATION plugins/)
 
+	set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+	set(CPACK_VERSION_MAJOR 0)
+	set(CPACK_VERSION_MINOR 9)
+	set(CPACK_VERSION_PATCH 0)
+	set(CPACK_PACKAGE_VERSION "${CPACK_VERSION_MAJOR}.${CPACK_VERSION_MINOR}.${CPACK_VERSION_PATCH}")
 	set(CPACK_GENERATOR NSIS)
 	set(CPACK_NSIS_MODIFY_PATH OFF)
 	set(CPACK_MONOLITHIC_INSTALL ON)
@@ -91,6 +85,6 @@ if (MSVC)
 	set(CPACK_NSIS_URL_INFO_ABOUT ${ORGANIZATION_URL})
 	set(CPACK_PACKAGE_VENDOR ${ORGANIZATION_NAME})
 	set(CPACK_NSIS_CONTACT ${ORGANIZATION_EMAIL})
-	
+
 	include(CPack)
 endif()

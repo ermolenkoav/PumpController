@@ -71,7 +71,6 @@ void MainWindow::connectEvent(const QString& text) {
 		pcmdSearch->setText("Connected");
 		pcmdSearch->setCheckable(false);
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		//controller->cleaningAirSystem();
 	}
 }
 void MainWindow::setSypplyTime(int time) {
@@ -163,6 +162,14 @@ QGroupBox* MainWindow::createSetUpLayout() {
 	pgbSetOfAllValves->setLayout(ploSetOfAllValves);
 	return pgbSetOfAllValves;
 }
+void MainWindow::changeCartridgeView(int catridge, bool state) {
+	if (state) { 
+		plblTimes[catridge]->setStyleSheet("QLabel { color : red; }");
+	}
+	else {
+		plblTimes[catridge]->setStyleSheet("QLabel { color : black; }");
+	}
+}
 QGroupBox* MainWindow::createExecuteLayout() {
 	auto pgbExecuteLayout = new QGroupBox(tr("Execute sequence"), this);
 	auto ploExecuteLayout = new QGridLayout(this);
@@ -242,7 +249,6 @@ void MainWindow::searchButtonClicked() {
 	});
 }
 void MainWindow::prepareTheGasAirMixtureButtonClicked() {
-//controller->clearBuffer();
 	if (pchbGCm3->isChecked()) {
 		for (auto iterate = 0; iterate < NumValves; ++iterate) {
 			auto stTimes = ptxtConcentration[iterate]->text();
