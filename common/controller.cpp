@@ -98,7 +98,7 @@ void Controller::startUpSequenceAirDelivery() {
 }
 void Controller::manualSetting(std::string command) {
 	odoratorModel->addCustomCommand(command);
-	sendCommand(command.length(), 1);
+	sendCommand(static_cast<int>(command.length()), 1);
 }
 void Controller::clearBuffer() {
 	odoratorModel->sendCommandData.clear();

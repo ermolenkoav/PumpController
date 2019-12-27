@@ -11,6 +11,6 @@ add_executable(test_common tests_all.cpp ${srcs_tst_common_all} )
 target_link_libraries(test_common ${GTEST_BOTH_LIBRARIES} common ${external_libs} )
 
 ### TEST INTEGRATION AND MODULES ###
-add_executable(test_all tests_all.cpp ${srcs_tst_common_all} )
+#add_executable(test_all tests_all.cpp ${srcs_tst_common_all} )
 
-target_link_libraries(test_all ${GTEST_BOTH_LIBRARIES} common ${external_libs} )
+#target_link_libraries(test_all ${GTEST_BOTH_LIBRARIES} common ${external_libs} )
