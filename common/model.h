@@ -1,21 +1,19 @@
 #pragma once
+#include "pch.h"
 #include "common.h"
 
-
 class OdoratorModel {
-	double startValueDouble[NumValves] = { 0 };
-	int startValueInt[NumValves] = { 0 };
-
-	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
-
-	void shuffleValves(int *arr, size_t n);
+	void shuffleValves(int* arr, size_t n);
 	int calculateValue(const double, int) const;
 
 	// variables:
+	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
+	double startValueDouble[NumValves] = { 0 };
+	int startValueInt[NumValves] = { 0 };
+	char workingVolume = '2';
+    utility::string_t comPortName = {};
 	int supplyTime = {};
 	int delayTime = {};
-	char workingVolume = '2';
-	std::wstring comPortName;
 
 public:
 	std::list<char> sendCommandData;
@@ -37,8 +35,8 @@ public:
 	bool setSupplyTime(int);
 	int getDelayTime() const;
 	bool setDelayTime(int);
-	void setComPortName(const std::wstring&);
-	std::wstring getComPortName() const;
+	void setComPortName(const utility::string_t&);
+    utility::string_t getComPortName() const;
 	void setWorkingVolume(int);
 	int getWorkingVolume() const;
 };

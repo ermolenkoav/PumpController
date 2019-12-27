@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include "common.h"
 #include "csvLog.h"
 
@@ -41,8 +42,8 @@ public:
 	int getDelayTime() const;
 	bool setDelayTime(int);
 	void saveCurrentWorkSpace();
-	void setComPortName(const std::wstring&);
-	std::wstring& getComPortName() const;
+	void setComPortName(const utility::string_t&);
+    utility::string_t getComPortName() const;
 	void setWorkingVolume(int);
 	int getWorkingVolume() const;
 };

@@ -8,21 +8,13 @@ Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
 	odoratorView = _odoratorView;
 }
 
-static auto cstrConcentration = L"Consentration";
-static auto cstrGeometry = L"Geometry";
-static auto cstrComPort = L"Com Port";
-static auto cstrSettings = L"Settings";
-static std::wstring cstrSupplyTimes = L"Supply Times";
-static std::wstring cstrDelayTimes = L"Delay Times";
-static std::wstring cstrWorkingVolume = L"Working Volume";
-
 void Settings::saveWorkspace() {
-	if (std::wofstream settingFile(settingsFileName); settingFile.is_open()) {
+	if (utility::ofstream_t settingFile(settingsFileName); settingFile.is_open()) {
 		json::value concentration, delayTimes, supplyTimes, geometry, comPort, settings, workingVolume;
 		// Window geometry:
 		auto windowPos = odoratorView->getWindowPos();
-		geometry[cstrGeometry][L"0"] = json::value(windowPos.first);
-		geometry[cstrGeometry][L"1"] = json::value(windowPos.second);
+		geometry[cstrGeometry][_XPLATSTR("0")] = json::value(windowPos.first);
+		geometry[cstrGeometry][_XPLATSTR("1")] = json::value(windowPos.second);
 		// Working Volume
 		workingVolume[cstrWorkingVolume] = json::value(odoratorModel->getWorkingVolume());
 		// Last com port:
@@ -41,8 +33,8 @@ void Settings::saveWorkspace() {
 }
 
 void Settings::loadWorkspace() {
-	if (std::wifstream settingFile(settingsFileName); settingFile.is_open()) {
-		std::wstringstream sstr;
+	if (utility::ifstream_t settingFile(settingsFileName); settingFile.is_open()) {
+		utility::stringstream_t sstr;
 		sstr << settingFile.rdbuf();
 		loadJSONValue(json::value::parse(sstr));
 	}
@@ -50,7 +42,7 @@ void Settings::loadWorkspace() {
 }
 
 std::wstring Settings::loadJSONValue(web::json::value v) {
-	std::wstringstream ss;
+	utility::stringstream_t ss;
 	try {
 		if (!v.is_null()) {
 			if (v.is_object()) {
@@ -68,7 +60,7 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 						continue;
 					}
 					if (!str.compare(cstrComPort)) {
-						odoratorModel->setComPortName(value.as_string());
+						//odoratorModel->setComPortName(value.as_string());
 						continue;
 					}
 					if (!str.compare(cstrWorkingVolume)) {
@@ -104,8 +96,9 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 
 	return ss.str();
 }
+
 std::wstring Settings::DisplayJSONValue(web::json::value v) {
-	std::wstringstream ss;
+	utility::stringstream_t ss;
 	try {
 		if (!v.is_null()) {
 			if (v.is_object()) {
@@ -148,5 +141,5 @@ std::wstring Settings::DisplayJSONValue(web::json::value v) {
 	return ss.str();
 }
 void Settings::saveCurrentData() {
-	if(std::wifstream settingFile(logFileName); settingFile.is_open()) {}
+	if(utility::ifstream_t settingFile(logFileName); settingFile.is_open()) {}
 }

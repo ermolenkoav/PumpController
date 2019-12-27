@@ -130,10 +130,10 @@ bool Controller::setDelayTime(int temp) {
 void Controller::saveCurrentWorkSpace() {
 	settings->saveWorkspace();
 }
-void Controller::setComPortName(const std::wstring& name) {
+void Controller::setComPortName(const utility::string_t& name) {
 	odoratorModel->setComPortName(name);
 }
-std::wstring& Controller::getComPortName() const {
+utility::string_t Controller::getComPortName() const {
 	return odoratorModel->getComPortName();
 }
 void Controller::setWorkingVolume(int vol) {

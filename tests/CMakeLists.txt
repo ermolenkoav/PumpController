@@ -1,42 +1,16 @@
-#-------------------------------------------------------------------------------
-#	CMAKE SETTINGS
-#-------------------------------------------------------------------------------
-set(TEST_TARGET_NAME ${PROJECT_NAME}-tests)
-set(GTest GTest::GTest GTest::Main)
+include_directories(${PROJECT_SOURCE_DIR}/)
+include_directories(SYSTEM ${GTEST_INCLUDE_DIRS})
 
-find_package(GTest MODULE REQUIRED)
-find_package(Qt5 COMPONENTS Core Widgets SerialPort REQUIRED)
-find_package(cpprestsdk CONFIG REQUIRED)
+include_directories(${external_includes})
 
+add_subdirectory(unit)
 
-#-------------------------------------------------------------------------------
-#	TEST CODE
-#-------------------------------------------------------------------------------
-list(APPEND SOURCE_FILES_TST
-	commonstability.cpp
-	controllertests.cpp
-	csvLogtests.cpp
-	mainwindowtests.cpp
-	modeltests.cpp
-	settingstests.cpp
-)
+### TEST MODULE COMMON ###
+add_executable(test_common tests_all.cpp ${srcs_tst_common_all} )
 
-list(APPEND LIBRARIES
-	Qt5::Core
-	Qt5::Widgets 
-	Qt5::SerialPort
-	cpprestsdk::cpprest 
-)
+target_link_libraries(test_common ${GTEST_BOTH_LIBRARIES} common ${external_libs} )
 
-#-------------------------------------------------------------------------------
-#	GENERATE EXECUTABLE
-#-------------------------------------------------------------------------------
-add_executable(${TEST_TARGET_NAME} ${SOURCE_FILES_TST})
+### TEST INTEGRATION AND MODULES ###
+add_executable(test_all tests_all.cpp ${srcs_tst_common_all} )
 
-target_link_libraries(${TEST_TARGET_NAME} PUBLIC ${LIBRARIES} ${GTest})
-
-gtest_add_tests(
-	TARGET  ${TEST_TARGET_NAME}
-	SOURCES ${SOURCE_FILES_TST}
-	EXTRA_ARGS --gtest-list-tests --build-and-test
-)
+target_link_libraries(test_all ${GTEST_BOTH_LIBRARIES} common ${external_libs} )

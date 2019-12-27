@@ -62,12 +62,12 @@ void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
 void MainWindow::autoConnectToComPort() {
 	if (!controller->getComPortName().empty()) 
 	{
-		connectEvent(toQString(controller->getComPortName()));
+		connectEvent(QString::fromStdWString(controller->getComPortName()));
 	}
 }
 void MainWindow::connectEvent(const QString& text) {
 	if (controller->serialPortInitialization(text)) {
-		controller->setComPortName(text.toStdWString());
+		controller->setComPortName(utility::conversions::to_string_t(text.toStdString()));
 		pcmdSearch->setText("Connected");
 		pcmdSearch->setCheckable(false);
 		std::this_thread::sleep_for(std::chrono::seconds(1));

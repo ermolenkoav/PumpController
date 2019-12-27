@@ -13,7 +13,6 @@ void OdoratorModel::cleaningAirSystem() {
 }
 void OdoratorModel::gasSupplyTime(int seconds) {
 	if ((seconds >= 0) && (seconds <= 9)) {
-		//sendCommandData.clear();
 		for (auto it = 0; it < NumValves; it++) {
 			if (0 == startValueDouble[it]) {
 				continue;
@@ -134,10 +133,10 @@ int OdoratorModel::getSupplyTime() const {
 int OdoratorModel::getDelayTime() const {
 	return delayTime * 1000;
 }
-void OdoratorModel::setComPortName(const std::wstring& name) {
+void OdoratorModel::setComPortName(const utility::string_t& name) {
 	comPortName = name;
 }
-std::wstring OdoratorModel::getComPortName() const {
+utility::string_t OdoratorModel::getComPortName() const {
 	return comPortName;
 }
 int OdoratorModel::getWorkingVolume() const {

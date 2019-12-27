@@ -1,30 +1,15 @@
-﻿#-------------------------------------------------------------------------------
-#	CMAKE SETTINGS
-#-------------------------------------------------------------------------------
-cmake_minimum_required (VERSION 3.11)
+cmake_minimum_required(VERSION 3.13)
+
 project(Odorator LANGUAGES CXX)
 
-#-------------------------------------------------------------------------------
-#	COMPILE FLAGS
-#-------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+include(cmake/options.cmake               REQUIRED)
 
-if (MSVC)
-    set(GUI_TYPE WIN32)
-elseif(GNU)
-    set(CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/)
-endif(MSVC)
+include(cmake/findDependencies.cmake      REQUIRED)
 
-#-------------------------------------------------------------------------------
-#	PROJECT STRUCTURE
-#-------------------------------------------------------------------------------
-include_directories(source)
-add_subdirectory(source)
-add_subdirectory(tests)
+include(cmake/compilerDefOpt.cmake        REQUIRED)
 
-option(BUILD_TESTING "Create tests using CMake" ON)
-if(BUILD_TESTING)
-    enable_testing()
-endif()
+include(cmake/paths.cmake                 REQUIRED)
+
+include(cmake/buildTargets.cmake          REQUIRED)
+
+include(cmake/printInfo.cmake             REQUIRED)
