@@ -1,8 +1,10 @@
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets SerialPort REQUIRED)
-#set(CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/)
+find_package(Cuda REQUIRED)
 find_package(cpprestsdk CONFIG REQUIRED)
+#set(CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/)
+
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)

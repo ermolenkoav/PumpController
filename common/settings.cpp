@@ -1,5 +1,4 @@
 #include "settings.h"
-
 using namespace web;
 
 Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
@@ -7,7 +6,6 @@ Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
 	odoratorModel = _odoratorModel;
 	odoratorView = _odoratorView;
 }
-
 void Settings::saveWorkspace() {
 	if (utility::ofstream_t settingFile(settingsFileName); settingFile.is_open()) {
 		json::value concentration, delayTimes, supplyTimes, geometry, comPort, settings, workingVolume;
@@ -31,7 +29,6 @@ void Settings::saveWorkspace() {
 		settingFile << settings.serialize().c_str();
 	}
 }
-
 void Settings::loadWorkspace() {
 	if (utility::ifstream_t settingFile(settingsFileName); settingFile.is_open()) {
 		utility::stringstream_t sstr;
@@ -40,7 +37,6 @@ void Settings::loadWorkspace() {
 	}
 	odoratorView->setWindowPos(windowPos);
 }
-
 std::wstring Settings::loadJSONValue(web::json::value v) {
 	utility::stringstream_t ss;
 	try {
@@ -96,7 +92,6 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 
 	return ss.str();
 }
-
 std::wstring Settings::DisplayJSONValue(web::json::value v) {
 	utility::stringstream_t ss;
 	try {

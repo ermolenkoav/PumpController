@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    set(GUI_TYPE WIN32)
+endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     #set (CMAKE_CXX_FLAGS                "-Wextra -Wall -Wno-delete-non-virtual-dtor" -Werror=return-type)
     #set (CMAKE_CXX_FLAGS_DEBUG          "-g -O0 -DDEBUG")
@@ -17,10 +21,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if(OPT_ASAN)
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer")
     endif()
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(GUI_TYPE WIN32)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
