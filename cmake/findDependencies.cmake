@@ -1,12 +1,9 @@
 find_package(Qt5 COMPONENTS Core Widgets SerialPort REQUIRED)
 find_package(cpprestsdk CONFIG REQUIRED)
-#find_package(Cuda REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(external_includes ${Qt5Core_INCLUDE_DIRS}
+set(EXTERNAL_INCLUDES ${Qt5Core_INCLUDE_DIRS}
                       ${Qt5Gui_INCLUDE_DIRS} 
                       ${Qt5Widgets_INCLUDE_DIRS} 
                       ${Qt5SerialPort_INCLUDE_DIRS}

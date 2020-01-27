@@ -32,10 +32,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pspbWorkingVolume,			QOverload<int>::of(&QSpinBox::valueChanged),
 		[=]() { controller->setWorkingVolume(pspbWorkingVolume->value()); });
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
-		[=]() { setSypplyTime(pspbSupplyTime->value()); });
+		[=]() { setSupplyTime(pspbSupplyTime->value()); });
 	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
-		[=]() { setDalayTime(pspbDelayTime->value());
-		});
+		[=]() { setDelayTime(pspbDelayTime->value()); });
 }
 /************************************LOAD LAST SETTINGS************************************/
 void MainWindow::loadSettings() {
@@ -57,7 +56,7 @@ void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
 void MainWindow::autoConnectToComPort() {
 	if (!controller->getComPortName().empty()) 
 	{
-		connectEvent(QString::fromStdWString(controller->getComPortName()));
+		connectEvent(toQString(controller->getComPortName()));
 	}
 }
 void MainWindow::connectEvent(const QString& text) {
@@ -68,21 +67,21 @@ void MainWindow::connectEvent(const QString& text) {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
-void MainWindow::setSypplyTime(int time) {
+void MainWindow::setSupplyTime(int time) {
 	if (!controller->setSupplyTime(time)) {
-		errorMessage(L"An error has occured!");
+		errorMessage(_XPLATSTR("An error has occurred!"));
 	}
 	controller->changeGasSupplyTime(time);
 }
-void MainWindow::setDalayTime(int time) {
+void MainWindow::setDelayTime(int time) {
 	if (!controller->setDelayTime(time)) {
-		errorMessage(L"An error has occured!");
+		errorMessage(_XPLATSTR("An error has occurred!"));
 	}
 	timer->setInterval(controller->getDelayTime());
 }
 void MainWindow::closeEvent(QCloseEvent *event) {
 	QMessageBox::StandardButton resBtn = QMessageBox::question(this, APPLICATION_NAME,
-		tr("Save privious session?\n"), QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+		tr("Save previous session?\n"), QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
 			QMessageBox::Yes);
 	if (resBtn == QMessageBox::Cancel) {
 		event->ignore();
@@ -95,18 +94,18 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 /************************************CREATE VIEW LAYOUT************************************/
 void MainWindow::createMainWindowLayout() {
-	mainLayout = new QVBoxLayout(this);
-	mainLayout->addWidget(createConnectionLayout());
-	mainLayout->addWidget(createSetUpLayout());
-	mainLayout->addWidget(createExecuteLayout());
-	mainLayout->addWidget(createManualSettingLayout());
-	setLayout(mainLayout);
+    pGridLayout = new QGridLayout(this);
+	pGridLayout->addWidget(createConnectionLayout());
+	pGridLayout->addWidget(createSetUpLayout());
+	pGridLayout->addWidget(createExecuteLayout());
+	pGridLayout->addWidget(createManualSettingLayout());
+    setLayout(pGridLayout);
 }
 QGroupBox* MainWindow::createConnectionLayout() {
 	auto pgbConnectionLayout = new QGroupBox(tr("Connection"), this);
-	auto ploConnectionLayout = new QGridLayout(this);
+	auto ploConnectionLayout = new QGridLayout(pgbConnectionLayout);
 
-	pcmdSearch = new QPushButton("Search", this);
+	pcmdSearch = new QPushButton("Search", pgbConnectionLayout);
 	ploConnectionLayout->addWidget(pcmdSearch);
 
 	pgbConnectionLayout->setLayout(ploConnectionLayout);
@@ -116,30 +115,31 @@ QGroupBox* MainWindow::createSetUpLayout() {
 	pgbSetOfAllValves = new QGroupBox(tr("Set up"), this);
 	ploSetOfAllValves = new QGridLayout(pgbSetOfAllValves);
 
-	auto ploConsentration = new QHBoxLayout(this);
-	auto plblWorkingVolume = new QLabel("Working Volume, %", this);
-	ploConsentration->addWidget(plblWorkingVolume);
-	pspbWorkingVolume = new QSpinBox(this);
+	auto ploConcentration = new QHBoxLayout();
+	auto plblWorkingVolume = new QLabel("Working Volume, %", pgbSetOfAllValves);
+	ploConcentration->addWidget(plblWorkingVolume);
+
+	pspbWorkingVolume = new QSpinBox(pgbSetOfAllValves);
 	pspbWorkingVolume->setMinimum(WorkingVolumeMin);
 	pspbWorkingVolume->setMaximum(WorkingVolumeMax);
-	ploConsentration->addWidget(pspbWorkingVolume);
-	ploSetOfAllValves->addLayout(ploConsentration, 0, 0);
 
-	auto ploViewSetUp = new QHBoxLayout(this);
-	pchbGCm3 = new QRadioButton("g/cm^3", this);
+	ploConcentration->addWidget(pspbWorkingVolume);
+	ploSetOfAllValves->addLayout(ploConcentration, 0, 0);
+
+	auto ploViewSetUp = new QHBoxLayout();
+	pchbGCm3 = new QRadioButton("g/cm^3", pgbSetOfAllValves);
 	pchbGCm3->setChecked(true);
-	pchbTimes = new QRadioButton("Times to mix", this);
+	pchbTimes = new QRadioButton("Times to mix", pgbSetOfAllValves);
 	ploViewSetUp->addWidget(pchbGCm3);
 	ploViewSetUp->addWidget(pchbTimes);
 	ploSetOfAllValves->addLayout(ploViewSetUp, 1, 0);
-	
 
 	QGroupBox* pgbValveSetUp[NumValves];
 	QHBoxLayout* ploValveLayout[NumValves];
 	
 	for (auto iter = 0; iter < NumValves; ++iter) {
-		pgbValveSetUp[iter] = new QGroupBox(tr("Cartridge %1").arg(iter + 1), pgbSetOfAllValves);
-		ploValveLayout[iter] = new QHBoxLayout(pgbSetOfAllValves);
+		pgbValveSetUp[iter] = new QGroupBox(tr("Cartridge %1").arg(iter + 1), this);
+		ploValveLayout[iter] = new QHBoxLayout();
 
 		plblTimes[iter] = new QLabel("Concentrations, g/cm^3", pgbSetOfAllValves);
 		ploValveLayout[iter]->addWidget(plblTimes[iter]);
@@ -167,46 +167,46 @@ void MainWindow::changeCartridgeView(int catridge, bool state) {
 }
 QGroupBox* MainWindow::createExecuteLayout() {
 	auto pgbExecuteLayout = new QGroupBox(tr("Execute sequence"), this);
-	auto ploExecuteLayout = new QGridLayout(this);
+	auto ploExecuteLayout = new QGridLayout(pgbExecuteLayout);
 	auto row = 0;
 
-	auto plblTimesofInnings = new QLabel("number of innings, pcs", this);
-	ploExecuteLayout->addWidget(plblTimesofInnings, row, 0, Qt::AlignCenter);
-	pspbTimesofInnings = new QSpinBox(this);
+	auto plblTimesOfInnings = new QLabel("number of innings, pcs", pgbExecuteLayout);
+	ploExecuteLayout->addWidget(plblTimesOfInnings, row, 0, Qt::AlignCenter);
+	pspbTimesofInnings = new QSpinBox(pgbExecuteLayout);
 	pspbTimesofInnings->setMinimum(TimesofInningsMin);
 	pspbTimesofInnings->setMaximum(TimesofInningsMax);
 	ploExecuteLayout->addWidget(pspbTimesofInnings, row++, 1);
 
-	auto plblSupplyTime = new QLabel("Supply Time, max 9s", this);
+	auto plblSupplyTime = new QLabel("Supply Time, max 9s", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(plblSupplyTime, row, 0, Qt::AlignCenter);
-	pspbSupplyTime = new QSpinBox(this);
+	pspbSupplyTime = new QSpinBox(pgbExecuteLayout);
 	pspbSupplyTime->setMinimum(SupplyTimeMin);
 	pspbSupplyTime->setMaximum(SupplyTimeMax);
 	ploExecuteLayout->addWidget(pspbSupplyTime, row++, 1);
 
-	auto plblDelayTime = new QLabel("Delay Time, max 100s", this);
+	auto plblDelayTime = new QLabel("Delay Time, max 100s", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(plblDelayTime, row, 0, Qt::AlignCenter);
-	pspbDelayTime = new QSpinBox(this);
+	pspbDelayTime = new QSpinBox(pgbExecuteLayout);
 	pspbDelayTime->setMinimum(DelayTimeMin);
 	pspbDelayTime->setMaximum(DelayTimeMax);
 	ploExecuteLayout->addWidget(pspbDelayTime, row++, 1);
 
-	prbtSequenceStart = new QRadioButton("Sequence Start", this);
+	prbtSequenceStart = new QRadioButton("Sequence Start", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(prbtSequenceStart, row, 0);
 	prbtSequenceStart->setChecked(true);
-	prbtShuffleStart = new QRadioButton("Shuffle Start", this);
+	prbtShuffleStart = new QRadioButton("Shuffle Start", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(prbtShuffleStart, row, 1);
 
-	pcmdStart = new QPushButton("Start", this);
+	pcmdStart = new QPushButton("Start", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(pcmdStart, row, 0);
 
-	pcmdStop = new QPushButton("Stop", this);
+	pcmdStop = new QPushButton("Stop", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(pcmdStop, row++, 1);
 
-	pcmdPause = new QPushButton("Pause", this);
+	pcmdPause = new QPushButton("Pause", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(pcmdPause, row, 0);
 
-	pcmdCleaningAirSystem = new QPushButton("Cleaning Air System", this);
+	pcmdCleaningAirSystem = new QPushButton("Cleaning Air System", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(pcmdCleaningAirSystem, row++, 1);
 
 	pgbExecuteLayout->setLayout(ploExecuteLayout);
@@ -214,12 +214,12 @@ QGroupBox* MainWindow::createExecuteLayout() {
 }
 QGroupBox* MainWindow::createManualSettingLayout() {
 	auto pgbManualSettingLayout = new QGroupBox(tr("Manual setting"), this);
-	auto ploManualSettingLayout = new QGridLayout(this);
+	auto ploManualSettingLayout = new QGridLayout(pgbManualSettingLayout);
 
-	ptxtSerialPort = new QLineEdit(this);
+	ptxtSerialPort = new QLineEdit(pgbManualSettingLayout);
 	ploManualSettingLayout->addWidget(ptxtSerialPort, 0, 0);
 
-	pcmdSendSP = new QPushButton("Send", this);
+	pcmdSendSP = new QPushButton("Send", pgbManualSettingLayout);
 	ploManualSettingLayout->addWidget(pcmdSendSP, 0, 1);
 
 	pgbManualSettingLayout->setLayout(ploManualSettingLayout);
@@ -302,12 +302,14 @@ void MainWindow::changeViewClicked() {
 		}
 	}
 }
-void MainWindow::errorMessage(const std::wstring& errorMsg) {
+void MainWindow::errorMessage(const utility::string_t& errorMsg) {
 	QMessageBox messageBox;
 	messageBox.critical(0, "Error", toQString(errorMsg));
 	messageBox.setFixedSize(500, 200);
 }
 QString MainWindow::toQString(const std::wstring& str) {
-	auto qstr = QString::fromStdWString(str);
-	return qstr;
+	return QString::fromStdWString(str);
+}
+QString MainWindow::toQString(const std::string& str) {
+    return QString::fromStdString(str);
 }

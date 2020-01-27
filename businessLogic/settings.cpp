@@ -1,4 +1,9 @@
 #include "settings.h"
+#ifdef _WIN32
+#define INT_TO_STRING(x) std::to_wstring(x)
+#elif INT_TO_STRING(x) std::to_string(x)
+#endif
+
 using namespace web;
 
 Settings::Settings(std::shared_ptr<OdoratorModel> pModel, MainWindow* pView)
@@ -21,7 +26,7 @@ void Settings::saveWorkspace() {
 		supplyTimes[cstrSupplyTimes] = json::value(odoratorModel->getSupplyTime());
 		// Valves value:
 		for (auto it = 0; it < NumValves; it++) {
-			concentration[cstrConcentration][std::to_wstring(it)] = json::value(odoratorModel->getValue(it));
+			concentration[cstrConcentration][INT_TO_STRING(it)] = json::value(odoratorModel->getValue(it));
 		}
 		// Compile all application settings:
 		settings[cstrSettings] = json::value::array({ concentration, delayTimes, supplyTimes, geometry, comPort, workingVolume });

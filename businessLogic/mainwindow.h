@@ -6,7 +6,6 @@ class QGroupBox;
 class QGridLayout;
 class QComboBox;
 class QPushButton;
-class QListWidget;
 class QLineEdit;
 class QVBoxLayout;
 class Controller;
@@ -19,7 +18,7 @@ class MainWindow : public QWidget {
 
     // widgets:
 	QLineEdit* ptxtConcentration[NumValves] = {};
-	QVBoxLayout* mainLayout = nullptr;
+    QGridLayout* pGridLayout = nullptr;
 	QGroupBox* pgbSetOfAllValves = nullptr;
 	QGridLayout* ploSetOfAllValves = nullptr;
 	QPushButton* pcmdSearch = nullptr;
@@ -48,9 +47,11 @@ class MainWindow : public QWidget {
 	void autoConnectToComPort();
 	void connectEvent(const QString& text);
 	QString toQString(const std::wstring& str);
+    QString toQString(const std::string& str);
 	void closeEvent(QCloseEvent* bar);
 
-	QGroupBox* createConnectionLayout();
+    QGroupBox* createConnectionLayout();
+    //QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
 	QGroupBox* createManualSettingLayout();
@@ -61,9 +62,9 @@ public:
 
 	std::pair<int, int> getWindowPos();
 	void setWindowPos(std::array<int, 2>);
-	void setSypplyTime(int);
-	void setDalayTime(int);
-	void errorMessage(const std::wstring&);
+	void setSupplyTime(int);
+	void setDelayTime(int);
+	void errorMessage(const utility::string_t&);
 	void changeCartridgeView(int, bool);
 
 private slots:

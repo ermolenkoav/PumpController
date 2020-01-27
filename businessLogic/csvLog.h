@@ -1,13 +1,14 @@
 #pragma once
 #include "pch.h"
 #include "common.h"
-#include <chrono>
-#include <ctime>    
+#include <iomanip>
+#include <ctime>
 
 class csvLog {
-	utility::char_t* getCurrentTime();
+    template<typename T>
+    utility::string_t toString(const T &t);
+    utility::string_t getCurrentTime();
 	utility::ofstream_t logFile;
-
 public:
 	csvLog();
 	~csvLog();

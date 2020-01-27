@@ -1,14 +1,17 @@
-find_package(GTest REQUIRED)
-find_package(Threads REQUIRED)
-
-include_directories(${PROJECT_SOURCE_DIR}/)
-include_directories(SYSTEM ${GTEST_INCLUDE_DIRS})
-include_directories(${external_includes})
-
-add_subdirectory(unit)
-
 set(TARGET_NAME ${PROJECT_NAME}_unit_tests)
 
-### TEST MODULE COMMON ###
-add_executable(${TARGET_NAME} tests_all.cpp ${srcs_tst_common_all} )
-target_link_libraries(${TARGET_NAME} ${GTEST_BOTH_LIBRARIES} common ${EXTERNAL_LIBS} )
+find_package(GTest CONFIG REQUIRED)
+find_package(pthreads CONFIG)
+
+include_directories(${EXTERNAL_INCLUDES})
+add_subdirectory(unit)
+
+enable_testing()
+
+add_executable(${TARGET_NAME} unit_tests.cpp ${TEST_SOURCE_FILES})
+target_link_libraries(${TARGET_NAME} PUBLIC ${CMAKE_THREAD_LIBS_INIT}
+                                             GTest::gtest
+                                             GTest::gmock
+                                             BUSINESS_LOGIC
+                                             ${EXTERNAL_LIBS}
+                                             )

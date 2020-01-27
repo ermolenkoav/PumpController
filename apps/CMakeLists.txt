@@ -1,7 +1,7 @@
 include_directories(${PROJECT_SOURCE_DIR}/)
-include_directories("../common")
+include_directories("../businessLogic")
 
-include_directories(${external_includes})
+include_directories(${EXTERNAL_INCLUDES})
 
 add_executable(${PROJECT_NAME} ${GUI_TYPE} main.cpp resources.rc)
-target_link_libraries(${PROJECT_NAME} common ${EXTERNAL_LIBS})
+target_link_libraries(${PROJECT_NAME} BUSINESS_LOGIC ${EXTERNAL_LIBS})

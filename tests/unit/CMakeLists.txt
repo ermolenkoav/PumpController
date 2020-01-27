@@ -1,2 +1,2 @@
-file(GLOB files_common "*.cc")
-set(srcs_tst_common_all ${files_common} PARENT_SCOPE)
+file(GLOB TST_SRC_FILES "*.cc")
+set(TEST_SOURCE_FILES ${TST_SRC_FILES} PARENT_SCOPE)

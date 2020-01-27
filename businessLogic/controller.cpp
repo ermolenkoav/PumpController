@@ -27,7 +27,7 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 		state = true;
 	} else {
 		state = false;
-		odoratorView->errorMessage(L"Com port is open");
+		odoratorView->errorMessage(_XPLATSTR("Com port is open"));
 	}
 	return state;
 }
