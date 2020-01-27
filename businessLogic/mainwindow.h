@@ -58,7 +58,7 @@ class MainWindow : public QWidget {
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() = default;
 
 	std::pair<int, int> getWindowPos();
 	void setWindowPos(std::array<int, 2>);

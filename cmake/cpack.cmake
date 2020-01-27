@@ -7,7 +7,6 @@ if (ENABLE_CPACK)
 	set(CPACK_PACKAGE_VERSION "${CPACK_VERSION_MAJOR}.${CPACK_VERSION_MINOR}.${CPACK_VERSION_PATCH}")
 	set(ORGANIZATION_NAME "ФГАОУ ВО «Южный федеральный университет»")
 	set(ORGANIZATION_URL "https://sfedu.ru/")
-	set(ORGANIZATION_LOGO "logoSFEDU.ico")
 	set(ORGANIZATION_EMAIL "ermolenkoav@yandex.ru")
 
 	if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")

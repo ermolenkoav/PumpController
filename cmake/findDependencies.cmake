@@ -2,6 +2,7 @@ find_package(Qt5 COMPONENTS Core Widgets SerialPort REQUIRED)
 find_package(cpprestsdk CONFIG REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 set(EXTERNAL_INCLUDES ${Qt5Core_INCLUDE_DIRS}
                       ${Qt5Gui_INCLUDE_DIRS} 

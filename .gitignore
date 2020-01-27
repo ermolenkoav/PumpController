@@ -94,6 +94,7 @@ ui_*.h
 *.jsc
 Makefile*
 *build-*
+resources.aps
 
 # Qt unit tests
 target_wrapper.*

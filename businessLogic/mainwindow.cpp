@@ -1,11 +1,7 @@
 #include "mainwindow.h"
 #include "version.h"
 
-MainWindow::~MainWindow() {
-	//qDebug() << "Delete Main Window.";
-} 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
-	setWindowIcon(QIcon(":APPLICATION_LOGO"));
 	setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	setWindowTitle(APPLICATION_NAME);
 
