@@ -16,6 +16,9 @@ class OdoratorModel {
 	int delayTime = {};
 
 public:
+	OdoratorModel() = default;
+	~OdoratorModel() = default;
+
 	std::list<char> sendCommandData;
 	// control commands:
 	void calculatePrepareTheGasAirMixture();

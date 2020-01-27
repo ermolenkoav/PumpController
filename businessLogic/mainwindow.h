@@ -11,10 +11,11 @@ class QLineEdit;
 class QVBoxLayout;
 class Controller;
 class QSpinBox;
+class Controller;
 
 class MainWindow : public QWidget {
-    Q_OBJECT    
-	Controller *controller = nullptr;
+	Q_OBJECT
+	std::unique_ptr<Controller> controller;
 
     // widgets:
 	QLineEdit* ptxtConcentration[NumValves] = {};

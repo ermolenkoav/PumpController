@@ -1,10 +1,9 @@
 #include "settings.h"
 using namespace web;
 
-Settings::Settings(OdoratorModel* _odoratorModel, MainWindow* _odoratorView) {
+Settings::Settings(std::shared_ptr<OdoratorModel> pModel, MainWindow* pView)
+		 : odoratorModel{ pModel }, odoratorView { pView } {
 	//TO DO: pointer to class is mast be const
-	odoratorModel = _odoratorModel;
-	odoratorView = _odoratorView;
 }
 void Settings::saveWorkspace() {
 	if (utility::ofstream_t settingFile(settingsFileName); settingFile.is_open()) {
@@ -37,7 +36,7 @@ void Settings::loadWorkspace() {
 	}
 	odoratorView->setWindowPos(windowPos);
 }
-std::wstring Settings::loadJSONValue(web::json::value v) {
+utility::string_t Settings::loadJSONValue(web::json::value v) {
 	utility::stringstream_t ss;
 	try {
 		if (!v.is_null()) {
@@ -92,7 +91,7 @@ std::wstring Settings::loadJSONValue(web::json::value v) {
 
 	return ss.str();
 }
-std::wstring Settings::DisplayJSONValue(web::json::value v) {
+utility::string_t  Settings::DisplayJSONValue(web::json::value v) {
 	utility::stringstream_t ss;
 	try {
 		if (!v.is_null()) {

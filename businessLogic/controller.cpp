@@ -3,22 +3,12 @@
 #define SIXTH_COMMAND_LENGTH 5
 #define S_COMMAND_LENGTH 2
 
-Controller::~Controller() {
-	pSerialPort->close();
-	delete odoratorModel;
-	delete settings;
-	delete pSerialPort;
-	delete log;
-}
-Controller::Controller(MainWindow* _odoratorView) {
-	odoratorView = _odoratorView;
-	odoratorModel = new OdoratorModel;
-	settings = new Settings(odoratorModel, odoratorView);
-	pSerialPort = new QSerialPort;
-	log = new csvLog;
-	loadWorkspace();
-}
-void Controller::loadWorkspace() {
+Controller::~Controller() {}
+Controller::Controller(MainWindow* pView) : odoratorView{ pView } {
+	odoratorModel = std::make_shared<OdoratorModel>();
+	settings = std::make_unique<Settings>(odoratorModel, pView);
+	pSerialPort = std::make_unique<QSerialPort>();
+	log = std::make_unique<csvLog>();
 	settings->loadWorkspace();
 }
 double Controller::getStartValue(int index) {

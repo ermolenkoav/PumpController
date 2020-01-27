@@ -1,5 +1,22 @@
 #pragma once
 
+#include <initializer_list>
+#include <filesystem>
+#include <cstdlib>
+#include <fstream>
+#include <cstdlib>
+#include <utility>
+#include <string>
+#include <thread>
+#include <chrono>
+#include <vector>
+#include <array>
+#include <cmath>
+#include <list>
+
+#define _TURN_OFF_PLATFORM_STRING
+#include "cpprest/json.h"
+
 #include <Qt>
 #include <QApplication>
 #include <QMessageBox>
@@ -23,20 +40,3 @@
 #include <QLabel>
 #include <QPoint>
 #include <QDebug>
-
-#define _TURN_OFF_PLATFORM_STRING
-#include "cpprest/json.h"
-
-#include <initializer_list>
-#include <filesystem>
-#include <cstdlib>
-#include <fstream>
-#include <cstdlib>
-#include <utility>
-#include <string>
-#include <thread>
-#include <chrono>
-#include <vector>
-#include <array>
-#include <cmath>
-#include <list>

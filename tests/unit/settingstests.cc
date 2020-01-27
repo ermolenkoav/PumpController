@@ -1,4 +1,4 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "common/settings.h"
+#include "businessLogic/settings.h"

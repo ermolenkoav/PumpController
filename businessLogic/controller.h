@@ -9,19 +9,17 @@ class MainWindow;
 class csvLog;
 
 class Controller {
-	QSerialPort *pSerialPort = nullptr;
-	OdoratorModel *odoratorModel = nullptr;
-	Settings* settings = nullptr;
-	MainWindow* odoratorView = nullptr;
-	csvLog* log = nullptr;
-
+	std::shared_ptr<OdoratorModel> odoratorModel;
+	std::unique_ptr<Settings> settings;
+	std::unique_ptr<QSerialPort> pSerialPort;
+	std::unique_ptr<csvLog> log;
+	MainWindow* odoratorView;
 	bool readyToGo = false;
 
 	void sendCommand(int, int);
-	void loadWorkspace();
 
 public:	
-	Controller(MainWindow* _odoratorView);
+	Controller(MainWindow*);
 	~Controller();
 
 	bool serialPortInitialization(QString);

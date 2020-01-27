@@ -5,11 +5,11 @@
 #include <ctime>    
 
 class csvLog {
-	wchar_t* getCurrentTime();
-	std::wofstream logFile;
+	utility::char_t* getCurrentTime();
+	utility::ofstream_t logFile;
 
 public:
 	csvLog();
 	~csvLog();
-	void logEvent(char);
+	void logEvent(utility::char_t);
 };

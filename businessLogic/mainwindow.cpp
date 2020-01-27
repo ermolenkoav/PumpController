@@ -2,14 +2,14 @@
 #include "version.h"
 
 MainWindow::~MainWindow() {
-	delete controller;
-	qDebug() << "Delete Main Window.";
+	//qDebug() << "Delete Main Window.";
 } 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowIcon(QIcon(":APPLICATION_LOGO"));
 	setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	setWindowTitle(APPLICATION_NAME);
-	controller = new Controller(this);
+
+	controller = std::make_unique<Controller>(this);
 
 	timer = new QTimer(this);
 	timer->setInterval(controller->getDelayTime());
@@ -30,16 +30,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
 	connect(pspbWorkingVolume,			QOverload<int>::of(&QSpinBox::valueChanged),
-		[=]() {
-		controller->setWorkingVolume(pspbWorkingVolume->value());
-		});
+		[=]() { controller->setWorkingVolume(pspbWorkingVolume->value()); });
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
-		[=]() {
-		setSypplyTime(pspbSupplyTime->value());
-		});
+		[=]() { setSypplyTime(pspbSupplyTime->value()); });
 	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
-		[=]() { 
-		setDalayTime(pspbDelayTime->value());
+		[=]() { setDalayTime(pspbDelayTime->value());
 		});
 }
 /************************************LOAD LAST SETTINGS************************************/
@@ -266,7 +261,6 @@ void MainWindow::prepareTheGasAirMixtureButtonClicked() {
 	controller->setReadyToGo(true);
 }
 void MainWindow::startButtonClicked() {
-	timeOutSlot();
 	timer->start(controller->getDelayTime());
 }
 void MainWindow::timeOutSlot() {
