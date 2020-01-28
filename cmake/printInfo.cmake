@@ -16,6 +16,7 @@ message( STATUS "CMAKE_CXX_FLAGS_RELEASE =     ${CMAKE_CXX_FLAGS_RELEASE}")
 
 message( STATUS "ENABLE_UNIT_TESTS =           ${ENABLE_UNIT_TESTS}")
 message( STATUS "ENABLE_CPACK =                ${ENABLE_CPACK}")
+message( STATUS "USE_NSIS                      ${USE_NSIS}")
 message( STATUS "WARNINGS_AS_ERRORS =          ${WARNINGS_AS_ERRORS}")
 #message( STATUS "TEST_DATA_DIR =              ${TEST_DATA_DIR}")
 message( STATUS "ASAN_OPTIONS =                ${ASAN_OPTIONS}")
