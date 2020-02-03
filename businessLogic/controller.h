@@ -22,6 +22,8 @@ public:
 	Controller(MainWindow*);
 	~Controller();
 
+	void valveCloseCommand(char);
+	void stopAirDelivery();
 	bool serialPortInitialization(QString);
 	void prepareTheGasAirMixture();
 	void changeGasSupplyTime(int time);
@@ -29,6 +31,7 @@ public:
 	void startUpSequenceAirDelivery();
 	void manualSetting(std::string command);
 	void cleaningAirSystem();
+	bool isBufferClear();
 	void clearBuffer();
 	void setStartValue(const double, const int);
 	void setStartValue(const int, const int);

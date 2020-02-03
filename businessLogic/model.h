@@ -19,6 +19,7 @@ public:
 	OdoratorModel() = default;
 	~OdoratorModel() = default;
 
+	void valveCloseCommand(char);
 	std::list<char> sendCommandData;
 	// control commands:
 	void calculatePrepareTheGasAirMixture();
@@ -28,6 +29,7 @@ public:
 	void cleaningAirSystem();
 	bool isBufferClear();
 	void gasSupplyTime(int seconds);
+	void stopAirSystem();
 
 	void setValue(const double, const int);
 	double getValue(int index) const;

@@ -11,6 +11,14 @@ void OdoratorModel::cleaningAirSystem() {
 		sendCommandData.push_back('A');
 	}
 }
+void OdoratorModel::stopAirSystem() {
+		sendCommandData.push_back('A');
+		sendCommandData.push_back('P');
+}
+void OdoratorModel::valveCloseCommand(char valve) {
+	sendCommandData.push_back(valve);
+	sendCommandData.push_back('L');
+}
 void OdoratorModel::gasSupplyTime(int seconds) {
 	if ((seconds >= 0) && (seconds <= 9)) {
 		for (auto it = 0; it < NumValves; it++) {
@@ -31,7 +39,7 @@ void OdoratorModel::calculatePrepareTheGasAirMixture() {
 		sendCommandData.push_back(cartridgeName[it]);
 		sendCommandData.push_back('6');
 		sendCommandData.push_back(workingVolume);
-		int iworkingVolume = (int)(workingVolume - '0') * 10;
+		auto iworkingVolume = static_cast<int>(workingVolume - '0') * 10;
 		auto times = calculateValue(startValueDouble[it], iworkingVolume);
 		if ( (0 <= times) && (20 >= times) ) {
 			sendCommandData.push_back('0');
@@ -140,8 +148,8 @@ utility::string_t OdoratorModel::getComPortName() const {
 	return comPortName;
 }
 int OdoratorModel::getWorkingVolume() const {
-	return workingVolume - '0';
+	return static_cast<int>(workingVolume - '0');
 }
 void OdoratorModel::setWorkingVolume(int vol) {
-	workingVolume = vol + '0';
+	workingVolume = static_cast<char>(vol + '0');
 }

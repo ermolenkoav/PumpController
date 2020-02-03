@@ -49,6 +49,7 @@ class MainWindow : public QWidget {
 	QString toQString(const std::wstring& str);
     QString toQString(const std::string& str);
 	void closeEvent(QCloseEvent* bar);
+	void collectData();
 
     QGroupBox* createConnectionLayout();
     //QGroupBox* createConnectionLayout();

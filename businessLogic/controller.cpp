@@ -72,17 +72,34 @@ void Controller::changeGasSupplyTime(int time) {
 }
 void Controller::startUpShuffleAirDelivery() {
 	if (isReady()) {
-		if (odoratorModel->isBufferClear()) {
-			odoratorModel->randomGasAirDelivery();
+		if (!odoratorModel->isBufferClear()) {
+			clearBuffer();
 		}
-		sendCommand(S_COMMAND_LENGTH, 1);
+	odoratorModel->randomGasAirDelivery();
+	sendCommand(S_COMMAND_LENGTH, 1);
 	}
 }
 void Controller::startUpSequenceAirDelivery() {
 	if (isReady()) {
-		if (odoratorModel->isBufferClear()) {
-			odoratorModel->sequenceGasAirDelivery();
+		if (!odoratorModel->isBufferClear()) {
+			clearBuffer();
 		}
+	odoratorModel->sequenceGasAirDelivery();
+	sendCommand(S_COMMAND_LENGTH, 1);
+	}
+}
+void Controller::stopAirDelivery() {
+	if (isReady()) {
+		if (!odoratorModel->isBufferClear()) {
+			clearBuffer();
+		}
+	odoratorModel->stopAirSystem();
+	sendCommand(S_COMMAND_LENGTH, 1);
+	}
+}
+void Controller::valveCloseCommand(char valve = 'A') {
+	if (isReady()) {
+		odoratorModel->valveCloseCommand(valve);
 		sendCommand(S_COMMAND_LENGTH, 1);
 	}
 }
@@ -131,4 +148,7 @@ void Controller::setWorkingVolume(int vol) {
 }
 int Controller::getWorkingVolume() const {
 	return odoratorModel->getWorkingVolume();
+}
+bool Controller::isBufferClear() {
+	return odoratorModel->isBufferClear();
 }

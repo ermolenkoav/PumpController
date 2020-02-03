@@ -13,7 +13,7 @@ const auto DelayTimeMax = 100;
 const auto SupplyTimeMin = 1;
 const auto SupplyTimeMax = 9;
 const auto WorkingVolumeMin = 1;
-const auto WorkingVolumeMax = 9;
+const auto WorkingVolumeMax = 10;
 const auto TimesofInningsMin = 0;
 const auto TimesofInningsMax = 100;
 

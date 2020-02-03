@@ -196,11 +196,11 @@ QGroupBox* MainWindow::createExecuteLayout() {
 	pcmdStart = new QPushButton("Start", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(pcmdStart, row, 0);
 
-	pcmdStop = new QPushButton("Stop", pgbExecuteLayout);
-	ploExecuteLayout->addWidget(pcmdStop, row++, 1);
-
 	pcmdPause = new QPushButton("Pause", pgbExecuteLayout);
-	ploExecuteLayout->addWidget(pcmdPause, row, 0);
+	ploExecuteLayout->addWidget(pcmdPause, row++, 1);
+
+	pcmdStop = new QPushButton("Stop", pgbExecuteLayout);
+	ploExecuteLayout->addWidget(pcmdStop, row, 0);
 
 	pcmdCleaningAirSystem = new QPushButton("Cleaning Air System", pgbExecuteLayout);
 	ploExecuteLayout->addWidget(pcmdCleaningAirSystem, row++, 1);
@@ -257,12 +257,14 @@ void MainWindow::prepareTheGasAirMixtureButtonClicked() {
 	controller->setReadyToGo(true);
 }
 void MainWindow::startButtonClicked() {
-	timer->start(controller->getDelayTime());
+	controller->valveCloseCommand('A');
+	timer->start(controller->getDelayTime()); 
 }
 void MainWindow::timeOutSlot() {
 	auto count = pspbTimesofInnings->value();
-	if (0 < count) {
-		pspbTimesofInnings->setValue(count - 1);
+	if (0 <= count) {
+		count--;
+		pspbTimesofInnings->setValue(count);
 		if (prbtSequenceStart->isChecked()) {
 			controller->startUpSequenceAirDelivery();
 		}
@@ -270,17 +272,25 @@ void MainWindow::timeOutSlot() {
 			controller->startUpShuffleAirDelivery();
 		}
 		if (0 == count) {
-			timer->stop();
+			std::this_thread::sleep_for(std::chrono::milliseconds(controller->getDelayTime()));
+			stopButtonClicked();
 		}
 	}
 }
 void MainWindow::stopButtonClicked() {
-	controller->setReadyToGo(false);
+	//controller->setReadyToGo(false);
 	timer->stop();
-	controller->clearBuffer();
+	controller->stopAirDelivery();
 }
 void MainWindow::pauseButtonClicked() {
-	timer->stop();
+	static bool times;
+	if (times) {
+		timer->stop();
+	}
+	else {
+		timer->start();
+	}
+	times ^= times;
 }
 void MainWindow::manualSettingClicked() {
 	auto command = ptxtSerialPort->text();
