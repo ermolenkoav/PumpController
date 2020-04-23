@@ -27,7 +27,7 @@ bool Controller::serialPortInitialization(QString selectedDevice) {
 		state = true;
 	} else {
 		state = false;
-		odoratorView->errorMessage(_XPLATSTR("Com port is open"));
+		odoratorView->errorMessage("Com port is open");
 	}
 	return state;
 }
@@ -137,10 +137,10 @@ bool Controller::setDelayTime(int temp) {
 void Controller::saveCurrentWorkSpace() {
 	settings->saveWorkspace();
 }
-void Controller::setComPortName(const utility::string_t& name) {
+void Controller::setComPortName(const std::string& name) {
 	odoratorModel->setComPortName(name);
 }
-utility::string_t Controller::getComPortName() const {
+std::string Controller::getComPortName() const {
 	return odoratorModel->getComPortName();
 }
 void Controller::setWorkingVolume(int vol) {

@@ -65,7 +65,7 @@ public:
 	void setWindowPos(std::array<int, 2>);
 	void setSupplyTime(int);
 	void setDelayTime(int);
-	void errorMessage(const utility::string_t&);
+	void errorMessage(const std::string&);
 	void changeCartridgeView(int, bool);
 
 private slots:

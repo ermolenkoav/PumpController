@@ -1,7 +1,8 @@
 set(ORGANIZATION_LOGO "logoSFEDU.ico")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-
+    set(Boost_INCLUDE_DIR D:/SC/VS/vcpkg/installed/${VCPKG_TARGET_TRIPLET}/include)
+    set(GTest_DIR D:/SC/VS/vcpkg/installed/${VCPKG_TARGET_TRIPLET}/share/gtest)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/)
     set(GTest_DIR /usr/lib/)

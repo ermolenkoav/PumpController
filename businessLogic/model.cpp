@@ -141,10 +141,10 @@ int OdoratorModel::getSupplyTime() const {
 int OdoratorModel::getDelayTime() const {
 	return delayTime * 1000;
 }
-void OdoratorModel::setComPortName(const utility::string_t& name) {
+void OdoratorModel::setComPortName(const std::string& name) {
 	comPortName = name;
 }
-utility::string_t OdoratorModel::getComPortName() const {
+std::string OdoratorModel::getComPortName() const {
 	return comPortName;
 }
 int OdoratorModel::getWorkingVolume() const {

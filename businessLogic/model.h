@@ -11,7 +11,7 @@ class OdoratorModel {
 	double startValueDouble[NumValves] = { 0 };
 	int startValueInt[NumValves] = { 0 };
 	char workingVolume = '2';
-    utility::string_t comPortName = {};
+	std::string comPortName = {};
 	int supplyTime = {};
 	int delayTime = {};
 
@@ -40,8 +40,8 @@ public:
 	bool setSupplyTime(int);
 	int getDelayTime() const;
 	bool setDelayTime(int);
-	void setComPortName(const utility::string_t&);
-    utility::string_t getComPortName() const;
+	void setComPortName(const std::string&);
+	std::string getComPortName() const;
 	void setWorkingVolume(int);
 	int getWorkingVolume() const;
 };

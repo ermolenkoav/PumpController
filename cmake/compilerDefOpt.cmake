@@ -8,6 +8,27 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(GUI_TYPE WIN32)
+
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP /MT")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP /MTd")
+
+    if (VCPKG_TARGET_TRIPLET MATCHES "static")
+        add_definitions(-D_UNICODE -DUNICODE -DwxUSE_GUI=1 -D__WXMSW__)
+        set(CompilerFlags
+            CMAKE_CXX_FLAGS
+            CMAKE_CXX_FLAGS_DEBUG
+            CMAKE_CXX_FLAGS_RELEASE
+            CMAKE_C_FLAGS
+            CMAKE_C_FLAGS_DEBUG
+            CMAKE_C_FLAGS_RELEASE
+            )
+        foreach(CompilerFlag ${CompilerFlags})
+            string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+        endforeach()
+
+    endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")

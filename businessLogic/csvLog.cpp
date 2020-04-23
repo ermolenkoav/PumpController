@@ -4,25 +4,25 @@ csvLog::~csvLog() {
     logFile.close();
 }
 csvLog::csvLog() {
-    utility::string_t name = _XPLATSTR("logs");
-    utility::string_t time = getCurrentTime();
-    utility::string_t format = _XPLATSTR(".csv");
-    utility::string_t fileName(name /*+ time*/ + format);
-    utility::ofstream_t logFile(fileName);
+    std::string name = "logs";
+    std::string time = getCurrentTime();
+    std::string format = ".csv";
+    std::string fileName(name /*+ time*/ + format);
+    std::ofstream logFile(fileName);
 }
-utility::string_t csvLog::getCurrentTime() {
+std::string csvLog::getCurrentTime() {
     std::time_t time;
     std::time(&time);
-    utility::stringstream_t ss;
+    std::stringstream ss;
     ss << time;
-    utility::string_t ts = ss.str();
+    std::string ts = ss.str();
     return ts;
 }
-void csvLog::logEvent(utility::char_t str) {
+void csvLog::logEvent(char str) {
     if (logFile.is_open()) {
-        logFile << _XPLATSTR("Cartridge ")
+        logFile << "Cartridge "
                 << str
-                << _XPLATSTR(", ")
+                << ", "
                 << getCurrentTime()
                 << std::endl;
     }

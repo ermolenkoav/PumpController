@@ -43,8 +43,8 @@ public:
 	int getDelayTime() const;
 	bool setDelayTime(int);
 	void saveCurrentWorkSpace();
-	void setComPortName(const utility::string_t&);
-    utility::string_t getComPortName() const;
+	void setComPortName(const std::string&);
+	std::string getComPortName() const;
 	void setWorkingVolume(int);
 	int getWorkingVolume() const;
 };

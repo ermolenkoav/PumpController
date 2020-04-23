@@ -1,7 +1,7 @@
 #pragma once
 
 #include <initializer_list>
-//#include <filesystem>
+#include <filesystem>
 #include <cstdlib>
 #include <fstream>
 #include <cstdlib>
@@ -14,8 +14,7 @@
 #include <cmath>
 #include <list>
 
-#define _TURN_OFF_PLATFORM_STRING
-#include "cpprest/json.h"
+#include <json/json.h>
 
 #include <Qt>
 #include <QApplication>

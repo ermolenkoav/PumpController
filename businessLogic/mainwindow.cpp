@@ -57,7 +57,7 @@ void MainWindow::autoConnectToComPort() {
 }
 void MainWindow::connectEvent(const QString& text) {
 	if (controller->serialPortInitialization(text)) {
-		controller->setComPortName(utility::conversions::to_string_t(text.toStdString()));
+		controller->setComPortName(text.toStdString());
 		pcmdSearch->setText("Connected");
 		pcmdSearch->setCheckable(false);
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -65,13 +65,13 @@ void MainWindow::connectEvent(const QString& text) {
 }
 void MainWindow::setSupplyTime(int time) {
 	if (!controller->setSupplyTime(time)) {
-		errorMessage(_XPLATSTR("An error has occurred!"));
+		errorMessage("An error has occurred!");
 	}
 	controller->changeGasSupplyTime(time);
 }
 void MainWindow::setDelayTime(int time) {
 	if (!controller->setDelayTime(time)) {
-		errorMessage(_XPLATSTR("An error has occurred!"));
+		errorMessage("An error has occurred!");
 	}
 	timer->setInterval(controller->getDelayTime());
 }
@@ -308,7 +308,7 @@ void MainWindow::changeViewClicked() {
 		}
 	}
 }
-void MainWindow::errorMessage(const utility::string_t& errorMsg) {
+void MainWindow::errorMessage(const std::string& errorMsg) {
 	QMessageBox messageBox;
 	messageBox.critical(0, "Error", toQString(errorMsg));
 	messageBox.setFixedSize(500, 200);

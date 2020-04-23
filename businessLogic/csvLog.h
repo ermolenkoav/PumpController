@@ -6,11 +6,11 @@
 
 class csvLog {
     template<typename T>
-    utility::string_t toString(const T &t);
-    utility::string_t getCurrentTime();
-	utility::ofstream_t logFile;
+	std::string toString(const T &t);
+	std::string getCurrentTime();
+	std::ofstream logFile;
 public:
 	csvLog();
 	~csvLog();
-	void logEvent(utility::char_t);
+	void logEvent(char);
 };
