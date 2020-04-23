@@ -139,7 +139,7 @@ int OdoratorModel::getSupplyTime() const {
 	return supplyTime;
 }
 int OdoratorModel::getDelayTime() const {
-	return delayTime * 1000;
+	return delayTime;
 }
 void OdoratorModel::setComPortName(const std::string& name) {
 	comPortName = name;

@@ -6,7 +6,7 @@ class Settings {
 	std::shared_ptr<OdoratorModel> odoratorModel;
 	MainWindow* odoratorView;
 
-	std::string  loadJSONValue(Json::Value);
+	void loadJSONValue(Json::Value);
 
 	std::array<int, 2> windowPos = {1600,170};
 	std::string  comPortName;

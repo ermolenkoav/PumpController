@@ -7,11 +7,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 
 	controller = std::make_unique<Controller>(this);
 
-	timer = new QTimer(this);
-	timer->setInterval(controller->getDelayTime());
-
 	createMainWindowLayout();
 	loadSettings();
+
+	timer = new QTimer(this);
+	timer->setInterval(controller->getDelayTime() * 1000);
+
 	//autoConnectToComPort();
 
     // Signals:
@@ -37,8 +38,8 @@ void MainWindow::loadSettings() {
 	for (auto iterate = 0; iterate < NumValves; ++iterate) {  // All previous concentrations
 		ptxtConcentration[iterate]->setText(QString::number(controller->getStartValue(iterate)));
 	}
-	pspbDelayTime->setValue(controller->getDelayTime() / 1000);
-	pspbSupplyTime->setValue(DefaultSupplyTime);
+	pspbDelayTime->setValue(controller->getDelayTime());
+	pspbSupplyTime->setValue(controller->getSupplyTime());
 	pspbWorkingVolume->setValue(controller->getWorkingVolume());
 }
 std::pair<int, int> MainWindow::getWindowPos() {
@@ -73,7 +74,7 @@ void MainWindow::setDelayTime(int time) {
 	if (!controller->setDelayTime(time)) {
 		errorMessage("An error has occurred!");
 	}
-	timer->setInterval(controller->getDelayTime());
+	timer->setInterval(controller->getDelayTime() * 1000);
 }
 void MainWindow::closeEvent(QCloseEvent *event) {
 	QMessageBox::StandardButton resBtn = QMessageBox::question(this, APPLICATION_NAME,
