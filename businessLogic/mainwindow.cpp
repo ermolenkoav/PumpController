@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	loadSettings();
 
 	timer = new QTimer(this);
-	timer->setInterval(controller->getDelayTime() * 1000);
+	setTimerInterval();
 
 	//autoConnectToComPort();
 
@@ -51,8 +51,7 @@ void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
 	move(windowPos[0], windowPos[1]);
 }
 void MainWindow::autoConnectToComPort() {
-	if (!controller->getComPortName().empty()) 
-	{
+	if (!controller->getComPortName().empty())  {
 		connectEvent(toQString(controller->getComPortName()));
 	}
 }
@@ -74,7 +73,7 @@ void MainWindow::setDelayTime(int time) {
 	if (!controller->setDelayTime(time)) {
 		errorMessage("An error has occurred!");
 	}
-	timer->setInterval(controller->getDelayTime() * 1000);
+	setTimerInterval();
 }
 void MainWindow::closeEvent(QCloseEvent *event) {
 	QMessageBox::StandardButton resBtn = QMessageBox::question(this, APPLICATION_NAME,
@@ -85,6 +84,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 		return;
 	}
 	if (resBtn == QMessageBox::Yes) {
+		saveConcentrationValue();
 		controller->saveCurrentWorkSpace();
 	}
 	event->accept();
@@ -240,12 +240,17 @@ void MainWindow::searchButtonClicked() {
 			pcmbListOfPorts->clear();
 	});
 }
+void MainWindow::saveConcentrationValue() {
+	for (auto iterate = 0; iterate < NumValves; ++iterate) {
+		controller->setStartValue(ptxtConcentration[iterate]->text().toDouble(), iterate);
+	}
+}
+void MainWindow::setTimerInterval() {
+	timer->setInterval(controller->getDelayTime() * 1000);
+}
 void MainWindow::prepareTheGasAirMixtureButtonClicked() {
 	if (pchbGCm3->isChecked()) {
-		for (auto iterate = 0; iterate < NumValves; ++iterate) {
-			auto stTimes = ptxtConcentration[iterate]->text();
-			controller->setStartValue(stTimes.toDouble(), iterate);
-		}
+		saveConcentrationValue();
 		controller->prepareTheGasAirMixture();
 	}
 	if (pchbTimes->isChecked()) {

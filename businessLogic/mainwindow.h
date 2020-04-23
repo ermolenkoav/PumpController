@@ -42,6 +42,8 @@ class MainWindow : public QWidget {
 	QTimer* timer = nullptr;
 
     // methods:
+	void saveConcentrationValue();
+	void setTimerInterval();
 	void createMainWindowLayout();
 	void loadSettings();
 	void autoConnectToComPort();

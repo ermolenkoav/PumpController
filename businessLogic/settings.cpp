@@ -21,34 +21,24 @@ void Settings::saveWorkspace() {
 		for (auto it = 0; it < NumValves; it++) {
 			settings[cstrSettings][cstrConcentration][std::to_string(it)] = odoratorModel->getValue(it);
 		}
-		// Compile all application settings:
-		//settings[cstrSettings] =  concentration, delayTimes, supplyTimes, geometry, comPort, workingVolume ;
 		Json::StyledWriter styled;
 		settingFile << styled.write(settings);
 	}
 }
 void Settings::loadWorkspace() {
 	if (std::ifstream settingFile(settingsFileName); settingFile.is_open()) {
-		Json::Value val;
-		settingFile >> val;
-		loadJSONValue(val);
+		Json::Value jValue;
+		settingFile >> jValue;
+		odoratorModel->setComPortName(jValue[cstrSettings][cstrComPort].asString());
+		odoratorModel->setSupplyTime(jValue[cstrSettings][cstrSupplyTimes].asInt());
+		odoratorModel->setDelayTime(jValue[cstrSettings][cstrDelayTimes].asInt());
+		odoratorModel->setWorkingVolume(jValue[cstrSettings][cstrWorkingVolume].asInt());
+		for (auto it = jValue[cstrSettings][cstrConcentration].begin(); it != jValue[cstrSettings][cstrConcentration].end(); ++it) {
+			odoratorModel->setValue(it->asDouble(), std::stoi(it.memberName()));
+		}
+		for (auto it = jValue[cstrSettings][cstrGeometry].begin(); it != jValue[cstrSettings][cstrGeometry].end(); ++it) {
+			windowPos[std::stoi(it.memberName())] = it->asInt();
+		}
 	}
 	odoratorView->setWindowPos(windowPos);
-}
-void Settings::loadJSONValue(Json::Value jValue) {
-	odoratorModel->setComPortName(jValue[cstrSettings][cstrComPort].asString());
-	odoratorModel->setSupplyTime(jValue[cstrSettings][cstrSupplyTimes].asInt());
-	odoratorModel->setDelayTime(jValue[cstrSettings][cstrDelayTimes].asInt());
-	odoratorModel->setWorkingVolume(jValue[cstrSettings][cstrWorkingVolume].asInt());
-	const Json::Value& characters = jValue[cstrSettings] [cstrConcentration] ;
-	for (auto it = characters.begin(); it != characters.end(); ++it) {
-		odoratorModel->setValue(it->asDouble(), std::stoi(it.memberName()));
-	}
-	const Json::Value& winPosition = jValue[cstrSettings][cstrGeometry];
-	for (auto it = winPosition.begin(); it != winPosition.end(); ++it) {
-		windowPos[std::stoi(it.memberName())] = it->asInt();
-	}
-}
-void Settings::saveCurrentData() {
-	if(std::ifstream settingFile(logFileName); settingFile.is_open()) {}
 }

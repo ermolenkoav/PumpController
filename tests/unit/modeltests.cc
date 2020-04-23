@@ -1,4 +1,4 @@
-#include "businessLogic/model.h"
+#include "../businessLogic/model.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
