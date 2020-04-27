@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Odorator LANGUAGES CXX)
+project(Odorator LANGUAGES C CXX)
 
 include(cmake/options.cmake               REQUIRED)
 

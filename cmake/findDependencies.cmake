@@ -1,6 +1,8 @@
 find_package(Qt5 COMPONENTS Core Widgets SerialPort REQUIRED)
 find_package(jsoncpp CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)

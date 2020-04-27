@@ -34,10 +34,10 @@ void Settings::loadWorkspace() {
 		odoratorModel->setDelayTime(jValue[cstrSettings][cstrDelayTimes].asInt());
 		odoratorModel->setWorkingVolume(jValue[cstrSettings][cstrWorkingVolume].asInt());
 		for (auto it = jValue[cstrSettings][cstrConcentration].begin(); it != jValue[cstrSettings][cstrConcentration].end(); ++it) {
-			odoratorModel->setValue(it->asDouble(), std::stoi(it.memberName()));
+			odoratorModel->setValue(it->asDouble(), std::stoi(it.name()));
 		}
 		for (auto it = jValue[cstrSettings][cstrGeometry].begin(); it != jValue[cstrSettings][cstrGeometry].end(); ++it) {
-			windowPos[std::stoi(it.memberName())] = it->asInt();
+			windowPos[std::stoi(it.name())] = it->asInt();
 		}
 	}
 	odoratorView->setWindowPos(windowPos);
