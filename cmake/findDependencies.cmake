@@ -1,8 +1,9 @@
 find_package(Qt5 COMPONENTS Core Widgets SerialPort REQUIRED)
-find_package(jsoncpp CONFIG REQUIRED)
-find_package(GTest CONFIG REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
+find_package(jsoncpp CONFIG REQUIRED)
+
+include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -19,6 +20,4 @@ set(EXTERNAL_INCLUDES ${Qt5Core_INCLUDE_DIRS}
                       ${Qt5Gui_INCLUDE_DIRS} 
                       ${Qt5Widgets_INCLUDE_DIRS} 
                       ${Qt5SerialPort_INCLUDE_DIRS}
-                      ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include
-                      ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/gtest
                       )
