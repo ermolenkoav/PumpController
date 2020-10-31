@@ -46,7 +46,8 @@ class MainWindow : public QWidget {
 	void setTimerInterval();
 	void createMainWindowLayout();
 	void loadSettings();
-	void autoConnectToComPort();
+
+    [[maybe_unused]] void autoConnectToComPort();
 	void connectEvent(const QString& text);
 	QString toQString(const std::wstring& str);
     QString toQString(const std::string& str);
@@ -54,7 +55,6 @@ class MainWindow : public QWidget {
 	void collectData();
 
     QGroupBox* createConnectionLayout();
-    //QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
 	QGroupBox* createExecuteLayout();
 	QGroupBox* createManualSettingLayout();

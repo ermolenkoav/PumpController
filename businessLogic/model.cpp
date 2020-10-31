@@ -1,8 +1,8 @@
 #include "model.h"
 
-void OdoratorModel::addCustomCommand(std::string command) {
-	for (auto it = 0; it < command.length(); it++) {
-		sendCommandData.push_back(command[it]);
+void OdoratorModel::addCustomCommand(const std::string& command) {
+	for (const char & it : command) {
+		sendCommandData.push_back(it);
 	}
 }
 void OdoratorModel::cleaningAirSystem() {

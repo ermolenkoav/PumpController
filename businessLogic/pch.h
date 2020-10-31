@@ -1,7 +1,6 @@
 #pragma once
 
 #include <initializer_list>
-//#include <filesystem>
 #include <cstdlib>
 #include <fstream>
 #include <cstdlib>
@@ -13,8 +12,6 @@
 #include <array>
 #include <cmath>
 #include <list>
-
-#include <json/json.h>
 
 #include <Qt>
 #include <QApplication>

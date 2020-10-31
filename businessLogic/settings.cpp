@@ -1,12 +1,14 @@
 #include "settings.h"
 
+#include <utility>
+
 Settings::Settings(std::shared_ptr<OdoratorModel> pModel, MainWindow* pView)
-		 : odoratorModel{ pModel }, odoratorView { pView } {
+		 : odoratorModel{std::move( pModel )}, odoratorView { pView } {
 	//TO DO: pointer to class is mast be const
 }
 void Settings::saveWorkspace() {
 	if (std::ofstream settingFile(settingsFileName); settingFile.is_open()) {
-		Json::Value settings;
+/*		Json::Value settings;
 		// Window geometry:
 		settings[cstrSettings][cstrGeometry]["0"] = odoratorView->getWindowPos().first;
 		settings[cstrSettings][cstrGeometry]["1"] = odoratorView->getWindowPos().second;
@@ -21,13 +23,16 @@ void Settings::saveWorkspace() {
 		for (auto it = 0; it < NumValves; it++) {
 			settings[cstrSettings][cstrConcentration][std::to_string(it)] = odoratorModel->getValue(it);
 		}
-		Json::StyledWriter styled;
-		settingFile << styled.write(settings);
+        Json::StreamWriterBuilder builder;
+        builder["commentStyle"] = "None";
+        builder["indentation"] = "   ";
+        std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+        writer->write(settings, &settingFile);*/
 	}
 }
 void Settings::loadWorkspace() {
 	if (std::ifstream settingFile(settingsFileName); settingFile.is_open()) {
-		Json::Value jValue;
+		/*Json::Value jValue;
 		settingFile >> jValue;
 		odoratorModel->setComPortName(jValue[cstrSettings][cstrComPort].asString());
 		odoratorModel->setSupplyTime(jValue[cstrSettings][cstrSupplyTimes].asInt());
@@ -38,7 +43,7 @@ void Settings::loadWorkspace() {
 		}
 		for (auto it = jValue[cstrSettings][cstrGeometry].begin(); it != jValue[cstrSettings][cstrGeometry].end(); ++it) {
 			windowPos[std::stoi(it.name())] = it->asInt();
-		}
+		}*/
 	}
 	odoratorView->setWindowPos(windowPos);
 }

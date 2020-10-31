@@ -11,8 +11,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP /MTd")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP /MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP /MTd /UTF-8")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP /MD /UTF-8")
 
     if (VCPKG_TARGET_TRIPLET MATCHES "static")
         add_definitions(-D_UNICODE -DUNICODE -DwxUSE_GUI=1 -D__WXMSW__)
@@ -25,7 +25,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
             CMAKE_C_FLAGS_RELEASE
             )
         foreach(CompilerFlag ${CompilerFlags})
-            string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+            #string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
         endforeach()
     endif()
 
@@ -35,7 +35,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    #set (CMAKE_CXX_FLAGS                "-Wextra -Wno-delete-non-virtual-dtor" -Werror=return-type)
+    set (CMAKE_CXX_FLAGS                "-Wextra -Wno-delete-non-virtual-dtor -Werror=return-type")
     set (CMAKE_CXX_FLAGS_DEBUG          "-fPIC -Wall -g -O0 -DDEBUG")
     set (CMAKE_CXX_FLAGS_RELEASE        "-fPIC -O3")
 
@@ -53,7 +53,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         message( FATAL_ERROR "Clang++ not found. " )
     endif()
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register -Qunused-arguments")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-const-variable")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register -Qunused-arguments")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-const-variable")
+    set (CMAKE_CXX_FLAGS_DEBUG          "-fPIC -Wall -g -O0 -DDEBUG")
+    set (CMAKE_CXX_FLAGS_RELEASE        "-fPIC -O3")
+
 endif()

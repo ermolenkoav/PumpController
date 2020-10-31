@@ -1,4 +1,5 @@
-set(ORGANIZATION_LOGO "logoSFEDU.ico")
+set(ORGANIZATION_LOGO "logo.ico")
+set(CMAKE_PREFIX_PATH "C:\\Users\\ermol\\AppData\\Local\\Programs\\Qt\\5.15.1\\msvc2019_64")
 
 #needed when dynamic linking
 #set(EXECUTABLE_OUTPUT_PATH ${OPT_BIN_DIR})

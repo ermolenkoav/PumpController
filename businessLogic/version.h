@@ -1,5 +1,5 @@
 #pragma once
 
 #define APPLICATION_NAME "Odorator"
-#define APPLICATION_LOGO "logoSFEDU.ico"
+#define APPLICATION_LOGO "logo.ico"
 

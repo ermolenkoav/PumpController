@@ -13,9 +13,9 @@ csvLog::csvLog() {
 std::string csvLog::getCurrentTime() {
     std::time_t time;
     std::time(&time);
-    std::stringstream ss;
-    ss << time;
-    std::string ts = ss.str();
+    //std::stringstream ss;
+    //ss << time;
+    std::string ts;// = ss.str();
     return ts;
 }
 void csvLog::logEvent(char str) {

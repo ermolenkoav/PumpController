@@ -10,7 +10,7 @@ class OdoratorModel {
 	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
 	double startValueDouble[NumValves] = { 0 };
 	int startValueInt[NumValves] = { 0 };
-	char workingVolume = '2';
+	char workingVolume {'2'};
 	std::string comPortName = {};
 	int supplyTime = {};
 	int delayTime = {};
@@ -25,7 +25,7 @@ public:
 	void calculatePrepareTheGasAirMixture();
 	void randomGasAirDelivery();
 	void sequenceGasAirDelivery();
-	void addCustomCommand(std::string command);
+	void addCustomCommand(const std::string& command);
 	void cleaningAirSystem();
 	bool isBufferClear();
 	void gasSupplyTime(int seconds);

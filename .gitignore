@@ -4,6 +4,9 @@
 # JetBrains
 .idea
 
+#
+version.h
+
 # Prerequisites
 *.d
 

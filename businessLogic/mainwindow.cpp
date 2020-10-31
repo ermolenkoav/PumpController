@@ -27,11 +27,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	connect(pchbTimes,				&QPushButton::clicked, this, &MainWindow::changeViewClicked);
 	connect(timer,					&QTimer::timeout,	   this, &MainWindow::timeOutSlot);
 	connect(pspbWorkingVolume,			QOverload<int>::of(&QSpinBox::valueChanged),
-		[=]() { controller->setWorkingVolume(pspbWorkingVolume->value()); });
+		[this]() { controller->setWorkingVolume(pspbWorkingVolume->value()); });
 	connect(pspbSupplyTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
-		[=]() { setSupplyTime(pspbSupplyTime->value()); });
+		[this]() { setSupplyTime(pspbSupplyTime->value()); });
 	connect(pspbDelayTime,			QOverload<int>::of(&QSpinBox::valueChanged), 
-		[=]() { setDelayTime(pspbDelayTime->value()); });
+		[this]() { setDelayTime(pspbDelayTime->value()); });
 }
 /************************************LOAD LAST SETTINGS************************************/
 void MainWindow::loadSettings() {
@@ -50,7 +50,8 @@ std::pair<int, int> MainWindow::getWindowPos() {
 void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
 	move(windowPos[0], windowPos[1]);
 }
-void MainWindow::autoConnectToComPort() {
+
+[[maybe_unused]] void MainWindow::autoConnectToComPort() {
 	if (!controller->getComPortName().empty())  {
 		connectEvent(toQString(controller->getComPortName()));
 	}
@@ -233,7 +234,7 @@ void MainWindow::searchButtonClicked() {
 		pcmbListOfPorts->addItem(serialPortInfo.portName());
 	}
 	pcmbListOfPorts->show();
-	connect(pcmbListOfPorts, QOverload<const QString &>::of(&QComboBox::activated),
+	connect(pcmbListOfPorts, QOverload<const QString &>::of(&QComboBox::textActivated),
 		[=](const QString &text) {
 			connectEvent(text);
 			pcmbListOfPorts->hide();
