@@ -1,4 +1,7 @@
 #include "controller.h"
+#include "mainwindow.h"
+#include "settings.h"
+#include "model.h"
 
 #define SIXTH_COMMAND_LENGTH 5
 #define S_COMMAND_LENGTH 2

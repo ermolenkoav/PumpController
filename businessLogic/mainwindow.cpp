@@ -1,4 +1,6 @@
 #include "mainwindow.h"
+#include "model.h"
+#include "settings.h"
 #include "version.h"
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {

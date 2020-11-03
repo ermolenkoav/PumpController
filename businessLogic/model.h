@@ -1,8 +1,8 @@
 #pragma once
 #include "pch.h"
-#include "common.h"
 
 class OdoratorModel {
+
 	void shuffleValves(int* arr, size_t n);
 	int calculateValue(const double, int) const;
 
@@ -16,6 +16,7 @@ class OdoratorModel {
 	int delayTime = {};
 
 public:
+
 	OdoratorModel() = default;
 	~OdoratorModel() = default;
 
@@ -44,4 +45,5 @@ public:
 	std::string getComPortName() const;
 	void setWorkingVolume(int);
 	int getWorkingVolume() const;
+
 };

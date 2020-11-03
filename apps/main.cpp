@@ -1,5 +1,5 @@
 #include "../businessLogic/pch.h"
-#include "../businessLogic/common.h"
+#include "../businessLogic/mainwindow.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

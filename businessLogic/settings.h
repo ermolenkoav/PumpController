@@ -1,8 +1,11 @@
 #pragma once
 #include "pch.h"
-#include "common.h"
+
+class OdoratorModel;
+class MainWindow;
 
 class Settings {
+
 	std::shared_ptr<OdoratorModel> odoratorModel;
 	MainWindow* odoratorView;
 
@@ -21,8 +24,10 @@ class Settings {
 	std::string cstrWorkingVolume = ("Working Volume");
 
 public:
+
 	Settings(std::shared_ptr<OdoratorModel>, MainWindow*);
 
 	void saveWorkspace();
 	void loadWorkspace();
+
 };

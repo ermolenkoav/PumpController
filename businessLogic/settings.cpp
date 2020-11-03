@@ -1,6 +1,7 @@
 #include "settings.h"
-
-#include <utility>
+#include "mainwindow.h"
+//#include <Poco/JSON/JSON.h>
+//#include <Poco/JSON/Parser.h>
 
 Settings::Settings(std::shared_ptr<OdoratorModel> pModel, MainWindow* pView)
 		 : odoratorModel{std::move( pModel )}, odoratorView { pView } {

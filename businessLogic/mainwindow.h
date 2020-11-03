@@ -1,20 +1,10 @@
 #pragma once
 #include "pch.h"
-#include "common.h"
-
-class QGroupBox;
-class QGridLayout;
-class QComboBox;
-class QPushButton;
-class QLineEdit;
-class QVBoxLayout;
-class Controller;
-class QSpinBox;
-class Controller;
+#include "controller.h"
 
 class MainWindow : public QWidget {
+
 	Q_OBJECT
-	std::unique_ptr<Controller> controller;
 
     // widgets:
 	QLineEdit* ptxtConcentration[NumValves] = {};
@@ -41,6 +31,8 @@ class MainWindow : public QWidget {
 	QLabel* plblTimes[NumValves];
 	QTimer* timer = nullptr;
 
+    std::unique_ptr<Controller> controller;
+
     // methods:
 	void saveConcentrationValue();
 	void setTimerInterval();
@@ -60,6 +52,7 @@ class MainWindow : public QWidget {
 	QGroupBox* createManualSettingLayout();
 
 public:
+
 	explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() = default;
 
@@ -71,6 +64,7 @@ public:
 	void changeCartridgeView(int, bool);
 
 private slots:
+
 	void searchButtonClicked();
 	void prepareTheGasAirMixtureButtonClicked();
 	void cleaningAirSystemButtonClicked();
@@ -80,4 +74,5 @@ private slots:
 	void changeViewClicked();
 	void startButtonClicked();
 	void pauseButtonClicked();
+
 };

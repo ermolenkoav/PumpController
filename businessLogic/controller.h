@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include "common.h"
 #include "csvLog.h"
 
 class OdoratorModel;
@@ -9,6 +8,7 @@ class MainWindow;
 class csvLog;
 
 class Controller {
+
 	std::shared_ptr<OdoratorModel> odoratorModel;
 	std::unique_ptr<Settings> settings;
 	std::unique_ptr<QSerialPort> pSerialPort;
@@ -18,7 +18,8 @@ class Controller {
 
 	void sendCommand(int, int);
 
-public:	
+public:
+
 	Controller(MainWindow*);
 	~Controller();
 
@@ -47,4 +48,5 @@ public:
 	std::string getComPortName() const;
 	void setWorkingVolume(int);
 	int getWorkingVolume() const;
+
 };
