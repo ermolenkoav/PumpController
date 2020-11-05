@@ -1,5 +1,0 @@
-add_subdirectory(businessLogic)
-add_subdirectory(apps)
-if(ENABLE_UNIT_TESTS)
-	add_subdirectory(tests)
-endif(ENABLE_UNIT_TESTS)

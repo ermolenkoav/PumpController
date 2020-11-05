@@ -6,3 +6,4 @@ elseif("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
     option(WARNINGS_AS_ERRORS        "Compiler warnings as errors"	             OFF)
     option(OPT_ASAN                  "Address Sanitizer"	                     OFF)
 endif()
+
