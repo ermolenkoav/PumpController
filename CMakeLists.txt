@@ -4,8 +4,6 @@ project(Odorator LANGUAGES CXX)
 
 include(cmake/options.cmake               REQUIRED)
 
-include(cmake/paths.cmake                 REQUIRED)
-
 include(cmake/cpack.cmake                 REQUIRED)
 
 include(cmake/compilerDefOpt.cmake        REQUIRED)

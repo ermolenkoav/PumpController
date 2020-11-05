@@ -6,6 +6,7 @@
 #include <chrono>
 #include <vector>
 #include <memory>
+#include <array>
 #include <cmath>
 
 #include <QtWidgets>

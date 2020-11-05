@@ -1,39 +1,17 @@
-# Defintion needed if you need eigen support
-#add_definitions(-DEIGEN_DONT_VECTORIZE -DEIGEN_DONT_ALIGN)
-
 ###### Compiler options
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC" OR "Clang")
     set(GUI_TYPE WIN32)
 
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP /MT /UTF-8")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP /MTd /UTF-8")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP /MD /UTF-8")
-
-    if (VCPKG_TARGET_TRIPLET MATCHES "static")
-        add_definitions(-D_UNICODE -DUNICODE -DwxUSE_GUI=1 -D__WXMSW__)
-        set(CompilerFlags
-            CMAKE_CXX_FLAGS
-            CMAKE_CXX_FLAGS_DEBUG
-            CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_C_FLAGS
-            CMAKE_C_FLAGS_DEBUG
-            CMAKE_C_FLAGS_RELEASE
-            )
-        foreach(CompilerFlag ${CompilerFlags})
-            #string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
-        endforeach()
-    endif()
-
-    if(WARNINGS_AS_ERRORS)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}/WX")
-    endif()
 endif()
-
+#[[
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set (CMAKE_CXX_FLAGS                "-Wextra -Wno-delete-non-virtual-dtor -Werror=return-type")
     set (CMAKE_CXX_FLAGS_DEBUG          "-fPIC -Wall -g -O0 -DDEBUG")
@@ -58,4 +36,4 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set (CMAKE_CXX_FLAGS_DEBUG          "-fPIC -Wall -g -O0 -DDEBUG")
     set (CMAKE_CXX_FLAGS_RELEASE        "-fPIC -O3")
 
-endif()
+endif()]]

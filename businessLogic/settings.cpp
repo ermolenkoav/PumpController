@@ -1,12 +1,11 @@
 #include "settings.h"
 #include "mainwindow.h"
-//#include <Poco/JSON/JSON.h>
-//#include <Poco/JSON/Parser.h>
+#include <Poco/JSON/JSON.h>
+#include <Poco/JSON/Parser.h>
 
 Settings::Settings(std::shared_ptr<OdoratorModel> pModel, MainWindow* pView)
-		 : odoratorModel{std::move( pModel )}, odoratorView { pView } {
-	//TO DO: pointer to class is mast be const
-}
+		 : odoratorModel{std::move( pModel )}, odoratorView { pView } {}
+
 void Settings::saveWorkspace() {
 	if (std::ofstream settingFile(settingsFileName); settingFile.is_open()) {
 /*		Json::Value settings;
