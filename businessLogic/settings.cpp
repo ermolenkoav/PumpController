@@ -1,49 +1,63 @@
 #include "settings.h"
 #include "mainwindow.h"
+#include "model.h"
 #include <Poco/JSON/JSON.h>
 #include <Poco/JSON/Parser.h>
+#include <Poco/JSON/Stringifier.h>
 
 Settings::Settings(std::shared_ptr<OdoratorModel> pModel, MainWindow* pView)
 		 : odoratorModel{std::move( pModel )}, odoratorView { pView } {}
 
 void Settings::saveWorkspace() {
 	if (std::ofstream settingFile(settingsFileName); settingFile.is_open()) {
-/*		Json::Value settings;
 		// Window geometry:
-		settings[cstrSettings][cstrGeometry]["0"] = odoratorView->getWindowPos().first;
-		settings[cstrSettings][cstrGeometry]["1"] = odoratorView->getWindowPos().second;
-		// Working Volume
-		settings[cstrSettings][cstrWorkingVolume] = odoratorModel->getWorkingVolume();
-		// Last com port:
-		settings[cstrSettings][cstrComPort] = odoratorModel->getComPortName();
-		// Execute sequence:
-		settings[cstrSettings][cstrDelayTimes] = odoratorModel->getDelayTime();
-		settings[cstrSettings][cstrSupplyTimes] = odoratorModel->getSupplyTime();
+        Poco::JSON::Array::Ptr geometry = new Poco::JSON::Array();
+        geometry->set(0, odoratorView->getWindowPos().first);
+        geometry->set(1, odoratorView->getWindowPos().second);
 		// Valves value:
+        Poco::JSON::Array::Ptr concentration = new Poco::JSON::Array();
 		for (auto it = 0; it < NumValves; it++) {
-			settings[cstrSettings][cstrConcentration][std::to_string(it)] = odoratorModel->getValue(it);
+            concentration->set(it, odoratorModel->getValue(it));
 		}
-        Json::StreamWriterBuilder builder;
-        builder["commentStyle"] = "None";
-        builder["indentation"] = "   ";
-        std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
-        writer->write(settings, &settingFile);*/
+
+        Poco::JSON::Object::Ptr settings = new Poco::JSON::Object();
+		settings->set(cstrWorkingVolume, odoratorModel->getWorkingVolume());
+        settings->set(cstrSupplyTimes, odoratorModel->getSupplyTime());
+        settings->set(cstrDelayTimes, odoratorModel->getDelayTime());
+        settings->set(cstrComPort, odoratorModel->getComPortName());
+        settings->set(cstrConcentration, concentration);
+        settings->set(cstrGeometry, geometry);
+
+		std::ostringstream oss;
+		Poco::JSON::Stringifier::stringify(settings, oss, 4);
+		settingFile << oss.str();
 	}
 }
 void Settings::loadWorkspace() {
 	if (std::ifstream settingFile(settingsFileName); settingFile.is_open()) {
-		/*Json::Value jValue;
-		settingFile >> jValue;
-		odoratorModel->setComPortName(jValue[cstrSettings][cstrComPort].asString());
-		odoratorModel->setSupplyTime(jValue[cstrSettings][cstrSupplyTimes].asInt());
-		odoratorModel->setDelayTime(jValue[cstrSettings][cstrDelayTimes].asInt());
-		odoratorModel->setWorkingVolume(jValue[cstrSettings][cstrWorkingVolume].asInt());
-		for (auto it = jValue[cstrSettings][cstrConcentration].begin(); it != jValue[cstrSettings][cstrConcentration].end(); ++it) {
-			odoratorModel->setValue(it->asDouble(), std::stoi(it.name()));
+		std::string jsonData((std::istreambuf_iterator<char>(settingFile)),
+							  std::istreambuf_iterator<char>());
+		Poco::JSON::Parser parser;
+		try {
+			auto result = parser.parse(jsonData);
+			auto object = result.extract<Poco::JSON::Object::Ptr>();
+
+			odoratorModel->setComPortName(object->getValue<std::string>(cstrComPort));
+			odoratorModel->setSupplyTime(object->getValue<int>(cstrSupplyTimes));
+			odoratorModel->setDelayTime(object->getValue<int>(cstrDelayTimes));
+			odoratorModel->setWorkingVolume(object->getValue<int>(cstrWorkingVolume));
+
+			auto concentration = object->getArray(cstrConcentration);
+			for (auto i = 0; i < NumValves; ++i) {
+				odoratorModel->setValue(concentration->getElement<double>(i), i);
+			}
+
+			auto geometry = object->getArray(cstrGeometry);
+			for(auto it = 0; it < 2; ++it) {
+				windowPos[it] = geometry->getElement<int>(it);
+			}
+			odoratorView->setWindowPos(windowPos);
 		}
-		for (auto it = jValue[cstrSettings][cstrGeometry].begin(); it != jValue[cstrSettings][cstrGeometry].end(); ++it) {
-			windowPos[std::stoi(it.name())] = it->asInt();
-		}*/
+		catch(...) {}
 	}
-	odoratorView->setWindowPos(windowPos);
 }
