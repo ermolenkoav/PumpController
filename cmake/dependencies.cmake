@@ -4,19 +4,19 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
+
 set(CMAKE_PREFIX_PATH "C:\\Users\\ermol\\AppData\\Local\\Programs\\Qt\\5.15.1\\msvc2019_64")
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 	set(LIB_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib)
-	file(GLOB VCPKG_LIBRARIES "${LIB_DIR}/*.lib")
+	link_directories(${LIB_DIR})
 elseif("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 	set(LIB_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib)
-	file(GLOB VCPKG_LIBRARIES "${LIB_DIR}/*.lib")
+	link_directories(${LIB_DIR})
 endif()
 
 set(EXTERNAL_LIBS
     Qt5::Widgets
     Qt5::SerialPort
-	${VCPKG_LIBRARIES}
    )
 
 set(EXTERNAL_INCLUDES
