@@ -1,0 +1,51 @@
+// Include the necessary resources
+#include <winver.h>
+#include <ntdef.h>
+#include "../businessLogic/version.h"
+/*
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
+#define APP_FULL_VERSION_STR	APP_VERSION_STR "." STR(BUILD_NUMBER)
+*/
+#ifdef RC_INVOKED
+
+// Set up debug information
+#if DBG
+#define VER_DBG VS_FF_DEBUG
+#else
+#define VER_DBG 0
+#endif
+
+//<------version info------>//
+
+VS_VERSION_INFO VERSIONINFO
+	FILEVERSION					FILE_VERSION
+	PRODUCTVERSION				APP_VERSION
+	FILEFLAGSMASK				VS_FFI_FILEFLAGSMASK
+	FILEFLAGS					VER_DBG
+	FILEOS						VOS_NT
+	FILETYPE					VFT_DRV
+	FILESUBTYPE					VFT2_DRV_SYSTEM
+BEGIN
+	BLOCK "StringFileInfo"
+BEGIN
+	BLOCK "040904b0"
+BEGIN
+	VALUE "Comments",			APP_DOWNLOADER_NAME_STR
+	VALUE "CompanyName",		ORGANIZATION_NAME_STR
+	VALUE "FileDescription",	APP_DOWNLOADER_NAME_STR
+	VALUE "FileVersion",		APP_VERSION_STR
+	VALUE "InternalName",		APP_DISTR_PROCESS_NAME_STR
+	VALUE "LegalCopyright",		APP_LEGAL_COPYRIGHT_STR
+	VALUE "OriginalFilename",
+	VALUE "ProductName",		APP_DOWNLOADER_NAME_STR
+	VALUE "ProductVersion",		APP_VERSION_STR
+END
+END
+	BLOCK "VarFileInfo"
+BEGIN
+	VALUE "Translation", 0x0409, 1200
+END
+END
+#endif
