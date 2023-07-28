@@ -27,7 +27,7 @@ jobs:
           submodule_update: ON
           create_package: ON
           #run_tests: ON
-          unit_test_build: -Dtest=ON
+          #unit_test_build: -Dtest=ON
           cmake_args: -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 
       - name: Upload build folder
