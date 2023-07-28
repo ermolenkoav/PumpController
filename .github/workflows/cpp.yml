@@ -22,6 +22,9 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@v3
 
+      - name: install dependencies
+        run: sudo apt install -y cmake clang qt6-base-dev libqt6serialport6-dev libpoco-dev
+
       - name: Install googletest
         shell: bash
         run: |
