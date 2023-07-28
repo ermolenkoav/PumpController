@@ -8,8 +8,8 @@ on:
     tags:
       - '*.*.*'
 
-env:
-  BUILD_TYPE: Release
+#env:
+#  BUILD_TYPE: Release
 
 jobs:
   build:
@@ -28,6 +28,7 @@ jobs:
           create_package: ON
           run_tests: ON
           unit_test_build: -Dtest=ON
+          cmake_args: -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 
       - name: Upload build folder
         uses: actions/upload-artifact@v2
