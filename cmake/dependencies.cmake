@@ -1,5 +1,4 @@
-#set(CMAKE_PREFIX_PATH "C:\\Users\\ermol\\AppData\\Local\\Programs\\Qt\\5.15.1\\msvc2019_64")
-find_package(Qt6 COMPONENTS Widgets SerialPort REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets SerialPort REQUIRED)
 find_package(Poco REQUIRED COMPONENTS Foundation JSON)
 
 set(CMAKE_AUTOMOC ON)

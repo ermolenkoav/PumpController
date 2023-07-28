@@ -15,66 +15,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Get latest CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+
       - name: install dependencies
-        run: sudo apt update && sudo apt install -y cmake ninja-build clang qt6-base-dev libqt6widgets6 libqt6openglwidgets6 libqt6serialport6-dev libpoco-dev libglx-dev libgl1-mesa-dev googletest
+        run: sudo apt update && sudo apt install -y clang qt6-base-dev libqt6widgets6 libqt6openglwidgets6 libqt6serialport6-dev libpoco-dev libglx-dev libgl1-mesa-dev googletest
 
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Build project
-        uses: nicledomaS/cmake_build_action@v1.4
+      - name: Run CMake
+        uses: lukka/run-cmake@v10
         with:
-          submodule_update: ON
-          create_package: ON
-          #run_tests: ON
-          #unit_test_build: -Dtest=ON
-          cmake_args: -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+          configurePreset: 'ninja-multi-vcpkg'
+          configurePresetAdditionalArgs: "['-DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++']"
+          buildPreset: 'ninja-multi-vcpkg'
+          buildPresetAdditionalArgs: "['--config Release']"
+          testPreset: 'ninja-multi-vcpkg'
+          testPresetAdditionalArgs: "['--config Release']"
 
       - name: Upload build folder
         uses: actions/upload-artifact@v2
         with:
           path: build/*.tar.gz
           name: artifact_${{ matrix.os }}_${{ matrix.configs }}.tar.gz
-
-#      - name: Install googletest
-#        shell: bash
-#        run: |
-#          git clone https://github.com/google/googletest --depth 1
-#          cd googletest
-#          mkdir build && cd build
-#          cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/googletest-install -G Ninja
-#          cmake --build . --config ${{env.BUILD_TYPE}} -j $(nproc)
-#          cmake --install . --config ${{env.BUILD_TYPE}}
-
-#      - name: CMake configure
-#        run: |
-#          mkdir build
-#          cd build
-#          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
-#
-#      - name: Build
-#        run: cmake --build build --config ${{env.BUILD_TYPE}} -j $(nproc)
-#
-#      - name: Test
-#        run: ${{github.workspace}}/build/PumpControllerUnitTests
-#
-#      - name: Create Release
-#        id: create_release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: ${{ github.ref }}
-#          release_name: Release ${{ github.ref }}
-#          draft: false
-#          prerelease: false
-#
-#      - name: Upload Release Asset
-#        id: upload-release-asset
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ./apps/PumpController
-#          asset_name: PumpController
