@@ -42,7 +42,7 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}} -j $(nproc)
 
       - name: Test
-        run: cmake --build build --target PumpControllerUnitTests -j $(nproc)
+        run: ./PumpControllerUnitTests
 
       - name: Install
         working-directory: ${{github.workspace}}/build
