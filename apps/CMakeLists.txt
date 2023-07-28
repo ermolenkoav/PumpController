@@ -1,4 +1,5 @@
-add_executable(${PROJECT_NAME} ${GUI_TYPE} main.cpp resources.rc)
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc")
+add_executable(${PROJECT_NAME} ${GUI_TYPE} main.cpp ${app_icon_resource_windows})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC BUSINESS_LOGIC ${EXTERNAL_LIBS})
 

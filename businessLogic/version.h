@@ -1,6 +1,6 @@
 #pragma once
 
-#define APPLICATION_NAME                "Odorator"
+#define APPLICATION_NAME                "PumpController"
 #define ORGANIZATION_NAME_STR			"Don-Strike ltd"
 /*
 #define XXX_STR_HELPER_XXX(x) #x

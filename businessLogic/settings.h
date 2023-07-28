@@ -1,16 +1,16 @@
 #pragma once
 #include "pch.h"
 
-class OdoratorModel;
+class PumpControllerModel;
 class MainWindow;
 
 class Settings {
 
-	std::shared_ptr<OdoratorModel> odoratorModel;
-	MainWindow* odoratorView;
+	std::shared_ptr<PumpControllerModel> pumpControllerModel;
+	MainWindow* pumpControllerView;
 
 	std::array<int, 2> windowPos = {1600,170};
-	std::string  comPortName;
+	std::string comPortName;
 
 	std::string settingsFileName = ( "settings.json" );
 	std::string logFileName = ("logs.json");
@@ -25,7 +25,7 @@ class Settings {
 
 public:
 
-	Settings(std::shared_ptr<OdoratorModel>, MainWindow*);
+	Settings(std::shared_ptr<PumpControllerModel>, MainWindow*);
 
 	void saveWorkspace();
 	void loadWorkspace();

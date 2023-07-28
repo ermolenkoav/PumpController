@@ -7,9 +7,10 @@ csvLog::csvLog() {
     std::string name = "logs";
     std::string time = getCurrentTime();
     std::string format = ".csv";
-    std::string fileName(name /*+ time*/ + format);
-    std::ofstream logFile(fileName);
+    std::string fileName = name + time + format;
+    logFile.open(fileName);
 }
+
 std::string csvLog::getCurrentTime() {
     std::time_t time;
     std::time(&time);
@@ -18,7 +19,9 @@ std::string csvLog::getCurrentTime() {
     std::string ts;// = ss.str();
     return ts;
 }
+
 void csvLog::logEvent(char str) {
+
     if (logFile.is_open()) {
         logFile << "Cartridge "
                 << str

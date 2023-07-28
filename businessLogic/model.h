@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 
-class OdoratorModel {
+class PumpControllerModel {
 
 	void shuffleValves(int* arr, size_t n);
 	int calculateValue(const double, int) const;
@@ -17,8 +17,8 @@ class OdoratorModel {
 
 public:
 
-	OdoratorModel() = default;
-	~OdoratorModel() = default;
+	PumpControllerModel() = default;
+	~PumpControllerModel() = default;
 
 	void valveCloseCommand(char);
 	std::list<char> sendCommandData;

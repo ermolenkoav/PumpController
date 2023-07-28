@@ -3,13 +3,12 @@
 #include <iomanip>
 #include <ctime>
 
-class csvLog {
-    template<typename T>
-	std::string toString(const T &t);
+class csvLog final {
 	std::string getCurrentTime();
-	std::ofstream logFile;
+    std::ofstream logFile;
+
 public:
-	csvLog();
+	explicit csvLog();
 	~csvLog();
 	void logEvent(char);
 };

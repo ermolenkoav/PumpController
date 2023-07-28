@@ -1,5 +1,5 @@
-set(CMAKE_PREFIX_PATH "C:\\Users\\ermol\\AppData\\Local\\Programs\\Qt\\5.15.1\\msvc2019_64")
-find_package(Qt5 COMPONENTS Widgets SerialPort REQUIRED)
+#set(CMAKE_PREFIX_PATH "C:\\Users\\ermol\\AppData\\Local\\Programs\\Qt\\5.15.1\\msvc2019_64")
+find_package(Qt6 COMPONENTS Widgets SerialPort REQUIRED)
 find_package(Poco REQUIRED COMPONENTS Foundation JSON)
 
 set(CMAKE_AUTOMOC ON)
@@ -19,11 +19,12 @@ set(EXTERNAL_LIBS
 	#${VCPKG_LIBRARIES}
 	Poco::Foundation
 	Poco::JSON
-    Qt5::Widgets
-    Qt5::SerialPort
+	Qt6::Core
+    Qt6::Widgets
+    Qt6::SerialPort
    )
 
 set(EXTERNAL_INCLUDES
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5SerialPort_INCLUDE_DIRS}
+    ${Qt6Widgets_INCLUDE_DIRS}
+    ${Qt6SerialPort_INCLUDE_DIRS}
    )

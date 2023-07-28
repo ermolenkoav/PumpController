@@ -2,18 +2,18 @@
 #include "pch.h"
 #include "csvLog.h"
 
-class OdoratorModel;
+class PumpControllerModel;
 class Settings;
 class MainWindow;
 class csvLog;
 
 class Controller {
 
-	std::shared_ptr<OdoratorModel> odoratorModel;
+	std::shared_ptr<PumpControllerModel> pumpControllerModel;
 	std::unique_ptr<Settings> settings;
 	std::unique_ptr<QSerialPort> pSerialPort;
 	std::unique_ptr<csvLog> log;
-	MainWindow* odoratorView;
+	MainWindow* pumpControllerView;
 	bool readyToGo = false;
 
 	void sendCommand(int, int);
