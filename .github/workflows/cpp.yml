@@ -21,7 +21,7 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4.1.1
       - name: Install dependencies
-        run: sudo apt update && sudo apt install -y clang cmake ninja qt6-base-dev libqt6widgets6 libqt6openglwidgets6 libqt6serialport6-dev libpoco-dev libglx-dev libgl1-mesa-dev googletest
+        run: sudo apt update && sudo apt install -y clang cmake ninja-build qt6-base-dev libqt6widgets6 libqt6openglwidgets6 libqt6serialport6-dev libpoco-dev libglx-dev libgl1-mesa-dev googletest
       - name: Run cmake
         run: cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -B./build
       - name: Build
