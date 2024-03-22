@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      discussions: write
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v4.1.1
@@ -36,5 +37,5 @@ jobs:
           generate_release_notes: false
           prerelease: false
           draft: false
-          files: build/apps/PumpController*/*
+          files: build/apps/*
           name: artifact_${{ matrix.os }}_${{ matrix.configs }}
