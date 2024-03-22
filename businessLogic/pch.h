@@ -1,31 +1,18 @@
 #pragma once
 
-#include <fstream>
-#include <string>
-#include <thread>
-#include <chrono>
-#include <vector>
-#include <memory>
-#include <array>
-#include <cmath>
+constexpr auto NumValves		 = 6;
+constexpr auto NumGridColumns	 = 2;
+constexpr auto NumGridRows		 = 2;
 
-#include <QtWidgets>
-#include <QSerialPortInfo>
-#include <QSerialPort>
+constexpr auto vesselVolume	     = 160;
+constexpr auto finalValue		 = 1e-15;
 
-const auto NumValves		= 6;
-const auto NumGridColumns	= 2;
-const auto NumGridRows		= 2;
-
-const auto _vesselVolume	= 160;
-const auto _finalValue		= 1e-15;
-
-const auto DefaultSupplyTime = 3;
-const auto DelayTimeMin = 1;
-const auto DelayTimeMax = 100;
-const auto SupplyTimeMin = 1;
-const auto SupplyTimeMax = 9;
-const auto WorkingVolumeMin = 1;
-const auto WorkingVolumeMax = 10;
-const auto TimesofInningsMin = 0;
-const auto TimesofInningsMax = 100;
+constexpr auto DefaultSupplyTime = 3;
+constexpr auto DelayTimeMin      = 1;
+constexpr auto DelayTimeMax      = 100;
+constexpr auto SupplyTimeMin     = 1;
+constexpr auto SupplyTimeMax     = 9;
+constexpr auto WorkingVolumeMin  = 1;
+constexpr auto WorkingVolumeMax  = 10;
+constexpr auto TimesofInningsMin = 0;
+constexpr auto TimesofInningsMax = 100;

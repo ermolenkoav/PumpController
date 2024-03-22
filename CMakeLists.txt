@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
 
-project(Odorator LANGUAGES C CXX)
+project(PumpController LANGUAGES CXX)
 
 include(cmake/options.cmake               REQUIRED)
 

@@ -1,15 +1,19 @@
 #pragma once
+#include <array>
+#include <list>
+#include <string>
+
 #include "pch.h"
 
-class OdoratorModel {
+class PumpControllerModel {
 
 	void shuffleValves(int* arr, size_t n);
 	int calculateValue(const double, int) const;
 
 	// variables:
 	const std::array<char, NumValves> cartridgeName = { 'A', 'B', 'C', 'D', 'E', 'F' };
-	double startValueDouble[NumValves] = { 0 };
-	int startValueInt[NumValves] = { 0 };
+	double startValueDouble[NumValves] = {};
+	int startValueInt[NumValves] = {};
 	char workingVolume {'2'};
 	std::string comPortName = {};
 	int supplyTime = {};
@@ -17,8 +21,8 @@ class OdoratorModel {
 
 public:
 
-	OdoratorModel() = default;
-	~OdoratorModel() = default;
+	PumpControllerModel() = default;
+	~PumpControllerModel() = default;
 
 	void valveCloseCommand(char);
 	std::list<char> sendCommandData;
@@ -32,9 +36,9 @@ public:
 	void gasSupplyTime(int seconds);
 	void stopAirSystem();
 
-	void setValue(const double, const int);
+	void setValue(double, int);
 	double getValue(int index) const;
-	void setValue(const int, const int);
+	void setValue(int, int);
 	void clearBuffer();
 
 	int getSupplyTime() const;

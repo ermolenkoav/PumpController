@@ -98,7 +98,7 @@ ui_*.h
 Makefile*
 *build-*
 resources.aps
-
+.qt
 # Qt unit tests
 target_wrapper.*
 
@@ -148,7 +148,3 @@ Obj/*
 
 # IAR backup files
 Backup*
-
-# IAR .dep files
-*.dep
-

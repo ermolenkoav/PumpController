@@ -4,7 +4,7 @@
 	   )]]
 install(DIRECTORY ${CMAKE_BINARY_DIR}/apps/ 
 	    DESTINATION /
-		REGEX "/Odorator_autogen" EXCLUDE
+		REGEX "/PumpController_autogen" EXCLUDE
 		REGEX "CMake" EXCLUDE
 		REGEX ".manifest" EXCLUDE
 	   )

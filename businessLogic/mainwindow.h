@@ -1,9 +1,16 @@
 #pragma once
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QSpinBox>
+
 #include "pch.h"
 #include "controller.h"
 
-class MainWindow : public QWidget {
-
+class MainWindow final : public QWidget {
 	Q_OBJECT
 
     // widgets:
@@ -28,7 +35,7 @@ class MainWindow : public QWidget {
 	QSpinBox* pspbSupplyTime = nullptr;
 	QSpinBox* pspbWorkingVolume = nullptr; 
 	QSpinBox* pspbTimesofInnings = nullptr;
-	QLabel* plblTimes[NumValves];
+	QLabel* plblTimes[NumValves]{};
 	QTimer* timer = nullptr;
 
     std::unique_ptr<Controller> controller;
@@ -43,8 +50,7 @@ class MainWindow : public QWidget {
 	void connectEvent(const QString& text);
 	QString toQString(const std::wstring& str);
     QString toQString(const std::string& str);
-	void closeEvent(QCloseEvent* bar);
-	void collectData();
+	void closeEvent(QCloseEvent* bar) final;
 
     QGroupBox* createConnectionLayout();
 	QGroupBox* createSetUpLayout();
@@ -53,8 +59,8 @@ class MainWindow : public QWidget {
 
 public:
 
-	explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() = default;
+	explicit MainWindow(QWidget *);
+    ~MainWindow() override = default;
 
 	std::pair<int, int> getWindowPos();
 	void setWindowPos(std::array<int, 2>);

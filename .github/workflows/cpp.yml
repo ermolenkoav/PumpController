@@ -1,0 +1,39 @@
+name: C/C++ CI Linux-x64
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    tags:
+      - '*.*.*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: on push
+        type: string
+        default: DEV
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4.1.1
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y clang cmake ninja-build qt6-base-dev libqt6widgets6 libqt6openglwidgets6 libqt6serialport6-dev libpoco-dev libpocojson80 libglx-dev libgl1-mesa-dev googletest
+      - name: Run cmake
+        run: cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -B./build
+      - name: Build
+        run: cmake --build ./build
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: false
+          prerelease: false
+          draft: false
+          files: ./build/apps/PumpController

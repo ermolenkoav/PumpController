@@ -1,15 +1,13 @@
 #pragma once
-#include "pch.h"
-#include <iomanip>
-#include <ctime>
+#include <fstream>
+#include <string>
 
-class csvLog {
-    template<typename T>
-	std::string toString(const T &t);
-	std::string getCurrentTime();
-	std::ofstream logFile;
+class csvLog final {
+	static std::string getCurrentTime();
+    std::ofstream logFile;
+
 public:
-	csvLog();
+	explicit csvLog();
 	~csvLog();
 	void logEvent(char);
 };
