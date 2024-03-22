@@ -57,7 +57,7 @@ std::pair<int, int> MainWindow::getWindowPos() {
 	return winPos;
 }
 void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
-	//std::move(windowPos[0], windowPos[1]);
+	move(windowPos[0], windowPos[1]);
 }
 
 [[maybe_unused]] void MainWindow::autoConnectToComPort() {
