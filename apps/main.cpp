@@ -1,4 +1,4 @@
-#include <QApplication.h>
+#include <QApplication>
 #include <QStyleFactory>
 #include <QIcon>
 #include <QFont>

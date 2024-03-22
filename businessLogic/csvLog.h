@@ -8,6 +8,6 @@ class csvLog final {
 
 public:
 	explicit csvLog();
-	//~csvLog();
+	~csvLog();
 	void logEvent(char);
 };
