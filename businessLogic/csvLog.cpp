@@ -1,8 +1,8 @@
 #include "csvLog.h"
 
-csvLog::~csvLog() {
-    logFile.close();
-}
+// csvLog::~csvLog() {
+//     logFile.close();
+// }
 csvLog::csvLog() {
     std::string name = "logs";
     std::string time = getCurrentTime();

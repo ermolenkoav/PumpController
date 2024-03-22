@@ -1,7 +1,14 @@
+#include <QSerialPortInfo>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QComboBox>
+#include <QTimer>
+
+#include <thread>
+
 #include "mainwindow.h"
-#include "model.h"
-#include "settings.h"
 #include "version.h"
+#include "model.h"
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent = nullptr) {
 	setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
@@ -46,11 +53,11 @@ void MainWindow::loadSettings() {
 }
 std::pair<int, int> MainWindow::getWindowPos() {
 	auto windowPosPoint = pos();
-	std::pair<int, int> winPos(windowPosPoint.x(), windowPosPoint.y());
+	std::pair winPos(windowPosPoint.x(), windowPosPoint.y());
 	return winPos;
 }
 void MainWindow::setWindowPos(std::array<int, 2> windowPos) {
-	move(windowPos[0], windowPos[1]);
+	//std::move(windowPos[0], windowPos[1]);
 }
 
 [[maybe_unused]] void MainWindow::autoConnectToComPort() {
@@ -232,7 +239,7 @@ void MainWindow::cleaningAirSystemButtonClicked() {
 void MainWindow::searchButtonClicked() {
  	auto pcmbListOfPorts = new QComboBox(pcmdSearch);
 	auto serialPortInfos = QSerialPortInfo::availablePorts();
-	for (auto serialPortInfo : serialPortInfos) {
+	for (const auto& serialPortInfo : serialPortInfos) {
 		pcmbListOfPorts->addItem(serialPortInfo.portName());
 	}
 	pcmbListOfPorts->show();
@@ -319,7 +326,7 @@ void MainWindow::changeViewClicked() {
 }
 void MainWindow::errorMessage(const std::string& errorMsg) {
 	QMessageBox messageBox;
-	messageBox.critical(0, "Error", toQString(errorMsg));
+	QMessageBox::critical(nullptr, "Error", toQString(errorMsg));
 	messageBox.setFixedSize(500, 200);
 }
 QString MainWindow::toQString(const std::wstring& str) {

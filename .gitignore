@@ -148,7 +148,3 @@ Obj/*
 
 # IAR backup files
 Backup*
-
-# IAR .dep files
-*.dep
-

@@ -20,7 +20,7 @@ void PumpControllerModel::valveCloseCommand(char valve) {
 	sendCommandData.push_back('L');
 }
 void PumpControllerModel::gasSupplyTime(int seconds) {
-	if ((seconds >= 0) && (seconds <= 9)) {
+	if (seconds >= 0 && seconds <= 9) {
 		for (auto it = 0; it < NumValves; it++) {
 			if (0 == startValueDouble[it]) {
 				continue;
@@ -43,7 +43,7 @@ void PumpControllerModel::calculatePrepareTheGasAirMixture() {
 		auto times = calculateValue(startValueDouble[it], iworkingVolume);
 		if ( (0 <= times) && (20 >= times) ) {
 			sendCommandData.push_back('0');
-			sendCommandData.push_back((char)('0' + times));
+			sendCommandData.push_back(static_cast<char>('0' + times));
 		}
 		else if ( (10 <= times) && (20 >= times) ) {
 			sendCommandData.push_back('1');
@@ -53,7 +53,7 @@ void PumpControllerModel::calculatePrepareTheGasAirMixture() {
 	}
 }
 bool PumpControllerModel::setSupplyTime(int temp) {
-	if ((SupplyTimeMin <= temp) && (SupplyTimeMax >= temp)) {
+	if (SupplyTimeMin <= temp && SupplyTimeMax >= temp) {
 		supplyTime = temp;
 	}
 	else {
@@ -101,7 +101,7 @@ void PumpControllerModel::sequenceGasAirDelivery() {
 	}
 }
 int PumpControllerModel::calculateValue(const double _initialValue, int _startVolume = 10) const {
-	return static_cast<int>(std::round(log(_initialValue / _finalValue) / log(_vesselVolume / _startVolume)));
+	return static_cast<int>(std::round(log(_initialValue / finalValue) / log(finalValue / _startVolume)));
 }
 void PumpControllerModel::shuffleValves(int *arr, size_t n) {
 	if (n > 1) {

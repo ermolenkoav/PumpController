@@ -1,9 +1,10 @@
 #include "settings.h"
 #include "mainwindow.h"
 #include "model.h"
-#include <Poco/JSON/JSON.h>
 #include <Poco/JSON/Parser.h>
 #include <Poco/JSON/Stringifier.h>
+
+#include <sstream>
 
 Settings::Settings(std::shared_ptr<PumpControllerModel> pModel, MainWindow* pView)
 		 : pumpControllerModel{std::move( pModel )}, pumpControllerView { pView } {}

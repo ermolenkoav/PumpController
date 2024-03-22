@@ -1,14 +1,13 @@
 #pragma once
-#include "pch.h"
-#include <iomanip>
-#include <ctime>
+#include <fstream>
+#include <string>
 
 class csvLog final {
-	std::string getCurrentTime();
+	static std::string getCurrentTime();
     std::ofstream logFile;
 
 public:
 	explicit csvLog();
-	~csvLog();
+	//~csvLog();
 	void logEvent(char);
 };

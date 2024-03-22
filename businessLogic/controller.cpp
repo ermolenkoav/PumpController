@@ -1,4 +1,7 @@
 #include "controller.h"
+
+#include <thread>
+
 #include "mainwindow.h"
 #include "settings.h"
 #include "model.h"
@@ -6,7 +9,6 @@
 #define SIXTH_COMMAND_LENGTH 5
 #define S_COMMAND_LENGTH 2
 
-Controller::~Controller() {}
 Controller::Controller(MainWindow* pView) : pumpControllerView{ pView } {
 	pumpControllerModel = std::make_shared<PumpControllerModel>();
 	settings = std::make_unique<Settings>(pumpControllerModel, pView);
@@ -17,7 +19,7 @@ Controller::Controller(MainWindow* pView) : pumpControllerView{ pView } {
 double Controller::getStartValue(int index) {
 	return pumpControllerModel->getValue(index);
 }
-bool Controller::serialPortInitialization(QString selectedDevice) {
+bool Controller::serialPortInitialization(const QString& selectedDevice) {
 	bool state;
 	if (!pSerialPort->isOpen()) {
 		pSerialPort->setPortName(selectedDevice);
@@ -106,7 +108,7 @@ void Controller::valveCloseCommand(char valve = 'A') {
 		sendCommand(S_COMMAND_LENGTH, 1);
 	}
 }
-void Controller::manualSetting(std::string command) {
+void Controller::manualSetting(const std::string& command) {
 	pumpControllerModel->addCustomCommand(command);
 	sendCommand(static_cast<int>(command.length()), 1);
 }

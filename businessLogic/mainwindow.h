@@ -1,9 +1,16 @@
 #pragma once
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QSpinBox>
+
 #include "pch.h"
 #include "controller.h"
 
-class MainWindow : public QWidget {
-
+class MainWindow final : public QWidget {
 	Q_OBJECT
 
     // widgets:
@@ -52,8 +59,8 @@ class MainWindow : public QWidget {
 
 public:
 
-	explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override = default ;
+	explicit MainWindow(QWidget *);
+    ~MainWindow() override = default;
 
 	std::pair<int, int> getWindowPos();
 	void setWindowPos(std::array<int, 2>);

@@ -1,4 +1,7 @@
-#include "../businessLogic/pch.h"
+#include <QApplication.h>
+#include <QStyleFactory>
+#include <QIcon>
+#include <QFont>
 #include "../businessLogic/mainwindow.h"
 
 int main(int argc, char *argv[]) {
@@ -7,7 +10,7 @@ int main(int argc, char *argv[]) {
     QApplication::setWindowIcon(QIcon(":/logo.ico"));
     QFont serifFont("Times", 11, 4, false);
     QApplication::setFont(serifFont);
-    MainWindow view;
+    MainWindow view(nullptr);
     view.show();
-    return app.exec();
+    return QApplication::exec();
 }
