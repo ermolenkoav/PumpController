@@ -1,6 +1,5 @@
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets SerialPort)
 find_package(Poco REQUIRED COMPONENTS Foundation JSON)
-qt_standard_project_setup()
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
