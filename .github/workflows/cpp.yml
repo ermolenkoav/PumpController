@@ -34,5 +34,5 @@ jobs:
           generate_release_notes: false
           prerelease: false
           draft: false
-          files: build/apps/*
+          files: ./build/apps/*
           name: artifact_${{ matrix.os }}_${{ matrix.configs }}
