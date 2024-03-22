@@ -35,4 +35,3 @@ jobs:
           prerelease: false
           draft: false
           files: ./build/apps/*
-          name: artifact_${{ matrix.os }}_${{ matrix.configs }}
