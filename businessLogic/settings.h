@@ -1,9 +1,9 @@
 #pragma once
 #include <array>
 #include <string>
+#include <memory>
 
-#include "model.h"
-
+class PumpControllerModel;
 class MainWindow;
 
 class Settings {

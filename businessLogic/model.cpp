@@ -1,3 +1,4 @@
+#include <cmath>
 #include "model.h"
 
 void PumpControllerModel::addCustomCommand(const std::string& command) {
