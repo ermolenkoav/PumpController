@@ -9,7 +9,6 @@ set(EXTERNAL_INCLUDES
 		${Qt6Widgets_INCLUDE_DIRS}
 		${Qt6SerialPort_INCLUDE_DIRS}
 		${Poco_INCLUDE_DIRS}
-		${PocoJson_DIR}
 )
 
 set(EXTERNAL_LIBS
