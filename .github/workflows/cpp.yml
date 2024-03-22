@@ -17,9 +17,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      discussions: write
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v4.1.1
