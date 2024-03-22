@@ -1,3 +1,4 @@
+#include <ctime>
 #include "csvLog.h"
 
 // csvLog::~csvLog() {
